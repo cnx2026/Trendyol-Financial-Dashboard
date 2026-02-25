@@ -153,7 +153,8 @@
                     <div class="flex items-center gap-3">
                         <div class="relative">
                             <!-- DİNAMİK AVATAR -->
-                            <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover shadow-md">
+                            <!-- object-top eklendi: Yüzü yukarı hizalar -->
+                            <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover object-top shadow-md">
                             <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0b1120] rounded-full"></div>
                         </div>
                         <div>
@@ -243,7 +244,7 @@
         // AYARLAR
         // ============================================================
         const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8'; // Lütfen kendi ANON key'inizi buraya yapıştırın
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8'; 
         // ============================================================
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -276,6 +277,7 @@
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
 
             if (error) {
+                console.error("Login Error:", error);
                 errorDiv.innerText = "Invalid email or password.";
                 errorDiv.classList.remove('hidden');
                 btn.innerText = 'Sign In';
@@ -305,10 +307,10 @@
                 const namePart = email.split('@')[0];
                 formattedName = namePart.split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
 
-                // Tutku Akgül Özel Kontrolü
-                if (email.includes('tutku.akgul')) {
-                    formattedName = "Tutku Akgül"; // Türkçe karakter düzeltmesi
-                    avatarUrl = "https://i.hizliresim.com/kg9znne.jpg"; // Özel Fotoğraf
+                // Tutku Akgül Özel Kontrolü (Küçük harf ile kontrol)
+                if (email.toLowerCase().includes('tutku.akgul') || email.toLowerCase().includes('tutkuakgul')) {
+                    formattedName = "Tutku Akgül"; 
+                    avatarUrl = "https://i.hizliresim.com/kg9znne.jpg"; 
                 } else {
                     // Diğerleri için varsayılan avatar
                     avatarUrl = `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff&size=128`;

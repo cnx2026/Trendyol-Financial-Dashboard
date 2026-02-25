@@ -153,7 +153,7 @@
                     <div class="flex items-center gap-3">
                         <div class="relative">
                             <!-- DİNAMİK AVATAR -->
-                            <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover shadow-md">
+                            <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover object-top shadow-md">
                             <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0b1120] rounded-full"></div>
                         </div>
                         <div>
@@ -571,7 +571,8 @@
                     'CNX Register Number': row.cnx_register_number,
                     'User Name': row.user_name,
                     'Clean Working Time': parseFloat(row.clean_working_time || 0),
-                    'FTE': parseFloat(row.fte_value || 0),
+                    'Raw FTE': parseFloat(row.raw_fte || 0),
+                    'Capped FTE': parseFloat(row.capped_fte || 0),
                     'Team Leader': row.team_leader,
                     'Operation Manager': row.operation_manager,
                     'Senior Manager': row.senior_manager,
@@ -584,7 +585,7 @@
                     const key = row.team_leader;
                     if (!grouped[key]) grouped[key] = { name: key, manager: row.operation_manager, channel: row.channel_name, hours: 0, fte: 0 };
                     grouped[key].hours += parseFloat(row.clean_working_time || 0);
-                    grouped[key].fte += parseFloat(row.fte_value || 0);
+                    grouped[key].fte += parseFloat(row.capped_fte || 0);
                 });
                 exportData = Object.values(grouped).map(g => ({
                     'Team Leader': g.name,
@@ -600,7 +601,7 @@
                     const key = row.channel_name;
                     if (!grouped[key]) grouped[key] = { name: key, hours: 0, fte: 0 };
                     grouped[key].hours += parseFloat(row.clean_working_time || 0);
-                    grouped[key].fte += parseFloat(row.fte_value || 0);
+                    grouped[key].fte += parseFloat(row.capped_fte || 0);
                 });
                 exportData = Object.values(grouped).map(g => ({
                     'Channel': g.name,
@@ -614,7 +615,7 @@
                     const key = row.operation_manager;
                     if (!grouped[key]) grouped[key] = { name: key, sm: row.senior_manager, hours: 0, fte: 0 };
                     grouped[key].hours += parseFloat(row.clean_working_time || 0);
-                    grouped[key].fte += parseFloat(row.fte_value || 0);
+                    grouped[key].fte += parseFloat(row.capped_fte || 0);
                 });
                 exportData = Object.values(grouped).map(g => ({
                     'Operation Manager': g.name,

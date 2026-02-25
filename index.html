@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trendyol Financial Dashboard</title>
     
+    <!-- FAVICON (CONCENTRIX LOGOSU) -->
+    <link rel="icon" href="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" type="image/png">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -26,58 +29,33 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        
-        /* Dashboard Kartları */
-        .card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
+        .card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; transition: all 0.3s ease; }
         .card:hover { transform: translateY(-2px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08); }
-
-        /* Sidebar Linkleri */
-        .nav-link {
-            display: flex; align-items: center; padding: 14px 20px; border-radius: 12px;
-            color: #94a3b8; font-weight: 500; transition: all 0.2s; margin-bottom: 6px; cursor: pointer;
-        }
+        .nav-link { display: flex; align-items: center; padding: 14px 20px; border-radius: 12px; color: #94a3b8; font-weight: 500; transition: all 0.2s; margin-bottom: 6px; cursor: pointer; }
         .nav-link:hover { background-color: #1e293b; color: #f8fafc; }
         .nav-link.active { background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
         .nav-link i { margin-right: 14px; width: 20px; text-align: center; font-size: 1.1em; }
-
-        /* Tablo */
         th { font-weight: 600; color: #475569; background-color: #f8fafc; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 16px; }
         td { color: #334155; font-size: 0.9rem; padding: 14px; }
         tr:hover td { background-color: #f1f5f9; }
         tfoot tr { background-color: #f8fafc; border-top: 2px solid #cbd5e1; }
         tfoot td { font-weight: 800; color: #0f172a; font-size: 0.95rem; }
-
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-
-        /* Animasyonlar */
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
         .modal-enter { animation: modalIn 0.3s ease-out forwards; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body class="h-screen overflow-hidden text-slate-800">
 
-    <!-- ========================== -->
-    <!-- 1. GİRİŞ EKRANI (LOGIN)    -->
-    <!-- ========================== -->
+    <!-- LOGIN PAGE -->
     <div id="loginPage" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 relative overflow-hidden">
-        
-        <!-- Arka Plan Efektleri (Blur Blobs) -->
         <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px]"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[120px]"></div>
 
-        <!-- Login Kartı -->
         <div class="relative z-10 w-full max-w-md p-8 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl fade-in">
             <div class="text-center mb-8">
                 <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -91,55 +69,32 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">Email Address</label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-regular fa-envelope text-slate-400"></i>
-                        </div>
-                        <input type="email" id="email" required 
-                            class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                            placeholder="name@company.com">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-regular fa-envelope text-slate-400"></i></div>
+                        <input type="email" id="email" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="name@company.com">
                     </div>
                 </div>
-                
                 <div>
                     <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">Password</label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-lock text-slate-400"></i>
-                        </div>
-                        <input type="password" id="password" required 
-                            class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                            placeholder="••••••••">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-slate-400"></i></div>
+                        <input type="password" id="password" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="••••••••">
                     </div>
                 </div>
-
-                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20">
-                    <i class="fa-solid fa-circle-exclamation mr-1"></i> Invalid email or password
-                </div>
-
-                <button type="submit" id="loginBtn"
-                    class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
-                    Sign In
-                </button>
+                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"><i class="fa-solid fa-circle-exclamation mr-1"></i> Invalid email or password</div>
+                <button type="submit" id="loginBtn" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">Sign In</button>
             </form>
-
-            <div class="mt-8 text-center">
-                <p class="text-xs text-slate-500">&copy; 2026 Concentrix. Secure Access Only.</p>
-            </div>
+            <div class="mt-8 text-center"><p class="text-xs text-slate-500">&copy; 2026 Concentrix. Secure Access Only.</p></div>
         </div>
     </div>
 
-    <!-- ========================== -->
-    <!-- 2. DASHBOARD EKRANI        -->
-    <!-- ========================== -->
+    <!-- MAIN DASHBOARD -->
     <div id="mainDashboard" class="flex h-screen overflow-hidden hidden">
         
         <!-- EXPORT MODAL -->
         <div id="exportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200">
                 <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-file-excel text-green-600"></i> Export Excel
-                    </h3>
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-excel text-green-600"></i> Export Excel</h3>
                     <button onclick="closeExportModal()" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark fa-lg"></i></button>
                 </div>
                 <div class="space-y-4">
@@ -155,36 +110,26 @@
                     <hr class="border-slate-100">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Senior Manager</label>
-                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option value="all">All Senior Managers</option>
-                        </select>
+                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">All Senior Managers</option></select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operation Manager</label>
-                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option value="all">All Operation Managers</option>
-                        </select>
+                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">All Operation Managers</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Team Leader</label>
-                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                                <option value="all">All Leaders</option>
-                            </select>
+                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">All Leaders</option></select>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Channel</label>
-                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                                <option value="all">All Channels</option>
-                            </select>
+                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">All Channels</option></select>
                         </div>
                     </div>
                 </div>
                 <div class="mt-8 flex gap-3">
                     <button onclick="closeExportModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition-colors">Cancel</button>
-                    <button onclick="generateExcel()" id="btnGenerate" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition-all flex justify-center items-center gap-2">
-                        <span>Download Excel</span> <i class="fa-solid fa-download"></i>
-                    </button>
+                    <button onclick="generateExcel()" id="btnGenerate" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition-all flex justify-center items-center gap-2"><span>Download Excel</span> <i class="fa-solid fa-download"></i></button>
                 </div>
             </div>
         </div>
@@ -207,23 +152,22 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="relative">
-                            <img src="https://i.hizliresim.com/t26i70g.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover shadow-md">
+                            <!-- DİNAMİK AVATAR -->
+                            <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover shadow-md">
                             <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0b1120] rounded-full"></div>
                         </div>
                         <div>
-                            <div class="text-sm font-bold text-white">Birand Ergüven</div>
+                            <!-- DİNAMİK İSİM -->
+                            <div id="userName" class="text-sm font-bold text-white">Loading...</div>
                             <div class="text-xs text-slate-400">Management Panel</div>
                         </div>
                     </div>
-                    <!-- Çıkış Butonu -->
-                    <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 transition-colors p-2" title="Sign Out">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
+                    <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 transition-colors p-2" title="Sign Out"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
             </div>
         </aside>
 
-        <!-- MAIN CONTENT -->
+        <!-- CONTENT -->
         <main class="flex-1 flex flex-col overflow-hidden bg-[#f8fafc] relative">
             <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 px-8 py-5 sticky top-0 z-20">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -232,12 +176,8 @@
                         <p class="text-sm text-slate-500 mt-1">Current billing period performance metrics</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors">
-                            <i class="fa-solid fa-file-excel"></i> <span>Export Excel</span>
-                        </button>
-                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
-                            <i class="fa-regular fa-clock text-blue-500"></i> <span>Last Update: <span id="lastUpdate" class="text-slate-700">-</span></span>
-                        </div>
+                        <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors"><i class="fa-solid fa-file-excel"></i> <span>Export Excel</span></button>
+                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span>Last Update: <span id="lastUpdate" class="text-slate-700">-</span></span></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -245,16 +185,9 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
                         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Search..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
-                    <select id="filterSenior" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm">
-                        <option value="all">All Senior Managers</option>
-                        <option value="Tutku Akgül">Tutku Akgül</option>
-                    </select>
-                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm">
-                        <option value="all">All Operation Managers</option>
-                    </select>
-                    <select id="filterSub" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 disabled:text-gray-400" disabled>
-                        <option value="all">-</option>
-                    </select>
+                    <select id="filterSenior" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">All Senior Managers</option><option value="Tutku Akgül">Tutku Akgül</option></select>
+                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">All Operation Managers</option></select>
+                    <select id="filterSub" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 disabled:text-gray-400" disabled><option value="all">-</option></select>
                 </div>
             </header>
 
@@ -310,7 +243,7 @@
         // AYARLAR
         // ============================================================
         const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8'; // Lütfen kendi ANON key'inizi buraya yapıştırın
+        const SUPABASE_ANON_KEY = 'sizin-anon-key-buraya'; // Lütfen kendi ANON key'inizi buraya yapıştırın
         // ============================================================
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -323,7 +256,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
-                showDashboard();
+                showDashboard(session.user);
             } else {
                 showLogin();
             }
@@ -348,7 +281,7 @@
                 btn.innerText = 'Sign In';
                 btn.disabled = false;
             } else {
-                showDashboard();
+                showDashboard(data.user);
             }
         }
 
@@ -357,10 +290,34 @@
             showLogin();
         }
 
-        function showDashboard() {
+        function showDashboard(user) {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('tr-TR');
+            
+            // --- DİNAMİK PROFİL GÜNCELLEME ---
+            if (user && user.email) {
+                const email = user.email;
+                let formattedName = "";
+                let avatarUrl = "";
+
+                // İsim Formatlama (birand.erguven -> Birand Ergüven)
+                const namePart = email.split('@')[0];
+                formattedName = namePart.split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
+
+                // Tutku Akgül Özel Kontrolü
+                if (email.includes('tutku.akgul')) {
+                    formattedName = "Tutku Akgül"; // Türkçe karakter düzeltmesi
+                    avatarUrl = "https://i.hizliresim.com/kg9znne.jpg"; // Özel Fotoğraf
+                } else {
+                    // Diğerleri için varsayılan avatar
+                    avatarUrl = `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff&size=128`;
+                }
+                
+                document.getElementById('userName').innerText = formattedName;
+                document.getElementById('userAvatar').src = avatarUrl;
+            }
+
             switchView('ops');
         }
 

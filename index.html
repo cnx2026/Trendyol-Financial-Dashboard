@@ -153,8 +153,7 @@
                     <div class="flex items-center gap-3">
                         <div class="relative">
                             <!-- DİNAMİK AVATAR -->
-                            <!-- object-top eklendi: Yüzü yukarı hizalar -->
-                            <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover object-top shadow-md">
+                            <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover shadow-md">
                             <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0b1120] rounded-full"></div>
                         </div>
                         <div>
@@ -307,14 +306,8 @@
                 const namePart = email.split('@')[0];
                 formattedName = namePart.split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
 
-                // Tutku Akgül Özel Kontrolü (Küçük harf ile kontrol)
-                if (email.toLowerCase().includes('tutku.akgul') || email.toLowerCase().includes('tutkuakgul')) {
-                    formattedName = "Tutku Akgül"; 
-                    avatarUrl = "https://i.hizliresim.com/kg9znne.jpg"; 
-                } else {
-                    // Diğerleri için varsayılan avatar
-                    avatarUrl = `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff&size=128`;
-                }
+                // Herkes için standart avatar (İsim Baş Harfleri)
+                avatarUrl = `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff&size=128`;
                 
                 document.getElementById('userName').innerText = formattedName;
                 document.getElementById('userAvatar').src = avatarUrl;

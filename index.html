@@ -552,7 +552,7 @@
             // Re-render data if available
             if(rawData.length > 0) {
                 populateFilters();
-                renderData(rawData);
+                applyFilters(); // applyFilters will call renderData
             }
         }
 
@@ -665,8 +665,6 @@
         }
 
         function populateFilters() {
-            // Initial population of OM filter
-            // We use handleSeniorChange to populate OM based on default "all" SM
             handleSeniorChange();
         }
 
@@ -674,33 +672,27 @@
             const smVal = document.getElementById('filterSenior').value;
             const managerSelect = document.getElementById('filterManager');
             
-            // Filter data by SM first
             let filteredBySM = rawData;
-            
-            // Check if data actually has senior_manager column to avoid empty list if column is missing
             const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
 
             if (smVal !== 'all' && hasSM) {
                 filteredBySM = rawData.filter(item => item.senior_manager === smVal);
             }
 
-            // Extract OMs from this filtered list
-            // Handle different column names across views
             const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
             const managers = getUniqueValues(filteredBySM, omKey).sort();
 
             managerSelect.innerHTML = `<option value="all">${t('all')}</option>` + managers.map(m => `<option value="${m}">${m}</option>`).join('');
             managerSelect.value = 'all';
             
-            // Trigger next level update
             handleManagerChange();
         }
 
         function handleManagerChange() {
+            const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subFilter = document.getElementById('filterSub');
             
-            // Only disable if we are in OPS view (no 3rd level)
             if (currentView === 'ops') {
                 subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
                 subFilter.disabled = true;
@@ -710,28 +702,22 @@
 
             subFilter.disabled = false;
             
-            // Get current data filtered by SM (from handleSeniorChange logic or rawData)
-            const smVal = document.getElementById('filterSenior').value;
-            let filteredData = rawData;
-
-            // 1. Filter by SM
+            let relevantData = rawData;
             const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
             if (smVal !== 'all' && hasSM) {
-                 filteredData = filteredData.filter(item => item.senior_manager === smVal);
+                relevantData = relevantData.filter(item => item.senior_manager === smVal);
             }
 
-            // 2. Filter by OM (if selected)
-            const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
+            const omKey = 'operation_manager';
             if (managerVal !== 'all') {
-                filteredData = filteredData.filter(item => item[omKey] === managerVal);
+                relevantData = relevantData.filter(item => item[omKey] === managerVal);
             }
 
-            // 3. Populate Sub Filter based on the resulting data
             let subItems = [];
             if (currentView === 'leader') {
-                subItems = getUniqueValues(filteredData, 'leader_name');
+                subItems = getUniqueValues(relevantData, 'leader_name');
             } else if (currentView === 'channel') {
-                subItems = getUniqueValues(filteredData, 'channel_name');
+                subItems = getUniqueValues(relevantData, 'channel_name');
             }
             subItems.sort();
 
@@ -749,24 +735,20 @@
             let filteredData = rawData;
             const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
 
-            // Senior Manager Filtresi
             if (smVal !== 'all' && hasSM) {
                 filteredData = filteredData.filter(item => item.senior_manager === smVal);
             }
 
-            // Manager Filtresi
             if (managerVal !== 'all') {
                 const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
                 filteredData = filteredData.filter(item => item[omKey] === managerVal);
             }
 
-            // Alt Filtre (Lider veya Kanal)
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
                 if (currentView === 'leader') filteredData = filteredData.filter(item => item.leader_name === subVal);
                 else if (currentView === 'channel') filteredData = filteredData.filter(item => item.channel_name === subVal);
             }
 
-            // Arama
             if (searchVal) {
                 filteredData = filteredData.filter(item => {
                     const name = (item.manager_name || item.leader_name || item.channel_name || '').toLowerCase();
@@ -968,13 +950,21 @@
                 if (error) { alert('Rapor verisi çekilemedi.'); return; }
 
                 let filtered = summaryData;
-                // Filtreleme Mantığı (View'daki kolon isimlerine göre)
-                if (om !== 'all') {
-                    if (reportLevel === 'manager') filtered = filtered.filter(i => i.manager_name === om);
-                    else filtered = filtered.filter(i => i.operation_manager === om);
+                
+                // Hiyerarşik Filtreleme
+                if (sm !== 'all') {
+                    filtered = filtered.filter(i => i.senior_manager === sm);
                 }
-                if (tl !== 'all' && reportLevel === 'leader') filtered = filtered.filter(i => i.leader_name === tl);
-                if (ch !== 'all' && reportLevel === 'channel') filtered = filtered.filter(i => i.channel_name === ch);
+                if (om !== 'all') {
+                    const omKey = reportLevel === 'manager' ? 'manager_name' : 'operation_manager';
+                    filtered = filtered.filter(i => i[omKey] === om);
+                }
+                if (tl !== 'all' && reportLevel === 'leader') {
+                    filtered = filtered.filter(i => i.leader_name === tl);
+                }
+                if (ch !== 'all' && reportLevel === 'channel') {
+                    filtered = filtered.filter(i => i.channel_name === ch);
+                }
 
                 // Veri Eşleştirme
                 if (reportLevel === 'leader') {
@@ -1031,7 +1021,7 @@
             const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
             
             const range = XLSX.utils.decode_range(ws['!ref']);
-            const currencyFmt = '"₺" #,##0.00'; // Para birimi formatı
+            const currencyFmt = '"₺" #,##0'; // Para birimi formatı (Küsüratsız görünüm)
             const numberFmt = '0.00'; // Sayı formatı (2 basamak)
             
             // Başlık satırını kontrol et ve formatları uygula
@@ -1044,14 +1034,14 @@
                 if (currencyColumns.includes(colName)) {
                     for (let R = 1; R <= range.e.r; ++R) {
                         const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
-                        if (!ws[cellAddress]) continue;
-                        if (ws[cellAddress].t === 'n') ws[cellAddress].z = currencyFmt;
+                        if (!ws[cellAddress] || ws[cellAddress].t !== 'n') continue;
+                        ws[cellAddress].z = currencyFmt;
                     }
                 } else if (numberColumns.includes(colName)) {
                     for (let R = 1; R <= range.e.r; ++R) {
                         const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
-                        if (!ws[cellAddress]) continue;
-                        if (ws[cellAddress].t === 'n') ws[cellAddress].z = numberFmt;
+                        if (!ws[cellAddress] || ws[cellAddress].t !== 'n') continue;
+                        ws[cellAddress].z = numberFmt;
                     }
                 }
             }

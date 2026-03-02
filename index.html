@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trendyol Finansal Arayüzü</title>
+    <title>Trendyol Financial Dashboard</title>
     
     <!-- FAVICON -->
     <link rel="icon" href="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" type="image/png">
@@ -62,7 +62,6 @@
                     <img src="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" alt="Logo" class="h-8 w-auto object-contain">
                 </div>
                 <h2 class="text-3xl font-bold text-white tracking-tight">Hoşgeldiniz</h2>
-                <p class="text-slate-400 text-sm mt-2">Finansal verilere erişmek için giriş yapın</p>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-5">
@@ -102,28 +101,28 @@
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Rapor Tipi</label>
                         <select id="expLevel" class="w-full p-3 bg-blue-50 border border-blue-200 rounded-xl text-sm font-semibold text-blue-800 focus:ring-2 focus:ring-blue-500 outline-none">
                             <option value="advisor">Temsilci Bazlı</option>
-                            <option value="leader">Lider Özeti</option>
+                            <option value="leader">Takım Lideri Özeti</option>
                             <option value="channel">Kanal Özeti</option>
-                            <option value="manager">Yönetici Özeti</option>
+                            <option value="manager">Operasyon Yöneticisi Özeti</option>
                         </select>
                     </div>
                     <hr class="border-slate-100">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operasyon Müdürü</label>
-                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
+                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operasyon Yöneticisi</label>
-                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
+                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Takım Lideri</label>
-                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
+                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Kanal</label>
-                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
+                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
                         </div>
                     </div>
                 </div>
@@ -140,7 +139,7 @@
                 <div class="bg-white/10 p-2 rounded-lg w-fit backdrop-blur-sm">
                     <img src="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" alt="Concentrix" class="h-8 w-auto object-contain">
                 </div>
-                <span class="text-lg font-bold text-white tracking-tight leading-tight">Trendyol Finansal<br><span class="text-blue-400">Arayüzü</span></span>
+                <span class="text-lg font-bold text-white tracking-tight leading-tight">Trendyol Financial<br><span class="text-blue-400">Dashboard</span></span>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
                 <a onclick="switchView('ops')" id="nav-ops" class="nav-link active"><i class="fa-solid fa-layer-group"></i> SM & OM</a>
@@ -183,8 +182,8 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
                         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Ara..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
-                    <select id="filterSenior" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Hepsi</option><option value="Tutku Akgül">Tutku Akgül</option></select>
-                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Hepsi</option></select>
+                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option><option value="Tutku Akgül">Tutku Akgül</option></select>
+                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option></select>
                     <select id="filterSub" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 disabled:text-gray-400" disabled><option value="all">-</option></select>
                 </div>
             </header>
@@ -331,10 +330,14 @@
             document.getElementById('pageTitle').innerText = titles[view];
             const placeholders = { 'ops': 'SM veya OM Ara...', 'leader': 'TL Ara...', 'channel': 'Kanal Ara...' };
             document.getElementById('searchInput').placeholder = placeholders[view];
+            
+            // Reset Filters
+            document.getElementById('filterSenior').value = 'all';
+            document.getElementById('filterManager').innerHTML = '<option value="all">Tümü</option>';
             const subFilter = document.getElementById('filterSub');
-            if (view === 'leader') subFilter.options[0].text = "Hepsi";
-            else if (view === 'channel') subFilter.options[0].text = "Hepsi";
-            else subFilter.options[0].text = "-";
+            subFilter.innerHTML = '<option value="all">-</option>';
+            subFilter.disabled = true;
+
             fetchData();
         }
 
@@ -352,23 +355,32 @@
                 alert('Veri çekme hatası.'); return; 
             }
             rawData = data;
-            populateManagerFilter(data); 
+            populateFilters(); 
             applyFilters(); 
         }
 
-        function populateManagerFilter(data) {
+        function populateFilters() {
+            // Senior Manager filtresi zaten HTML'de statik veya dinamik olabilir.
+            // Burada OM filtresini başlatıyoruz.
             const managerSelect = document.getElementById('filterManager');
-            const currentVal = managerSelect.value;
-            const managers = [...new Set(data.map(item => item.operation_manager || item.manager_name))].filter(Boolean).sort();
-            managerSelect.innerHTML = '<option value="all">Hepsi</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
-            if (managers.includes(currentVal)) managerSelect.value = currentVal;
+            // Ops view'da OM listesi manager_name'den, diğerlerinde operation_manager'dan gelir.
+            const managers = [...new Set(rawData.map(item => item.operation_manager || item.manager_name))].filter(Boolean).sort();
+            managerSelect.innerHTML = '<option value="all">Tümü</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
+        }
+
+        function handleSeniorChange() {
+            // Senior Manager değiştiğinde OM listesini filtrele (Eğer veri yapısı destekliyorsa)
+            // Şu anki veri yapısında SM bilgisi her tabloda olmayabilir, bu yüzden basitçe resetliyoruz.
+            document.getElementById('filterManager').value = 'all';
+            handleManagerChange();
         }
 
         function handleManagerChange() {
             const managerVal = document.getElementById('filterManager').value;
             const subFilter = document.getElementById('filterSub');
+            
             if (managerVal === 'all' || currentView === 'ops') {
-                subFilter.innerHTML = `<option value="all">Hepsi</option>`;
+                subFilter.innerHTML = `<option value="all">Tümü</option>`;
                 subFilter.disabled = true;
             } else {
                 subFilter.disabled = false;
@@ -376,10 +388,12 @@
                 if (currentView === 'leader') {
                     subItems = rawData.filter(item => item.operation_manager === managerVal).map(item => item.leader_name);
                 } else if (currentView === 'channel') {
-                    subItems = rawData.filter(item => item.operation_manager === managerVal).map(item => item.channel_name);
+                    // Kanal sayfasında OM'ye göre kanal filtreleme
+                    // Eğer operation_manager sütunu varsa filtreler, yoksa hepsi gelir.
+                    subItems = rawData.filter(item => !item.operation_manager || item.operation_manager === managerVal).map(item => item.channel_name);
                 }
-                subItems = [...new Set(subItems)].sort();
-                subFilter.innerHTML = `<option value="all">Hepsi</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
+                subItems = [...new Set(subItems)].filter(Boolean).sort();
+                subFilter.innerHTML = `<option value="all">Tümü</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
             }
             applyFilters();
         }
@@ -388,15 +402,22 @@
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
             const managerVal = document.getElementById('filterManager').value;
             const subVal = document.getElementById('filterSub').value;
+            
             let filteredData = rawData;
+
+            // Manager Filtresi
             if (managerVal !== 'all') {
                 if (currentView === 'ops') filteredData = filteredData.filter(item => item.manager_name === managerVal);
                 else filteredData = filteredData.filter(item => item.operation_manager === managerVal);
             }
+
+            // Alt Filtre (Lider veya Kanal)
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
                 if (currentView === 'leader') filteredData = filteredData.filter(item => item.leader_name === subVal);
                 else if (currentView === 'channel') filteredData = filteredData.filter(item => item.channel_name === subVal);
             }
+
+            // Arama
             if (searchVal) {
                 filteredData = filteredData.filter(item => {
                     const name = (item.manager_name || item.leader_name || item.channel_name || '').toLowerCase();
@@ -511,12 +532,13 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Veriler Yükleniyor...';
 
+            // Advisor verisini filtreler için çekiyoruz
             const { data, error } = await _supabase.from('view_advisor_performance').select('*');
             if (error) { alert('Veri çekme hatası'); return; }
             advisorData = data;
             
             const sms = [...new Set(data.map(i => i.senior_manager))].filter(Boolean).sort();
-            document.getElementById('expSenior').innerHTML = '<option value="all">Hepsi</option>' + sms.map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('expSenior').innerHTML = '<option value="all">Tümü</option>' + sms.map(m => `<option value="${m}">${m}</option>`).join('');
             
             updateExportFilters('sm'); 
             btn.disabled = false;
@@ -536,7 +558,7 @@
             if (changedLevel === 'sm') {
                 if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
                 const oms = [...new Set(filtered.map(i => i.operation_manager))].filter(Boolean).sort();
-                omSelect.innerHTML = '<option value="all">Hepsi</option>' + oms.map(m => `<option value="${m}">${m}</option>`).join('');
+                omSelect.innerHTML = '<option value="all">Tümü</option>' + oms.map(m => `<option value="${m}">${m}</option>`).join('');
                 omSelect.value = 'all'; 
             }
 
@@ -547,28 +569,29 @@
             const tls = [...new Set(filtered.map(i => i.team_leader))].filter(Boolean).sort();
             const chs = [...new Set(filtered.map(i => i.channel_name))].filter(Boolean).sort();
 
-            tlSelect.innerHTML = '<option value="all">Hepsi</option>' + tls.map(m => `<option value="${m}">${m}</option>`).join('');
-            chSelect.innerHTML = '<option value="all">Hepsi</option>' + chs.map(m => `<option value="${m}">${m}</option>`).join('');
+            tlSelect.innerHTML = '<option value="all">Tümü</option>' + tls.map(m => `<option value="${m}">${m}</option>`).join('');
+            chSelect.innerHTML = '<option value="all">Tümü</option>' + chs.map(m => `<option value="${m}">${m}</option>`).join('');
         }
 
-        function generateExcel() {
+        async function generateExcel() {
             const reportLevel = document.getElementById('expLevel').value;
             const sm = document.getElementById('expSenior').value;
             const om = document.getElementById('expManager').value;
             const tl = document.getElementById('expLeader').value;
             const ch = document.getElementById('expChannel').value;
 
-            let filtered = advisorData;
-            if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
-            if (om !== 'all') filtered = filtered.filter(i => i.operation_manager === om);
-            if (tl !== 'all') filtered = filtered.filter(i => i.team_leader === tl);
-            if (ch !== 'all') filtered = filtered.filter(i => i.channel_name === ch);
-
             let exportData = [];
             let sheetName = "Rapor";
 
+            // Rapor tipine göre doğru View'dan veri çek ve filtrele
             if (reportLevel === 'advisor') {
                 sheetName = "Temsilci Detay";
+                let filtered = advisorData;
+                if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
+                if (om !== 'all') filtered = filtered.filter(i => i.operation_manager === om);
+                if (tl !== 'all') filtered = filtered.filter(i => i.team_leader === tl);
+                if (ch !== 'all') filtered = filtered.filter(i => i.channel_name === ch);
+
                 exportData = filtered.map(row => ({
                     'Sicil No': row.cnx_register_number,
                     'İsim Soyisim': row.user_name,
@@ -580,51 +603,62 @@
                     'Operasyon Müdürü': row.senior_manager,
                     'Kanal': row.channel_name
                 }));
-            } else if (reportLevel === 'leader') {
-                sheetName = "Lider Ozeti";
-                const grouped = {};
-                filtered.forEach(row => {
-                    const key = row.team_leader;
-                    if (!grouped[key]) grouped[key] = { name: key, manager: row.operation_manager, channel: row.channel_name, hours: 0, fte: 0 };
-                    grouped[key].hours += parseFloat(row.clean_working_time || 0);
-                    grouped[key].fte += parseFloat(row.capped_fte || 0);
-                });
-                exportData = Object.values(grouped).map(g => ({
-                    'Takım Lideri': g.name,
-                    'Operasyon Yöneticisi': g.manager,
-                    'Kanal': g.channel,
-                    'Net Çalışma Saati': g.hours,
-                    'Toplam FTE': g.fte
-                }));
-            } else if (reportLevel === 'channel') {
-                sheetName = "Kanal Ozeti";
-                const grouped = {};
-                filtered.forEach(row => {
-                    const key = row.channel_name;
-                    if (!grouped[key]) grouped[key] = { name: key, hours: 0, fte: 0 };
-                    grouped[key].hours += parseFloat(row.clean_working_time || 0);
-                    grouped[key].fte += parseFloat(row.capped_fte || 0);
-                });
-                exportData = Object.values(grouped).map(g => ({
-                    'Kanal': g.name,
-                    'Net Çalışma Saati': g.hours,
-                    'Toplam FTE': g.fte
-                }));
-            } else if (reportLevel === 'manager') {
-                sheetName = "Yonetici Ozeti";
-                const grouped = {};
-                filtered.forEach(row => {
-                    const key = row.operation_manager;
-                    if (!grouped[key]) grouped[key] = { name: key, sm: row.senior_manager, hours: 0, fte: 0 };
-                    grouped[key].hours += parseFloat(row.clean_working_time || 0);
-                    grouped[key].fte += parseFloat(row.capped_fte || 0);
-                });
-                exportData = Object.values(grouped).map(g => ({
-                    'Operasyon Yöneticisi': g.name,
-                    'Operasyon Müdürü': g.sm,
-                    'Net Çalışma Saati': g.hours,
-                    'Toplam FTE': g.fte
-                }));
+            } else {
+                // Özet raporlar için ilgili View'ları çekiyoruz (Metriklerin doğru gelmesi için)
+                let tableName = '';
+                if (reportLevel === 'leader') tableName = 'view_leader_performance';
+                else if (reportLevel === 'channel') tableName = 'view_channel_performance';
+                else if (reportLevel === 'manager') tableName = 'view_operations_performance';
+
+                const { data: summaryData, error } = await _supabase.from(tableName).select('*');
+                if (error) { alert('Rapor verisi çekilemedi.'); return; }
+
+                let filtered = summaryData;
+                // Filtreleme Mantığı (View'daki kolon isimlerine göre)
+                if (om !== 'all') {
+                    if (reportLevel === 'manager') filtered = filtered.filter(i => i.manager_name === om);
+                    else filtered = filtered.filter(i => i.operation_manager === om);
+                }
+                if (tl !== 'all' && reportLevel === 'leader') filtered = filtered.filter(i => i.leader_name === tl);
+                if (ch !== 'all' && reportLevel === 'channel') filtered = filtered.filter(i => i.channel_name === ch);
+
+                // Veri Eşleştirme
+                if (reportLevel === 'leader') {
+                    sheetName = "Takim Lideri Ozeti";
+                    exportData = filtered.map(row => ({
+                        'Takım Lideri': row.leader_name,
+                        'Operasyon Yöneticisi': row.operation_manager,
+                        'Net Çalışma Saati': parseFloat(row.total_clean_hours || 0),
+                        'Gerçekleşen FTE': parseFloat(row.produced_fte || 0),
+                        'Öngörülen FTE': parseFloat(row.forecast_fte || 0),
+                        'FTE Farkı': parseFloat(row.produced_fte - row.forecast_fte),
+                        'Toplam Ücret': parseFloat(row.total_fee || 0),
+                        'Ücret Farkı': parseFloat(row.fee_diff || 0)
+                    }));
+                } else if (reportLevel === 'channel') {
+                    sheetName = "Kanal Ozeti";
+                    exportData = filtered.map(row => ({
+                        'Kanal': row.channel_name,
+                        'Birim Fiyat': row.unit_price,
+                        'Net Çalışma Saati': parseFloat(row.total_clean_hours || 0),
+                        'Gerçekleşen FTE': parseFloat(row.produced_fte || 0),
+                        'Öngörülen FTE': parseFloat(row.forecast_fte || 0),
+                        'FTE Farkı': parseFloat(row.produced_fte - row.forecast_fte),
+                        'Toplam Ücret': parseFloat(row.total_fee || 0),
+                        'Ücret Farkı': parseFloat(row.fee_diff || 0)
+                    }));
+                } else if (reportLevel === 'manager') {
+                    sheetName = "Operasyon Yoneticisi Ozeti";
+                    exportData = filtered.map(row => ({
+                        'Operasyon Yöneticisi': row.manager_name,
+                        'Net Çalışma Saati': parseFloat(row.total_clean_hours || 0),
+                        'Gerçekleşen FTE': parseFloat(row.produced_fte || 0),
+                        'Öngörülen FTE': parseFloat(row.forecast_fte || 0),
+                        'FTE Farkı': parseFloat(row.produced_fte - row.forecast_fte),
+                        'Toplam Ücret': parseFloat(row.total_fee || 0),
+                        'Ücret Farkı': parseFloat(row.fee_diff || 0)
+                    }));
+                }
             }
 
             if (exportData.length === 0) { alert("Veri bulunamadı."); return; }
@@ -643,7 +677,7 @@
             ws['!cols'] = wscols;
 
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            const fileName = `Trendyol_${sheetName.replace(' ', '_')}_${new Date().toISOString().slice(0,10)}.xlsx`;
+            const fileName = `Trendyol_${sheetName.replace(/ /g, '_')}_${new Date().toISOString().slice(0,10)}.xlsx`;
             XLSX.writeFile(wb, fileName);
             closeExportModal();
         }

@@ -180,7 +180,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
-                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Ara..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
+                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="OM & OY Ara..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
                     <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option><option value="Tutku Akgül">Tutku Akgül</option></select>
                     <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option></select>
@@ -369,10 +369,23 @@
         }
 
         function handleSeniorChange() {
-            // Senior Manager değiştiğinde OM listesini filtrele (Eğer veri yapısı destekliyorsa)
-            // Şu anki veri yapısında SM bilgisi her tabloda olmayabilir, bu yüzden basitçe resetliyoruz.
-            document.getElementById('filterManager').value = 'all';
-            handleManagerChange();
+            const smVal = document.getElementById('filterSenior').value;
+            const managerSelect = document.getElementById('filterManager');
+            
+            // OM Listesini SM'ye göre filtrele
+            let managers = [];
+            if (smVal === 'all') {
+                managers = [...new Set(rawData.map(item => item.operation_manager || item.manager_name))];
+            } else {
+                // Veri setinde senior_manager varsa filtrele, yoksa (ops view gibi) mevcut yapıyı koru
+                managers = [...new Set(rawData.filter(item => !item.senior_manager || item.senior_manager === smVal).map(item => item.operation_manager || item.manager_name))];
+            }
+            managers = managers.filter(Boolean).sort();
+            
+            managerSelect.innerHTML = '<option value="all">Tümü</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
+            managerSelect.value = 'all';
+            
+            handleManagerChange(); // Alt filtreleri tetikle
         }
 
         function handleManagerChange() {
@@ -389,7 +402,6 @@
                     subItems = rawData.filter(item => item.operation_manager === managerVal).map(item => item.leader_name);
                 } else if (currentView === 'channel') {
                     // Kanal sayfasında OM'ye göre kanal filtreleme
-                    // Eğer operation_manager sütunu varsa filtreler, yoksa hepsi gelir.
                     subItems = rawData.filter(item => !item.operation_manager || item.operation_manager === managerVal).map(item => item.channel_name);
                 }
                 subItems = [...new Set(subItems)].filter(Boolean).sort();
@@ -400,10 +412,16 @@
 
         function applyFilters() {
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subVal = document.getElementById('filterSub').value;
             
             let filteredData = rawData;
+
+            // Senior Manager Filtresi (Eğer veri setinde varsa)
+            if (smVal !== 'all') {
+                filteredData = filteredData.filter(item => !item.senior_manager || item.senior_manager === smVal);
+            }
 
             // Manager Filtresi
             if (managerVal !== 'all') {
@@ -666,10 +684,24 @@
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
             
-            for (const key in ws) {
-                if (key[0] === '!') continue;
-                if (ws[key].t === 'n') {
-                    ws[key].z = '0.00'; 
+            // Para Birimi Formatlaması (TL)
+            const currencyColumns = ["Toplam Ücret", "Ücret Farkı", "Birim Fiyat"];
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            
+            // Başlık satırını kontrol et
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const address = XLSX.utils.encode_cell({r: 0, c: C});
+                if (!ws[address]) continue;
+                
+                if (currencyColumns.includes(ws[address].v)) {
+                    // Bu sütundaki tüm veri hücrelerini formatla
+                    for (let R = 1; R <= range.e.r; ++R) {
+                        const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
+                        if (!ws[cellAddress]) continue;
+                        if (ws[cellAddress].t === 'n') {
+                            ws[cellAddress].z = '#,##0.00 "₺"';
+                        }
+                    }
                 }
             }
 

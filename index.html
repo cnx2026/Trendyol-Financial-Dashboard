@@ -61,26 +61,26 @@
                 <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <img src="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" alt="Logo" class="h-8 w-auto object-contain">
                 </div>
-                <h2 class="text-3xl font-bold text-white tracking-tight">Hoşgeldiniz</h2>
+                <h2 class="text-3xl font-bold text-white tracking-tight" data-i18n="welcome">Hoşgeldiniz</h2>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">E-posta Adresi</label>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1" data-i18n="email_label">E-posta Adresi</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-regular fa-envelope text-slate-400"></i></div>
                         <input type="email" id="email" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="isim.soyisim@concentrix.com">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">Şifre</label>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1" data-i18n="password_label">Şifre</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-slate-400"></i></div>
                         <input type="password" id="password" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="••••••••">
                     </div>
                 </div>
-                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"><i class="fa-solid fa-circle-exclamation mr-1"></i> Geçersiz e-posta veya şifre</div>
-                <button type="submit" id="loginBtn" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">Giriş</button>
+                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"><i class="fa-solid fa-circle-exclamation mr-1"></i> <span data-i18n="login_error">Geçersiz e-posta veya şifre</span></div>
+                <button type="submit" id="loginBtn" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]" data-i18n="login_btn">Giriş</button>
             </form>
             <div class="mt-8 text-center"><p class="text-xs text-slate-500">&copy; 2026 Concentrix. Secure Access Only.</p></div>
         </div>
@@ -93,42 +93,42 @@
         <div id="exportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200">
                 <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-excel text-green-600"></i> Excel'i Dışa Aktar</h3>
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-excel text-green-600"></i> <span data-i18n="export_title">Excel'i Dışa Aktar</span></h3>
                     <button onclick="closeExportModal()" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark fa-lg"></i></button>
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Rapor Tipi</label>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="report_type">Rapor Tipi</label>
                         <select id="expLevel" class="w-full p-3 bg-blue-50 border border-blue-200 rounded-xl text-sm font-semibold text-blue-800 focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option value="advisor">Temsilci Bazlı</option>
-                            <option value="leader">Takım Lideri Özeti</option>
-                            <option value="channel">Kanal Özeti</option>
-                            <option value="manager">Operasyon Yöneticisi Özeti</option>
+                            <option value="advisor" data-i18n="opt_advisor">Temsilci Bazlı</option>
+                            <option value="leader" data-i18n="opt_leader">Takım Lideri Özeti</option>
+                            <option value="channel" data-i18n="opt_channel">Kanal Özeti</option>
+                            <option value="manager" data-i18n="opt_manager">Operasyon Yöneticisi Özeti</option>
                         </select>
                     </div>
                     <hr class="border-slate-100">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operasyon Müdürü</label>
-                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="senior_manager">Operasyon Müdürü</label>
+                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operasyon Yöneticisi</label>
-                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="operation_manager">Operasyon Yöneticisi</label>
+                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Takım Lideri</label>
-                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="team_leader">Takım Lideri</label>
+                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Kanal</label>
-                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tümü</option></select>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="channel">Kanal</label>
+                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
                         </div>
                     </div>
                 </div>
                 <div class="mt-8 flex gap-3">
-                    <button onclick="closeExportModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition-colors">İptal</button>
-                    <button onclick="generateExcel()" id="btnGenerate" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition-all flex justify-center items-center gap-2"><span>Excel'i İndir</span> <i class="fa-solid fa-download"></i></button>
+                    <button onclick="closeExportModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition-colors" data-i18n="cancel">İptal</button>
+                    <button onclick="generateExcel()" id="btnGenerate" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition-all flex justify-center items-center gap-2"><span data-i18n="download_excel">Excel'i İndir</span> <i class="fa-solid fa-download"></i></button>
                 </div>
             </div>
         </div>
@@ -142,9 +142,9 @@
                 <span class="text-lg font-bold text-white tracking-tight leading-tight">Trendyol Financial<br><span class="text-blue-400">Dashboard</span></span>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                <a onclick="switchView('ops')" id="nav-ops" class="nav-link active"><i class="fa-solid fa-layer-group"></i> OM & OY</a>
-                <a onclick="switchView('leader')" id="nav-leader" class="nav-link"><i class="fa-solid fa-user-group"></i> Takım Liderleri</a>
-                <a onclick="switchView('channel')" id="nav-channel" class="nav-link"><i class="fa-solid fa-headset"></i> Kanallar</a>
+                <a onclick="switchView('ops')" id="nav-ops" class="nav-link active"><i class="fa-solid fa-layer-group"></i> <span data-i18n="nav_ops">OM & OY</span></a>
+                <a onclick="switchView('leader')" id="nav-leader" class="nav-link"><i class="fa-solid fa-user-group"></i> <span data-i18n="nav_leaders">Takım Liderleri</span></a>
+                <a onclick="switchView('channel')" id="nav-channel" class="nav-link"><i class="fa-solid fa-headset"></i> <span data-i18n="nav_channels">Kanallar</span></a>
             </nav>
             <div class="p-6 border-t border-slate-800 bg-[#0b1120]">
                 <div class="flex items-center justify-between">
@@ -157,7 +157,7 @@
                         <div>
                             <!-- DİNAMİK İSİM -->
                             <div id="userName" class="text-sm font-bold text-white">Loading...</div>
-                            <div class="text-xs text-slate-400">Yönetici Paneli</div>
+                            <div class="text-xs text-slate-400" data-i18n="admin_panel">Yönetici Paneli</div>
                         </div>
                     </div>
                     <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 transition-colors p-2" title="Çıkış"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -170,11 +170,17 @@
             <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 px-8 py-5 sticky top-0 z-20">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div>
-                        <h1 id="pageTitle" class="text-2xl font-bold text-slate-800">OM & OY Genel Bakış</h1>
+                        <h1 id="pageTitle" class="text-2xl font-bold text-slate-800" data-i18n="title_ops">OM & OY Genel Bakış</h1>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors"><i class="fa-solid fa-file-excel"></i> <span>Excel'i Dışa Aktar</span></button>
-                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span>Son Güncelleme: <span id="lastUpdate" class="text-slate-700">-</span></span></div>
+                        <!-- LANGUAGE SWITCHER -->
+                        <div class="flex bg-white rounded-full border border-gray-200 p-1 shadow-sm">
+                            <button onclick="changeLanguage('tr')" class="px-3 py-1 rounded-full text-xs font-bold transition-all" id="lang-tr">TR</button>
+                            <button onclick="changeLanguage('en')" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400" id="lang-en">EN</button>
+                        </div>
+
+                        <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors"><i class="fa-solid fa-file-excel"></i> <span data-i18n="export_btn">Excel'i Dışa Aktar</span></button>
+                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span><span data-i18n="last_update">Son Güncelleme</span>: <span id="lastUpdate" class="text-slate-700">-</span></span></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -182,8 +188,8 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
                         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="OM & OY Ara..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
-                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option><option value="Tutku Akgül">Tutku Akgül</option></select>
-                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option></select>
+                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option><option value="Tutku Akgül">Tutku Akgül</option></select>
+                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option></select>
                     <select id="filterSub" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 disabled:text-gray-400" disabled><option value="all">-</option></select>
                 </div>
             </header>
@@ -192,30 +198,30 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <div class="card p-6 relative overflow-hidden group border-l-4 border-blue-500">
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Toplam Ücret</p><div class="p-2 bg-blue-50 rounded-lg text-blue-600"><i class="fa-solid fa-wallet"></i></div></div>
+                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_total_fee">Toplam Ücret</p><div class="p-2 bg-blue-50 rounded-lg text-blue-600"><i class="fa-solid fa-wallet"></i></div></div>
                             <h3 id="kpi-total-fee" class="text-2xl font-extrabold text-slate-800 mt-2">...</h3>
                             <div id="kpi-fee-diff" class="mt-2 text-xs font-semibold">...</div>
                         </div>
                     </div>
                     <div class="card p-6 relative overflow-hidden group border-l-4 border-emerald-500">
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Gerçekleşen FTE</p><div class="p-2 bg-emerald-50 rounded-lg text-emerald-600"><i class="fa-solid fa-users-viewfinder"></i></div></div>
+                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_produced_fte">Gerçekleşen FTE</p><div class="p-2 bg-emerald-50 rounded-lg text-emerald-600"><i class="fa-solid fa-users-viewfinder"></i></div></div>
                             <h3 id="kpi-produced-fte" class="text-2xl font-extrabold text-slate-800 mt-2">...</h3>
                         </div>
                     </div>
                     <div class="card p-2 flex items-center justify-between relative overflow-hidden">
                         <div class="pl-4 z-10">
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Hedef Gerçekleşme Oranı</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_target_rate">Hedef Gerçekleşme Oranı</p>
                             <h3 id="kpi-target-percent" class="text-3xl font-extrabold text-slate-800 mt-1">%...</h3>
-                            <p class="text-xs text-slate-400 mt-1">Öngörülen vs Gerçekleşen</p>
+                            <p class="text-xs text-slate-400 mt-1" data-i18n="kpi_target_desc">Öngörülen vs Gerçekleşen</p>
                         </div>
                         <div id="targetDonutChart" style="width: 140px; height: 140px;"></div>
                     </div>
                     <div class="card p-6 relative overflow-hidden group border-l-4 border-purple-500">
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Net Çalışma Saati</p><div class="p-2 bg-purple-50 rounded-lg text-purple-600"><i class="fa-solid fa-clock"></i></div></div>
+                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_hours">Net Çalışma Saati</p><div class="p-2 bg-purple-50 rounded-lg text-purple-600"><i class="fa-solid fa-clock"></i></div></div>
                             <h3 id="kpi-hours" class="text-2xl font-extrabold text-slate-800 mt-2">...</h3>
-                            <p class="text-xs text-slate-400 mt-2">Toplam Net Çalışma Saati</p>
+                            <p class="text-xs text-slate-400 mt-2" data-i18n="kpi_hours_desc">Toplam Net Çalışma Saati</p>
                         </div>
                     </div>
                 </div>
@@ -242,14 +248,168 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8'; 
         // ============================================================
 
+        // --- LOCALIZATION DICTIONARY ---
+        const translations = {
+            tr: {
+                welcome: "Hoşgeldiniz",
+                email_label: "E-POSTA ADRESİ",
+                password_label: "ŞİFRE",
+                login_error: "Geçersiz e-posta veya şifre",
+                login_btn: "Giriş",
+                login_loading: "Giriş Yapılıyor...",
+                export_title: "Excel'i Dışa Aktar",
+                report_type: "RAPOR TİPİ",
+                opt_advisor: "Temsilci Bazlı",
+                opt_leader: "Takım Lideri Özeti",
+                opt_channel: "Kanal Özeti",
+                opt_manager: "Operasyon Yöneticisi Özeti",
+                senior_manager: "OPERASYON MÜDÜRÜ",
+                operation_manager: "OPERASYON YÖNETİCİSİ",
+                team_leader: "TAKIM LİDERİ",
+                channel: "KANAL",
+                all: "Tümü",
+                cancel: "İptal",
+                download_excel: "Excel'i İndir",
+                downloading: "Veriler Yükleniyor...",
+                nav_ops: "OM & OY",
+                nav_leaders: "Takım Liderleri",
+                nav_channels: "Kanallar",
+                admin_panel: "Yönetici Paneli",
+                title_ops: "OM & OY Genel Bakış",
+                title_leader: "Takım Lideri Performansı",
+                title_channel: "Kanal Performansı",
+                export_btn: "Excel'i Dışa Aktar",
+                last_update: "Son Güncelleme",
+                search_ops: "OM & OY Ara...",
+                search_leader: "TL Ara...",
+                search_channel: "Kanal Ara...",
+                kpi_total_fee: "TOPLAM ÜCRET",
+                kpi_produced_fte: "GERÇEKLEŞEN FTE",
+                kpi_target_rate: "HEDEF GERÇEKLEŞME ORANI",
+                kpi_target_desc: "Öngörülen vs Gerçekleşen",
+                kpi_hours: "NET ÇALIŞMA SAATİ",
+                kpi_hours_desc: "Toplam Net Çalışma Saati",
+                loading_data: "Veriler Yükleniyor...",
+                no_data: "Eşleşen veri bulunamadı.",
+                total: "GENEL TOPLAM",
+                chart_achieved: "Gerçekleşen",
+                chart_remaining: "Geriye Kalan",
+                // Table Headers
+                th_om: "Operasyon Yöneticisi",
+                th_hours: "Net Çalışma Saati",
+                th_prod_fte: "Gerçekleşen FTE",
+                th_fore_fte: "Öngörülen FTE",
+                th_fte_diff: "FTE Farkı",
+                th_fee: "Toplam Ücret",
+                th_fee_diff: "Ücret Farkı",
+                th_tl: "Takım Lideri",
+                th_channel: "Kanal",
+                th_unit_price: "Birim Fiyatı",
+                // Excel Headers
+                xls_reg: "Sicil No",
+                xls_name: "İsim Soyisim",
+                xls_clean_hours: "Net Çalışma Saati",
+                xls_raw_fte: "Ham FTE",
+                xls_fte: "FTE",
+                xls_tl: "Takım Lideri",
+                xls_om: "Operasyon Yöneticisi",
+                xls_sm: "Operasyon Müdürü",
+                xls_channel: "Kanal",
+                xls_unit_price: "Birim Fiyat",
+                xls_prod_fte: "Gerçekleşen FTE",
+                xls_fore_fte: "Öngörülen FTE",
+                xls_fte_diff: "FTE Farkı",
+                xls_total_fee: "Toplam Ücret",
+                xls_fee_diff: "Ücret Farkı"
+            },
+            en: {
+                welcome: "Welcome",
+                email_label: "EMAIL ADDRESS",
+                password_label: "PASSWORD",
+                login_error: "Invalid email or password",
+                login_btn: "Login",
+                login_loading: "Logging in...",
+                export_title: "Export Excel",
+                report_type: "REPORT TYPE",
+                opt_advisor: "Advisor Details",
+                opt_leader: "Team Leader Summary",
+                opt_channel: "Channel Summary",
+                opt_manager: "Operation Manager Summary",
+                senior_manager: "SENIOR MANAGER",
+                operation_manager: "OPERATION MANAGER",
+                team_leader: "TEAM LEADER",
+                channel: "CHANNEL",
+                all: "All",
+                cancel: "Cancel",
+                download_excel: "Download Excel",
+                downloading: "Loading Data...",
+                nav_ops: "SM & OM Overview",
+                nav_leaders: "Team Leaders",
+                nav_channels: "Channels",
+                admin_panel: "Admin Panel",
+                title_ops: "SM & OM Overview",
+                title_leader: "Team Leader Performance",
+                title_channel: "Channel Performance",
+                export_btn: "Export Excel",
+                last_update: "Last Update",
+                search_ops: "Search SM & OM...",
+                search_leader: "Search TL...",
+                search_channel: "Search Channel...",
+                kpi_total_fee: "Total Fee",
+                kpi_produced_fte: "Produced FTE",
+                kpi_target_rate: "Target Realization",
+                kpi_target_desc: "Forecast vs Actual",
+                kpi_hours: "Net Working Hours",
+                kpi_hours_desc: "Total clean hours",
+                loading_data: "Loading Data...",
+                no_data: "No matching data found.",
+                total: "GRAND TOTAL",
+                chart_achieved: "Achieved",
+                chart_remaining: "Remaining",
+                // Table Headers
+                th_om: "Operation Manager",
+                th_hours: "Net Hours",
+                th_prod_fte: "Produced FTE",
+                th_fore_fte: "Forecast FTE",
+                th_fte_diff: "FTE Diff",
+                th_fee: "Total Fee",
+                th_fee_diff: "Fee Diff",
+                th_tl: "Team Leader",
+                th_channel: "Channel",
+                th_unit_price: "Unit Price",
+                // Excel Headers
+                xls_reg: "Register No",
+                xls_name: "Full Name",
+                xls_clean_hours: "Net Working Hours",
+                xls_raw_fte: "Raw FTE",
+                xls_fte: "FTE",
+                xls_tl: "Team Leader",
+                xls_om: "Operation Manager",
+                xls_sm: "Senior Manager",
+                xls_channel: "Channel",
+                xls_unit_price: "Unit Price",
+                xls_prod_fte: "Produced FTE",
+                xls_fore_fte: "Forecast FTE",
+                xls_fte_diff: "FTE Diff",
+                xls_total_fee: "Total Fee",
+                xls_fee_diff: "Fee Diff"
+            }
+        };
+
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentView = 'ops';
+        let currentLang = 'tr'; // Default Language
         let rawData = []; 
         let advisorData = []; 
         let donutChartInstance = null;
 
         // --- AUTHENTICATION LOGIC ---
         document.addEventListener('DOMContentLoaded', async () => {
+            // Load language preference
+            const savedLang = localStorage.getItem('appLang');
+            if(savedLang) changeLanguage(savedLang);
+            else changeLanguage('tr');
+
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 showDashboard(session.user);
@@ -258,6 +418,38 @@
             }
         });
 
+        // --- LOCALIZATION FUNCTION ---
+        function t(key) {
+            return translations[currentLang][key] || key;
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('appLang', lang);
+
+            // Update UI Buttons
+            document.getElementById('lang-tr').className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${lang === 'tr' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`;
+            document.getElementById('lang-en').className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`;
+
+            // Update Static Text
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+
+            // Update Placeholders
+            const searchInput = document.getElementById('searchInput');
+            if(searchInput) {
+                const placeholders = { 'ops': t('search_ops'), 'leader': t('search_leader'), 'channel': t('search_channel') };
+                searchInput.placeholder = placeholders[currentView];
+            }
+
+            // Re-render data if available
+            if(rawData.length > 0) renderData(rawData);
+        }
+
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -265,7 +457,7 @@
             const errorDiv = document.getElementById('loginError');
             const btn = document.getElementById('loginBtn');
 
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Giriş Yapılıyor...';
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('login_loading')}`;
             btn.disabled = true;
             errorDiv.classList.add('hidden');
 
@@ -273,9 +465,9 @@
 
             if (error) {
                 console.error("Login Error:", error);
-                errorDiv.innerText = "Geçersiz e-posta veya şifre";
+                errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${t('login_error')}`;
                 errorDiv.classList.remove('hidden');
-                btn.innerText = 'Giriş';
+                btn.innerText = t('login_btn');
                 btn.disabled = false;
             } else {
                 showDashboard(data.user);
@@ -315,7 +507,7 @@
         function showLogin() {
             document.getElementById('mainDashboard').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('loginBtn').innerText = 'Giriş';
+            document.getElementById('loginBtn').innerText = t('login_btn');
             document.getElementById('loginBtn').disabled = false;
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
@@ -326,23 +518,25 @@
             currentView = view;
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-${view}`).classList.add('active');
-            const titles = { 'ops': 'OM & OY Genel Bakış', 'leader': 'Takım Lideri Performansı', 'channel': 'Kanal Performansı' };
-            document.getElementById('pageTitle').innerText = titles[view];
-            const placeholders = { 'ops': 'OM & OY Ara...', 'leader': 'TL Ara...', 'channel': 'Kanal Ara...' };
-            document.getElementById('searchInput').placeholder = placeholders[view];
+            
+            const titles = { 'ops': 'title_ops', 'leader': 'title_leader', 'channel': 'title_channel' };
+            document.getElementById('pageTitle').innerText = t(titles[view]);
+            
+            const placeholders = { 'ops': 'search_ops', 'leader': 'search_leader', 'channel': 'search_channel' };
+            document.getElementById('searchInput').placeholder = t(placeholders[view]);
             
             // Reset Filters
             document.getElementById('filterSenior').value = 'all';
-            document.getElementById('filterManager').innerHTML = '<option value="all">Tümü</option>';
+            document.getElementById('filterManager').innerHTML = `<option value="all" data-i18n="all">${t('all')}</option>`;
             const subFilter = document.getElementById('filterSub');
-            subFilter.innerHTML = '<option value="all">-</option>';
+            subFilter.innerHTML = `<option value="all" data-i18n="all">${t('all')}</option>`;
             subFilter.disabled = true;
 
             fetchData();
         }
 
         async function fetchData() {
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8" class="p-12 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>Veriler Yükleniyor...</td></tr>';
+            document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
             let tableName = '';
             if (currentView === 'ops') tableName = 'view_operations_performance';
             else if (currentView === 'leader') tableName = 'view_leader_performance';
@@ -389,7 +583,7 @@
             const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
             const managers = getUniqueValues(filteredBySM, omKey).sort();
 
-            managerSelect.innerHTML = '<option value="all">Tümü</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
+            managerSelect.innerHTML = `<option value="all">${t('all')}</option>` + managers.map(m => `<option value="${m}">${m}</option>`).join('');
             managerSelect.value = 'all';
             
             // Trigger next level update
@@ -401,7 +595,7 @@
             const subFilter = document.getElementById('filterSub');
             
             if (managerVal === 'all' || currentView === 'ops') {
-                subFilter.innerHTML = `<option value="all">Tümü</option>`;
+                subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
                 subFilter.disabled = true;
             } else {
                 subFilter.disabled = false;
@@ -430,7 +624,7 @@
                 }
                 subItems.sort();
                 
-                subFilter.innerHTML = `<option value="all">Tümü</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
+                subFilter.innerHTML = `<option value="all">${t('all')}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
             }
             applyFilters();
         }
@@ -476,16 +670,18 @@
             const tbody = document.getElementById('tableBody');
             const tfoot = document.getElementById('tableFooter');
             let headers = [];
-            if (currentView === 'ops') headers = ['Operasyon Yöneticisi', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
-            else if (currentView === 'leader') headers = ['Takım Lideri', 'Operasyon Yöneticisi', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
-            else headers = ['Kanal', 'Birim Fiyatı', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
+            
+            if (currentView === 'ops') headers = [t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
+            else if (currentView === 'leader') headers = [t('th_tl'), t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
+            else headers = [t('th_channel'), t('th_unit_price'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
+            
             thead.innerHTML = headers.map(h => `<th class="px-6 py-4">${h}</th>`).join('');
 
             let html = '';
             let totals = { hours: 0, prodFte: 0, foreFte: 0, fee: 0, feeDiff: 0 };
 
             if (data.length === 0) {
-                html = '<tr><td colspan="8" class="p-8 text-center text-slate-400">Eşleşen veri bulunamadı.</td></tr>';
+                html = `<tr><td colspan="8" class="p-8 text-center text-slate-400">${t('no_data')}</td></tr>`;
             } else {
                 data.forEach(row => {
                     let name = row.manager_name || row.leader_name || row.channel_name;
@@ -523,7 +719,7 @@
                 });
             }
             tbody.innerHTML = html;
-            let footerHtml = `<td class="px-6 py-5">GENEL TOPLAM</td>`;
+            let footerHtml = `<td class="px-6 py-5">${t('total')}</td>`;
             if (currentView === 'leader') footerHtml += `<td></td>`;
             if (currentView === 'channel') footerHtml += `<td></td>`;
             footerHtml += `
@@ -561,11 +757,12 @@
                 title: { text: null },
                 plotOptions: { pie: { innerSize: '50%', depth: 35, dataLabels: { enabled: false }, states: { hover: { enabled: false } } } },
                 credits: { enabled: false },
-                series: [{ name: 'FTE', data: [{ name: 'Gerçekleşen', y: achieved, color: '#10b981' }, { name: 'Geriye Kalan', y: remaining, color: '#e2e8f0' }] }]
+                series: [{ name: 'FTE', data: [{ name: t('chart_achieved'), y: achieved, color: '#10b981' }, { name: t('chart_remaining'), y: remaining, color: '#e2e8f0' }] }]
             });
         }
 
         function formatMoney(amount) {
+            // Use 'tr-TR' locale for currency formatting regardless of UI language to keep currency format consistent (TL)
             return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(amount);
         }
 
@@ -574,7 +771,7 @@
             document.getElementById('exportModal').classList.remove('hidden');
             const btn = document.getElementById('btnGenerate');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Veriler Yükleniyor...';
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('downloading')}`;
 
             // Advisor verisini filtreler için çekiyoruz
             const { data, error } = await _supabase.from('view_advisor_performance').select('*');
@@ -582,11 +779,11 @@
             advisorData = data;
             
             const sms = [...new Set(data.map(i => i.senior_manager))].filter(Boolean).sort();
-            document.getElementById('expSenior').innerHTML = '<option value="all">Tümü</option>' + sms.map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('expSenior').innerHTML = `<option value="all">${t('all')}</option>` + sms.map(m => `<option value="${m}">${m}</option>`).join('');
             
             updateExportFilters('sm'); 
             btn.disabled = false;
-            btn.innerHTML = '<span>Excel\'i İndir</span><i class="fa-solid fa-download"></i>';
+            btn.innerHTML = `<span>${t('download_excel')}</span><i class="fa-solid fa-download"></i>`;
         }
 
         function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
@@ -602,7 +799,7 @@
             if (changedLevel === 'sm') {
                 if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
                 const oms = [...new Set(filtered.map(i => i.operation_manager))].filter(Boolean).sort();
-                omSelect.innerHTML = '<option value="all">Tümü</option>' + oms.map(m => `<option value="${m}">${m}</option>`).join('');
+                omSelect.innerHTML = `<option value="all">${t('all')}</option>` + oms.map(m => `<option value="${m}">${m}</option>`).join('');
                 omSelect.value = 'all'; 
             }
 
@@ -613,8 +810,8 @@
             const tls = [...new Set(filtered.map(i => i.team_leader))].filter(Boolean).sort();
             const chs = [...new Set(filtered.map(i => i.channel_name))].filter(Boolean).sort();
 
-            tlSelect.innerHTML = '<option value="all">Tümü</option>' + tls.map(m => `<option value="${m}">${m}</option>`).join('');
-            chSelect.innerHTML = '<option value="all">Tümü</option>' + chs.map(m => `<option value="${m}">${m}</option>`).join('');
+            tlSelect.innerHTML = `<option value="all">${t('all')}</option>` + tls.map(m => `<option value="${m}">${m}</option>`).join('');
+            chSelect.innerHTML = `<option value="all">${t('all')}</option>` + chs.map(m => `<option value="${m}">${m}</option>`).join('');
         }
 
         async function generateExcel() {
@@ -636,17 +833,19 @@
                 if (tl !== 'all') filtered = filtered.filter(i => i.team_leader === tl);
                 if (ch !== 'all') filtered = filtered.filter(i => i.channel_name === ch);
 
-                exportData = filtered.map(row => ({
-                    'Sicil No': row.cnx_register_number,
-                    'İsim Soyisim': row.user_name,
-                    'Net Çalışma Saati': parseFloat(row.clean_working_time || 0),
-                    'Ham FTE': parseFloat(row.raw_fte || 0),
-                    'FTE': parseFloat(row.capped_fte || 0),
-                    'Takım Lideri': row.team_leader,
-                    'Operasyon Yöneticisi': row.operation_manager,
-                    'Operasyon Müdürü': row.senior_manager,
-                    'Kanal': row.channel_name
-                }));
+                exportData = filtered.map(row => {
+                    let obj = {};
+                    obj[t('xls_reg')] = row.cnx_register_number;
+                    obj[t('xls_name')] = row.user_name;
+                    obj[t('xls_clean_hours')] = parseFloat(row.clean_working_time || 0);
+                    obj[t('xls_raw_fte')] = parseFloat(row.raw_fte || 0);
+                    obj[t('xls_fte')] = parseFloat(row.capped_fte || 0);
+                    obj[t('xls_tl')] = row.team_leader;
+                    obj[t('xls_om')] = row.operation_manager;
+                    obj[t('xls_sm')] = row.senior_manager;
+                    obj[t('xls_channel')] = row.channel_name;
+                    return obj;
+                });
             } else {
                 // Özet raporlar için ilgili View'ları çekiyoruz (Metriklerin doğru gelmesi için)
                 let tableName = '';
@@ -669,49 +868,55 @@
                 // Veri Eşleştirme
                 if (reportLevel === 'leader') {
                     sheetName = "Takim Lideri Ozeti";
-                    exportData = filtered.map(row => ({
-                        'Takım Lideri': row.leader_name,
-                        'Operasyon Yöneticisi': row.operation_manager,
-                        'Net Çalışma Saati': parseFloat(row.total_clean_hours || 0),
-                        'Gerçekleşen FTE': parseFloat(row.produced_fte || 0),
-                        'Öngörülen FTE': parseFloat(row.forecast_fte || 0),
-                        'FTE Farkı': parseFloat(row.produced_fte - row.forecast_fte),
-                        'Toplam Ücret': parseFloat(row.total_fee || 0),
-                        'Ücret Farkı': parseFloat(row.fee_diff || 0)
-                    }));
+                    exportData = filtered.map(row => {
+                        let obj = {};
+                        obj[t('xls_tl')] = row.leader_name;
+                        obj[t('xls_om')] = row.operation_manager;
+                        obj[t('xls_clean_hours')] = parseFloat(row.total_clean_hours || 0);
+                        obj[t('xls_prod_fte')] = parseFloat(row.produced_fte || 0);
+                        obj[t('xls_fore_fte')] = parseFloat(row.forecast_fte || 0);
+                        obj[t('xls_fte_diff')] = parseFloat(row.produced_fte - row.forecast_fte);
+                        obj[t('xls_total_fee')] = parseFloat(row.total_fee || 0);
+                        obj[t('xls_fee_diff')] = parseFloat(row.fee_diff || 0);
+                        return obj;
+                    });
                 } else if (reportLevel === 'channel') {
                     sheetName = "Kanal Ozeti";
-                    exportData = filtered.map(row => ({
-                        'Kanal': row.channel_name,
-                        'Birim Fiyat': row.unit_price,
-                        'Net Çalışma Saati': parseFloat(row.total_clean_hours || 0),
-                        'Gerçekleşen FTE': parseFloat(row.produced_fte || 0),
-                        'Öngörülen FTE': parseFloat(row.forecast_fte || 0),
-                        'FTE Farkı': parseFloat(row.produced_fte - row.forecast_fte),
-                        'Toplam Ücret': parseFloat(row.total_fee || 0),
-                        'Ücret Farkı': parseFloat(row.fee_diff || 0)
-                    }));
+                    exportData = filtered.map(row => {
+                        let obj = {};
+                        obj[t('xls_channel')] = row.channel_name;
+                        obj[t('xls_unit_price')] = row.unit_price;
+                        obj[t('xls_clean_hours')] = parseFloat(row.total_clean_hours || 0);
+                        obj[t('xls_prod_fte')] = parseFloat(row.produced_fte || 0);
+                        obj[t('xls_fore_fte')] = parseFloat(row.forecast_fte || 0);
+                        obj[t('xls_fte_diff')] = parseFloat(row.produced_fte - row.forecast_fte);
+                        obj[t('xls_total_fee')] = parseFloat(row.total_fee || 0);
+                        obj[t('xls_fee_diff')] = parseFloat(row.fee_diff || 0);
+                        return obj;
+                    });
                 } else if (reportLevel === 'manager') {
                     sheetName = "Operasyon Yoneticisi Ozeti";
-                    exportData = filtered.map(row => ({
-                        'Operasyon Yöneticisi': row.manager_name,
-                        'Net Çalışma Saati': parseFloat(row.total_clean_hours || 0),
-                        'Gerçekleşen FTE': parseFloat(row.produced_fte || 0),
-                        'Öngörülen FTE': parseFloat(row.forecast_fte || 0),
-                        'FTE Farkı': parseFloat(row.produced_fte - row.forecast_fte),
-                        'Toplam Ücret': parseFloat(row.total_fee || 0),
-                        'Ücret Farkı': parseFloat(row.fee_diff || 0)
-                    }));
+                    exportData = filtered.map(row => {
+                        let obj = {};
+                        obj[t('xls_om')] = row.manager_name;
+                        obj[t('xls_clean_hours')] = parseFloat(row.total_clean_hours || 0);
+                        obj[t('xls_prod_fte')] = parseFloat(row.produced_fte || 0);
+                        obj[t('xls_fore_fte')] = parseFloat(row.forecast_fte || 0);
+                        obj[t('xls_fte_diff')] = parseFloat(row.produced_fte - row.forecast_fte);
+                        obj[t('xls_total_fee')] = parseFloat(row.total_fee || 0);
+                        obj[t('xls_fee_diff')] = parseFloat(row.fee_diff || 0);
+                        return obj;
+                    });
                 }
             }
 
-            if (exportData.length === 0) { alert("Veri bulunamadı."); return; }
+            if (exportData.length === 0) { alert(t('no_data')); return; }
 
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
             
             // Para Birimi Formatlaması (TL)
-            const currencyColumns = ["Toplam Ücret", "Ücret Farkı", "Birim Fiyat"];
+            const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
             const range = XLSX.utils.decode_range(ws['!ref']);
             const currencyFmt = '"₺" #,##0.00'; // Standard Excel format for currency symbol prefix
             

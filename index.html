@@ -359,33 +359,41 @@
             applyFilters(); 
         }
 
+        // Helper to get unique non-null values
+        function getUniqueValues(data, key) {
+            return [...new Set(data.map(item => item[key]))].filter(x => x);
+        }
+
         function populateFilters() {
-            // Senior Manager filtresi zaten HTML'de statik veya dinamik olabilir.
-            // Burada OM filtresini başlatıyoruz.
-            const managerSelect = document.getElementById('filterManager');
-            // Ops view'da OM listesi manager_name'den, diğerlerinde operation_manager'dan gelir.
-            const managers = [...new Set(rawData.map(item => item.operation_manager || item.manager_name))].filter(Boolean).sort();
-            managerSelect.innerHTML = '<option value="all">Tümü</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
+            // Initial population of OM filter
+            // We use handleSeniorChange to populate OM based on default "all" SM
+            handleSeniorChange();
         }
 
         function handleSeniorChange() {
             const smVal = document.getElementById('filterSenior').value;
             const managerSelect = document.getElementById('filterManager');
             
-            // OM Listesini SM'ye göre filtrele
-            let managers = [];
-            if (smVal === 'all') {
-                managers = [...new Set(rawData.map(item => item.operation_manager || item.manager_name))];
-            } else {
-                // Veri setinde senior_manager varsa filtrele, yoksa (ops view gibi) mevcut yapıyı koru
-                managers = [...new Set(rawData.filter(item => !item.senior_manager || item.senior_manager === smVal).map(item => item.operation_manager || item.manager_name))];
-            }
-            managers = managers.filter(Boolean).sort();
+            // Filter data by SM first
+            let filteredBySM = rawData;
             
+            // Check if data actually has senior_manager column to avoid empty list if column is missing
+            const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
+
+            if (smVal !== 'all' && hasSM) {
+                filteredBySM = rawData.filter(item => item.senior_manager === smVal);
+            }
+
+            // Extract OMs from this filtered list
+            // Handle different column names across views
+            const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
+            const managers = getUniqueValues(filteredBySM, omKey).sort();
+
             managerSelect.innerHTML = '<option value="all">Tümü</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
             managerSelect.value = 'all';
             
-            handleManagerChange(); // Alt filtreleri tetikle
+            // Trigger next level update
+            handleManagerChange();
         }
 
         function handleManagerChange() {
@@ -397,14 +405,31 @@
                 subFilter.disabled = true;
             } else {
                 subFilter.disabled = false;
+                
+                // Filter by OM
+                let filteredByOM = rawData;
+                const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
+                
+                if (managerVal !== 'all') {
+                    filteredByOM = rawData.filter(item => item[omKey] === managerVal);
+                } else {
+                    // If OM is All, we still respect SM filter from previous step
+                    const smVal = document.getElementById('filterSenior').value;
+                    const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
+                    if (smVal !== 'all' && hasSM) {
+                        filteredByOM = rawData.filter(item => item.senior_manager === smVal);
+                    }
+                }
+
+                // Populate Sub Filter
                 let subItems = [];
                 if (currentView === 'leader') {
-                    subItems = rawData.filter(item => item.operation_manager === managerVal).map(item => item.leader_name);
+                    subItems = getUniqueValues(filteredByOM, 'leader_name');
                 } else if (currentView === 'channel') {
-                    // Kanal sayfasında OM'ye göre kanal filtreleme
-                    subItems = rawData.filter(item => !item.operation_manager || item.operation_manager === managerVal).map(item => item.channel_name);
+                    subItems = getUniqueValues(filteredByOM, 'channel_name');
                 }
-                subItems = [...new Set(subItems)].filter(Boolean).sort();
+                subItems.sort();
+                
                 subFilter.innerHTML = `<option value="all">Tümü</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
             }
             applyFilters();
@@ -417,16 +442,17 @@
             const subVal = document.getElementById('filterSub').value;
             
             let filteredData = rawData;
+            const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
 
-            // Senior Manager Filtresi (Eğer veri setinde varsa)
-            if (smVal !== 'all') {
-                filteredData = filteredData.filter(item => !item.senior_manager || item.senior_manager === smVal);
+            // Senior Manager Filtresi
+            if (smVal !== 'all' && hasSM) {
+                filteredData = filteredData.filter(item => item.senior_manager === smVal);
             }
 
             // Manager Filtresi
             if (managerVal !== 'all') {
-                if (currentView === 'ops') filteredData = filteredData.filter(item => item.manager_name === managerVal);
-                else filteredData = filteredData.filter(item => item.operation_manager === managerVal);
+                const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
+                filteredData = filteredData.filter(item => item[omKey] === managerVal);
             }
 
             // Alt Filtre (Lider veya Kanal)
@@ -687,6 +713,7 @@
             // Para Birimi Formatlaması (TL)
             const currencyColumns = ["Toplam Ücret", "Ücret Farkı", "Birim Fiyat"];
             const range = XLSX.utils.decode_range(ws['!ref']);
+            const currencyFmt = '"₺" #,##0.00'; // Standard Excel format for currency symbol prefix
             
             // Başlık satırını kontrol et
             for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -699,7 +726,7 @@
                         const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
                         if (!ws[cellAddress]) continue;
                         if (ws[cellAddress].t === 'n') {
-                            ws[cellAddress].z = '#,##0.00 "₺"';
+                            ws[cellAddress].z = currencyFmt;
                         }
                     }
                 }

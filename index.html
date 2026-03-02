@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trendyol Financial Dashboard</title>
+    <title>Trendyol Finansal Arayüzü</title>
     
     <!-- FAVICON -->
     <link rel="icon" href="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" type="image/png">
@@ -61,27 +61,27 @@
                 <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <img src="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" alt="Logo" class="h-8 w-auto object-contain">
                 </div>
-                <h2 class="text-3xl font-bold text-white tracking-tight">Welcome Back</h2>
-                <p class="text-slate-400 text-sm mt-2">Sign in to access financial metrics</p>
+                <h2 class="text-3xl font-bold text-white tracking-tight">Hoşgeldiniz</h2>
+                <p class="text-slate-400 text-sm mt-2">Finansal verilere erişmek için giriş yapın</p>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">Email Address</label>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">E-posta Adresi</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-regular fa-envelope text-slate-400"></i></div>
-                        <input type="email" id="email" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="name@company.com">
+                        <input type="email" id="email" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="isim.soyisim@concentrix.com">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">Password</label>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1">Şifre</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-slate-400"></i></div>
                         <input type="password" id="password" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="••••••••">
                     </div>
                 </div>
-                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"><i class="fa-solid fa-circle-exclamation mr-1"></i> Invalid email or password</div>
-                <button type="submit" id="loginBtn" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">Sign In</button>
+                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"><i class="fa-solid fa-circle-exclamation mr-1"></i> Geçersiz e-posta veya şifre</div>
+                <button type="submit" id="loginBtn" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">Giriş</button>
             </form>
             <div class="mt-8 text-center"><p class="text-xs text-slate-500">&copy; 2026 Concentrix. Secure Access Only.</p></div>
         </div>
@@ -94,12 +94,12 @@
         <div id="exportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200">
                 <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-excel text-green-600"></i> Export Excel</h3>
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-excel text-green-600"></i> Excel'i Dışa Aktar</h3>
                     <button onclick="closeExportModal()" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark fa-lg"></i></button>
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Report Level</label>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Rapor Tipi</label>
                         <select id="expLevel" class="w-full p-3 bg-blue-50 border border-blue-200 rounded-xl text-sm font-semibold text-blue-800 focus:ring-2 focus:ring-blue-500 outline-none">
                             <option value="advisor">Temsilci Bazlı</option>
                             <option value="leader">Lider Özeti</option>
@@ -109,27 +109,27 @@
                     </div>
                     <hr class="border-slate-100">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Senior Manager</label>
-                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tüm Müdürler</option></select>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operasyon Müdürü</label>
+                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operation Manager</label>
-                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tüm Yöneticiler</option></select>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Operasyon Yöneticisi</label>
+                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Team Leader</label>
-                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tüm Liderler</option></select>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Takım Lideri</label>
+                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Channel</label>
-                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Tüm Kanallar</option></select>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Kanal</label>
+                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all">Hepsi</option></select>
                         </div>
                     </div>
                 </div>
                 <div class="mt-8 flex gap-3">
-                    <button onclick="closeExportModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition-colors">Cancel</button>
-                    <button onclick="generateExcel()" id="btnGenerate" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition-all flex justify-center items-center gap-2"><span>Download Excel</span> <i class="fa-solid fa-download"></i></button>
+                    <button onclick="closeExportModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition-colors">İptal</button>
+                    <button onclick="generateExcel()" id="btnGenerate" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition-all flex justify-center items-center gap-2"><span>Excel'i İndir</span> <i class="fa-solid fa-download"></i></button>
                 </div>
             </div>
         </div>
@@ -140,10 +140,9 @@
                 <div class="bg-white/10 p-2 rounded-lg w-fit backdrop-blur-sm">
                     <img src="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" alt="Concentrix" class="h-8 w-auto object-contain">
                 </div>
-                <span class="text-lg font-bold text-white tracking-tight leading-tight">Trendyol Financial<br><span class="text-blue-400">Dashboard</span></span>
+                <span class="text-lg font-bold text-white tracking-tight leading-tight">Trendyol Finansal<br><span class="text-blue-400">Arayüzü</span></span>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 px-4">Reports</div>
                 <a onclick="switchView('ops')" id="nav-ops" class="nav-link active"><i class="fa-solid fa-layer-group"></i> SM & OM</a>
                 <a onclick="switchView('leader')" id="nav-leader" class="nav-link"><i class="fa-solid fa-user-group"></i> Takım Liderleri</a>
                 <a onclick="switchView('channel')" id="nav-channel" class="nav-link"><i class="fa-solid fa-headset"></i> Kanallar</a>
@@ -159,10 +158,10 @@
                         <div>
                             <!-- DİNAMİK İSİM -->
                             <div id="userName" class="text-sm font-bold text-white">Loading...</div>
-                            <div class="text-xs text-slate-400">Management Panel</div>
+                            <div class="text-xs text-slate-400">Yönetici Paneli</div>
                         </div>
                     </div>
-                    <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 transition-colors p-2" title="Sign Out"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 transition-colors p-2" title="Çıkış"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
             </div>
         </aside>
@@ -173,20 +172,19 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div>
                         <h1 id="pageTitle" class="text-2xl font-bold text-slate-800">SM & OM Genel Bakış</h1>
-                        <!-- Kaldırıldı: Current billing period performance metrics -->
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors"><i class="fa-solid fa-file-excel"></i> <span>Export Excel</span></button>
-                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span>Last Update: <span id="lastUpdate" class="text-slate-700">-</span></span></div>
+                        <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors"><i class="fa-solid fa-file-excel"></i> <span>Excel'i Dışa Aktar</span></button>
+                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span>Son Güncelleme: <span id="lastUpdate" class="text-slate-700">-</span></span></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
-                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Search..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
+                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Ara..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
-                    <select id="filterSenior" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tüm Müdürler</option><option value="Tutku Akgül">Tutku Akgül</option></select>
-                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tüm Yöneticiler</option></select>
+                    <select id="filterSenior" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Hepsi</option><option value="Tutku Akgül">Tutku Akgül</option></select>
+                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Hepsi</option></select>
                     <select id="filterSub" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 disabled:text-gray-400" disabled><option value="all">-</option></select>
                 </div>
             </header>
@@ -204,7 +202,6 @@
                         <div class="relative z-10">
                             <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Gerçekleşen FTE</p><div class="p-2 bg-emerald-50 rounded-lg text-emerald-600"><i class="fa-solid fa-users-viewfinder"></i></div></div>
                             <h3 id="kpi-produced-fte" class="text-2xl font-extrabold text-slate-800 mt-2">...</h3>
-                            <!-- Kaldırıldı: Real-time production -->
                         </div>
                     </div>
                     <div class="card p-2 flex items-center justify-between relative overflow-hidden">
@@ -269,7 +266,7 @@
             const errorDiv = document.getElementById('loginError');
             const btn = document.getElementById('loginBtn');
 
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Signing In...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Giriş Yapılıyor...';
             btn.disabled = true;
             errorDiv.classList.add('hidden');
 
@@ -277,9 +274,9 @@
 
             if (error) {
                 console.error("Login Error:", error);
-                errorDiv.innerText = "Invalid email or password.";
+                errorDiv.innerText = "Geçersiz e-posta veya şifre";
                 errorDiv.classList.remove('hidden');
-                btn.innerText = 'Sign In';
+                btn.innerText = 'Giriş';
                 btn.disabled = false;
             } else {
                 showDashboard(data.user);
@@ -319,7 +316,7 @@
         function showLogin() {
             document.getElementById('mainDashboard').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('loginBtn').innerText = 'Sign In';
+            document.getElementById('loginBtn').innerText = 'Giriş';
             document.getElementById('loginBtn').disabled = false;
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
@@ -335,14 +332,14 @@
             const placeholders = { 'ops': 'SM veya OM Ara...', 'leader': 'TL Ara...', 'channel': 'Kanal Ara...' };
             document.getElementById('searchInput').placeholder = placeholders[view];
             const subFilter = document.getElementById('filterSub');
-            if (view === 'leader') subFilter.options[0].text = "Tüm Takım Liderleri";
-            else if (view === 'channel') subFilter.options[0].text = "Tüm Kanallar";
+            if (view === 'leader') subFilter.options[0].text = "Hepsi";
+            else if (view === 'channel') subFilter.options[0].text = "Hepsi";
             else subFilter.options[0].text = "-";
             fetchData();
         }
 
         async function fetchData() {
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8" class="p-12 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>Loading Data...</td></tr>';
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8" class="p-12 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>Veriler Yükleniyor...</td></tr>';
             let tableName = '';
             if (currentView === 'ops') tableName = 'view_operations_performance';
             else if (currentView === 'leader') tableName = 'view_leader_performance';
@@ -352,7 +349,7 @@
             if (error) { 
                 console.error(error); 
                 if(error.code === 'PGRST301' || error.message.includes('JWT')) { handleLogout(); return; }
-                alert('Data fetch error.'); return; 
+                alert('Veri çekme hatası.'); return; 
             }
             rawData = data;
             populateManagerFilter(data); 
@@ -363,7 +360,7 @@
             const managerSelect = document.getElementById('filterManager');
             const currentVal = managerSelect.value;
             const managers = [...new Set(data.map(item => item.operation_manager || item.manager_name))].filter(Boolean).sort();
-            managerSelect.innerHTML = '<option value="all">Tüm Yöneticiler</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
+            managerSelect.innerHTML = '<option value="all">Hepsi</option>' + managers.map(m => `<option value="${m}">${m}</option>`).join('');
             if (managers.includes(currentVal)) managerSelect.value = currentVal;
         }
 
@@ -371,14 +368,18 @@
             const managerVal = document.getElementById('filterManager').value;
             const subFilter = document.getElementById('filterSub');
             if (managerVal === 'all' || currentView === 'ops') {
-                subFilter.innerHTML = `<option value="all">Tüm ${currentView === 'leader' ? 'Takım Liderleri' : 'Kanallar'}</option>`;
+                subFilter.innerHTML = `<option value="all">Hepsi</option>`;
                 subFilter.disabled = true;
             } else {
                 subFilter.disabled = false;
                 let subItems = [];
-                if (currentView === 'leader') subItems = rawData.filter(item => item.operation_manager === managerVal).map(item => item.leader_name);
+                if (currentView === 'leader') {
+                    subItems = rawData.filter(item => item.operation_manager === managerVal).map(item => item.leader_name);
+                } else if (currentView === 'channel') {
+                    subItems = rawData.filter(item => item.operation_manager === managerVal).map(item => item.channel_name);
+                }
                 subItems = [...new Set(subItems)].sort();
-                subFilter.innerHTML = `<option value="all">Tüm ${currentView === 'leader' ? 'Takım Liderleri' : 'Kanallar'}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
+                subFilter.innerHTML = `<option value="all">Hepsi</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
             }
             applyFilters();
         }
@@ -394,6 +395,7 @@
             }
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
                 if (currentView === 'leader') filteredData = filteredData.filter(item => item.leader_name === subVal);
+                else if (currentView === 'channel') filteredData = filteredData.filter(item => item.channel_name === subVal);
             }
             if (searchVal) {
                 filteredData = filteredData.filter(item => {
@@ -409,8 +411,8 @@
             const tbody = document.getElementById('tableBody');
             const tfoot = document.getElementById('tableFooter');
             let headers = [];
-            if (currentView === 'ops') headers = ['Yönetici', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
-            else if (currentView === 'leader') headers = ['Takım Lideri', 'Yönetici', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
+            if (currentView === 'ops') headers = ['Operasyon Yöneticisi', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
+            else if (currentView === 'leader') headers = ['Takım Lideri', 'Operasyon Yöneticisi', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
             else headers = ['Kanal', 'Birim Fiyatı', 'Net Çalışma Saati', 'Gerçekleşen FTE', 'Öngörülen FTE', 'FTE Farkı', 'Toplam Ücret', 'Ücret Farkı'];
             thead.innerHTML = headers.map(h => `<th class="px-6 py-4">${h}</th>`).join('');
 
@@ -418,7 +420,7 @@
             let totals = { hours: 0, prodFte: 0, foreFte: 0, fee: 0, feeDiff: 0 };
 
             if (data.length === 0) {
-                html = '<tr><td colspan="8" class="p-8 text-center text-slate-400">No data found matching criteria.</td></tr>';
+                html = '<tr><td colspan="8" class="p-8 text-center text-slate-400">Eşleşen veri bulunamadı.</td></tr>';
             } else {
                 data.forEach(row => {
                     let name = row.manager_name || row.leader_name || row.channel_name;
@@ -456,7 +458,7 @@
                 });
             }
             tbody.innerHTML = html;
-            let footerHtml = `<td class="px-6 py-5">GRAND TOTAL</td>`;
+            let footerHtml = `<td class="px-6 py-5">GENEL TOPLAM</td>`;
             if (currentView === 'leader') footerHtml += `<td></td>`;
             if (currentView === 'channel') footerHtml += `<td></td>`;
             footerHtml += `
@@ -479,7 +481,6 @@
             const feeDiffEl = document.getElementById('kpi-fee-diff');
             const diff = totals.feeDiff;
             const icon = diff >= 0 ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
-            // Kaldırıldı: Surplus / Deficit metni
             feeDiffEl.innerHTML = `${icon} ${formatMoney(Math.abs(diff))}`;
             feeDiffEl.className = `mt-2 text-xs font-bold ${diff >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
             const percent = totals.foreFte > 0 ? (totals.prodFte / totals.foreFte) * 100 : 0;
@@ -508,18 +509,18 @@
             document.getElementById('exportModal').classList.remove('hidden');
             const btn = document.getElementById('btnGenerate');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Loading Data...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Veriler Yükleniyor...';
 
             const { data, error } = await _supabase.from('view_advisor_performance').select('*');
-            if (error) { alert('Error fetching advisor data'); return; }
+            if (error) { alert('Veri çekme hatası'); return; }
             advisorData = data;
             
             const sms = [...new Set(data.map(i => i.senior_manager))].filter(Boolean).sort();
-            document.getElementById('expSenior').innerHTML = '<option value="all">Tüm Müdürler</option>' + sms.map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('expSenior').innerHTML = '<option value="all">Hepsi</option>' + sms.map(m => `<option value="${m}">${m}</option>`).join('');
             
             updateExportFilters('sm'); 
             btn.disabled = false;
-            btn.innerHTML = '<span>Download Excel</span><i class="fa-solid fa-download"></i>';
+            btn.innerHTML = '<span>Excel\'i İndir</span><i class="fa-solid fa-download"></i>';
         }
 
         function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
@@ -535,7 +536,7 @@
             if (changedLevel === 'sm') {
                 if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
                 const oms = [...new Set(filtered.map(i => i.operation_manager))].filter(Boolean).sort();
-                omSelect.innerHTML = '<option value="all">Tüm Yöneticiler</option>' + oms.map(m => `<option value="${m}">${m}</option>`).join('');
+                omSelect.innerHTML = '<option value="all">Hepsi</option>' + oms.map(m => `<option value="${m}">${m}</option>`).join('');
                 omSelect.value = 'all'; 
             }
 
@@ -546,8 +547,8 @@
             const tls = [...new Set(filtered.map(i => i.team_leader))].filter(Boolean).sort();
             const chs = [...new Set(filtered.map(i => i.channel_name))].filter(Boolean).sort();
 
-            tlSelect.innerHTML = '<option value="all">Tüm Liderler</option>' + tls.map(m => `<option value="${m}">${m}</option>`).join('');
-            chSelect.innerHTML = '<option value="all">Tüm Kanallar</option>' + chs.map(m => `<option value="${m}">${m}</option>`).join('');
+            tlSelect.innerHTML = '<option value="all">Hepsi</option>' + tls.map(m => `<option value="${m}">${m}</option>`).join('');
+            chSelect.innerHTML = '<option value="all">Hepsi</option>' + chs.map(m => `<option value="${m}">${m}</option>`).join('');
         }
 
         function generateExcel() {
@@ -564,23 +565,23 @@
             if (ch !== 'all') filtered = filtered.filter(i => i.channel_name === ch);
 
             let exportData = [];
-            let sheetName = "Report";
+            let sheetName = "Rapor";
 
             if (reportLevel === 'advisor') {
-                sheetName = "Advisor Details";
+                sheetName = "Temsilci Detay";
                 exportData = filtered.map(row => ({
-                    'CNX Register Number': row.cnx_register_number,
-                    'User Name': row.user_name,
-                    'Clean Working Time': parseFloat(row.clean_working_time || 0),
-                    'Raw FTE': parseFloat(row.raw_fte || 0),
-                    'Capped FTE': parseFloat(row.capped_fte || 0),
-                    'Team Leader': row.team_leader,
-                    'Operation Manager': row.operation_manager,
-                    'Senior Manager': row.senior_manager,
-                    'Channel': row.channel_name
+                    'Sicil No': row.cnx_register_number,
+                    'İsim Soyisim': row.user_name,
+                    'Net Çalışma Saati': parseFloat(row.clean_working_time || 0),
+                    'Ham FTE': parseFloat(row.raw_fte || 0),
+                    'FTE': parseFloat(row.capped_fte || 0),
+                    'Takım Lideri': row.team_leader,
+                    'Operasyon Yöneticisi': row.operation_manager,
+                    'Operasyon Müdürü': row.senior_manager,
+                    'Kanal': row.channel_name
                 }));
             } else if (reportLevel === 'leader') {
-                sheetName = "Leader Summary";
+                sheetName = "Lider Ozeti";
                 const grouped = {};
                 filtered.forEach(row => {
                     const key = row.team_leader;
@@ -589,14 +590,14 @@
                     grouped[key].fte += parseFloat(row.capped_fte || 0);
                 });
                 exportData = Object.values(grouped).map(g => ({
-                    'Team Leader': g.name,
-                    'Operation Manager': g.manager,
-                    'Channel': g.channel,
-                    'Clean Working Time': g.hours,
-                    'Total FTE': g.fte
+                    'Takım Lideri': g.name,
+                    'Operasyon Yöneticisi': g.manager,
+                    'Kanal': g.channel,
+                    'Net Çalışma Saati': g.hours,
+                    'Toplam FTE': g.fte
                 }));
             } else if (reportLevel === 'channel') {
-                sheetName = "Channel Summary";
+                sheetName = "Kanal Ozeti";
                 const grouped = {};
                 filtered.forEach(row => {
                     const key = row.channel_name;
@@ -605,12 +606,12 @@
                     grouped[key].fte += parseFloat(row.capped_fte || 0);
                 });
                 exportData = Object.values(grouped).map(g => ({
-                    'Channel': g.name,
-                    'Clean Working Time': g.hours,
-                    'Total FTE': g.fte
+                    'Kanal': g.name,
+                    'Net Çalışma Saati': g.hours,
+                    'Toplam FTE': g.fte
                 }));
             } else if (reportLevel === 'manager') {
-                sheetName = "Manager Summary";
+                sheetName = "Yonetici Ozeti";
                 const grouped = {};
                 filtered.forEach(row => {
                     const key = row.operation_manager;
@@ -619,14 +620,14 @@
                     grouped[key].fte += parseFloat(row.capped_fte || 0);
                 });
                 exportData = Object.values(grouped).map(g => ({
-                    'Operation Manager': g.name,
-                    'Senior Manager': g.sm,
-                    'Clean Working Time': g.hours,
-                    'Total FTE': g.fte
+                    'Operasyon Yöneticisi': g.name,
+                    'Operasyon Müdürü': g.sm,
+                    'Net Çalışma Saati': g.hours,
+                    'Toplam FTE': g.fte
                 }));
             }
 
-            if (exportData.length === 0) { alert("No data found."); return; }
+            if (exportData.length === 0) { alert("Veri bulunamadı."); return; }
 
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);

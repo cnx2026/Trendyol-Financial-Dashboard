@@ -191,7 +191,7 @@
                             <div class="text-xs text-slate-400" data-i18n="admin_panel">Yönetici Paneli</div>
                         </div>
                     </div>
-                    <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 transition-colors p-2" title="Çıkış"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    <button onclick="handleLogout()" id="logoutBtn" class="text-slate-400 hover:text-red-400 transition-colors p-2" title="Çıkış"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
             </div>
         </aside>
@@ -293,6 +293,8 @@
                 login_error: "Geçersiz e-posta veya şifre",
                 login_btn: "Giriş",
                 login_loading: "Giriş Yapılıyor...",
+                email_placeholder: "isim.soyisim@concentrix.com",
+                logout_title: "Çıkış",
                 export_title: "Excel'i Dışa Aktar",
                 report_type: "RAPOR TİPİ",
                 opt_advisor: "Temsilci Bazlı",
@@ -365,6 +367,8 @@
                 login_error: "Invalid email or password",
                 login_btn: "Login",
                 login_loading: "Logging in...",
+                email_placeholder: "name.surname@concentrix.com",
+                logout_title: "Logout",
                 export_title: "Export Excel",
                 report_type: "REPORT TYPE",
                 opt_advisor: "Advisor Details",
@@ -533,6 +537,18 @@
                 searchInput.placeholder = placeholders[currentView];
             }
 
+            // Update Email Placeholder
+            const emailInput = document.getElementById('email');
+            if(emailInput) {
+                emailInput.placeholder = t('email_placeholder');
+            }
+
+            // Update Logout Title
+            const logoutBtn = document.getElementById('logoutBtn');
+            if(logoutBtn) {
+                logoutBtn.title = t('logout_title');
+            }
+
             // Re-render data if available
             if(rawData.length > 0) {
                 populateFilters();
@@ -684,38 +700,43 @@
             const managerVal = document.getElementById('filterManager').value;
             const subFilter = document.getElementById('filterSub');
             
-            if (managerVal === 'all' || currentView === 'ops') {
+            // Only disable if we are in OPS view (no 3rd level)
+            if (currentView === 'ops') {
                 subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
                 subFilter.disabled = true;
-            } else {
-                subFilter.disabled = false;
-                
-                // Filter by OM
-                let filteredByOM = rawData;
-                const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
-                
-                if (managerVal !== 'all') {
-                    filteredByOM = rawData.filter(item => item[omKey] === managerVal);
-                } else {
-                    // If OM is All, we still respect SM filter from previous step
-                    const smVal = document.getElementById('filterSenior').value;
-                    const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
-                    if (smVal !== 'all' && hasSM) {
-                        filteredByOM = rawData.filter(item => item.senior_manager === smVal);
-                    }
-                }
-
-                // Populate Sub Filter
-                let subItems = [];
-                if (currentView === 'leader') {
-                    subItems = getUniqueValues(filteredByOM, 'leader_name');
-                } else if (currentView === 'channel') {
-                    subItems = getUniqueValues(filteredByOM, 'channel_name');
-                }
-                subItems.sort();
-                
-                subFilter.innerHTML = `<option value="all">${t('all')}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
+                applyFilters();
+                return;
             }
+
+            subFilter.disabled = false;
+            
+            // Get current data filtered by SM (from handleSeniorChange logic or rawData)
+            const smVal = document.getElementById('filterSenior').value;
+            let filteredData = rawData;
+
+            // 1. Filter by SM
+            const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
+            if (smVal !== 'all' && hasSM) {
+                 filteredData = filteredData.filter(item => item.senior_manager === smVal);
+            }
+
+            // 2. Filter by OM (if selected)
+            const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
+            if (managerVal !== 'all') {
+                filteredData = filteredData.filter(item => item[omKey] === managerVal);
+            }
+
+            // 3. Populate Sub Filter based on the resulting data
+            let subItems = [];
+            if (currentView === 'leader') {
+                subItems = getUniqueValues(filteredData, 'leader_name');
+            } else if (currentView === 'channel') {
+                subItems = getUniqueValues(filteredData, 'channel_name');
+            }
+            subItems.sort();
+
+            subFilter.innerHTML = `<option value="all">${t('all')}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
+            
             applyFilters();
         }
 
@@ -1005,24 +1026,32 @@
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
             
-            // Para Birimi Formatlaması (TL)
+            // Formatlama Tanımları
+            const numberColumns = [t('xls_clean_hours'), t('xls_prod_fte'), t('xls_fore_fte'), t('xls_fte_diff'), t('xls_raw_fte'), t('xls_fte')];
             const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
-            const range = XLSX.utils.decode_range(ws['!ref']);
-            const currencyFmt = '"₺" #,##0.00'; // Standard Excel format for currency symbol prefix
             
-            // Başlık satırını kontrol et
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            const currencyFmt = '"₺" #,##0.00'; // Para birimi formatı
+            const numberFmt = '0.00'; // Sayı formatı (2 basamak)
+            
+            // Başlık satırını kontrol et ve formatları uygula
             for (let C = range.s.c; C <= range.e.c; ++C) {
                 const address = XLSX.utils.encode_cell({r: 0, c: C});
                 if (!ws[address]) continue;
                 
-                if (currencyColumns.includes(ws[address].v)) {
-                    // Bu sütundaki tüm veri hücrelerini formatla
+                const colName = ws[address].v;
+
+                if (currencyColumns.includes(colName)) {
                     for (let R = 1; R <= range.e.r; ++R) {
                         const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
                         if (!ws[cellAddress]) continue;
-                        if (ws[cellAddress].t === 'n') {
-                            ws[cellAddress].z = currencyFmt;
-                        }
+                        if (ws[cellAddress].t === 'n') ws[cellAddress].z = currencyFmt;
+                    }
+                } else if (numberColumns.includes(colName)) {
+                    for (let R = 1; R <= range.e.r; ++R) {
+                        const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
+                        if (!ws[cellAddress]) continue;
+                        if (ws[cellAddress].t === 'n') ws[cellAddress].z = numberFmt;
                     }
                 }
             }

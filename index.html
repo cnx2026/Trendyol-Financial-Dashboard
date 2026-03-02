@@ -8,8 +8,23 @@
     <!-- FAVICON -->
     <link rel="icon" href="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" type="image/png">
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS & Config -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Dark mode'u class tabanlı yapıyoruz
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#1e293b', // Özel ara renk
+                            950: '#020617', // Çok koyu arka plan
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -28,28 +43,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+        body { font-family: 'Inter', sans-serif; }
+        /* Dark mode transitions */
+        body, .card, input, select, th, td { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        
+        .card { border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
+        .dark .card { border-color: #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        
         .card:hover { transform: translateY(-2px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08); }
+        
         .nav-link { display: flex; align-items: center; padding: 14px 20px; border-radius: 12px; color: #94a3b8; font-weight: 500; transition: all 0.2s; margin-bottom: 6px; cursor: pointer; }
         .nav-link:hover { background-color: #1e293b; color: #f8fafc; }
         .nav-link.active { background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
         .nav-link i { margin-right: 14px; width: 20px; text-align: center; font-size: 1.1em; }
-        th { font-weight: 600; color: #475569; background-color: #f8fafc; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 16px; }
-        td { color: #334155; font-size: 0.9rem; padding: 14px; }
-        tr:hover td { background-color: #f1f5f9; }
-        tfoot tr { background-color: #f8fafc; border-top: 2px solid #cbd5e1; }
-        tfoot td { font-weight: 800; color: #0f172a; font-size: 0.95rem; }
+        
+        th { font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 16px; }
+        td { font-size: 0.9rem; padding: 14px; }
+        
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .modal-enter { animation: modalIn 0.3s ease-out forwards; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
-<body class="h-screen overflow-hidden text-slate-800">
+<body class="h-screen overflow-hidden text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900">
 
     <!-- LOGIN PAGE -->
     <div id="loginPage" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 relative overflow-hidden">
@@ -99,43 +122,43 @@
         
         <!-- EXPORT MODAL -->
         <div id="exportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200">
-                <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-excel text-green-600"></i> <span data-i18n="export_title">Excel'i Dışa Aktar</span></h3>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200 dark:border-slate-700">
+                <div class="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="fa-solid fa-file-excel text-green-600"></i> <span data-i18n="export_title">Excel'i Dışa Aktar</span></h3>
                     <button onclick="closeExportModal()" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark fa-lg"></i></button>
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="report_type">Rapor Tipi</label>
-                        <select id="expLevel" class="w-full p-3 bg-blue-50 border border-blue-200 rounded-xl text-sm font-semibold text-blue-800 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="report_type">Rapor Tipi</label>
+                        <select id="expLevel" class="w-full p-3 bg-blue-50 dark:bg-slate-700 border border-blue-200 dark:border-slate-600 rounded-xl text-sm font-semibold text-blue-800 dark:text-blue-300 focus:ring-2 focus:ring-blue-500 outline-none">
                             <option value="advisor" data-i18n="opt_advisor">Temsilci Bazlı</option>
                             <option value="leader" data-i18n="opt_leader">Takım Lideri Özeti</option>
                             <option value="channel" data-i18n="opt_channel">Kanal Özeti</option>
                             <option value="manager" data-i18n="opt_manager">Operasyon Yöneticisi Özeti</option>
                         </select>
                     </div>
-                    <hr class="border-slate-100">
+                    <hr class="border-slate-100 dark:border-slate-700">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="senior_manager">Operasyon Müdürü</label>
-                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="senior_manager">Operasyon Müdürü</label>
+                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="operation_manager">Operasyon Yöneticisi</label>
-                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="operation_manager">Operasyon Yöneticisi</label>
+                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="team_leader">Takım Lideri</label>
-                            <select id="expLeader" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
+                            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="team_leader">Takım Lideri</label>
+                            <select id="expLeader" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1" data-i18n="channel">Kanal</label>
-                            <select id="expChannel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"><option value="all" data-i18n="all">Tümü</option></select>
+                            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="channel">Kanal</label>
+                            <select id="expChannel" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
                         </div>
                     </div>
                 </div>
                 <div class="mt-8 flex gap-3">
-                    <button onclick="closeExportModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition-colors" data-i18n="cancel">İptal</button>
+                    <button onclick="closeExportModal()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-semibold rounded-xl transition-colors" data-i18n="cancel">İptal</button>
                     <button onclick="generateExcel()" id="btnGenerate" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition-all flex justify-center items-center gap-2"><span data-i18n="download_excel">Excel'i İndir</span> <i class="fa-solid fa-download"></i></button>
                 </div>
             </div>
@@ -174,72 +197,77 @@
         </aside>
 
         <!-- CONTENT -->
-        <main class="flex-1 flex flex-col overflow-hidden bg-[#f8fafc] relative">
-            <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 px-8 py-5 sticky top-0 z-20">
+        <main class="flex-1 flex flex-col overflow-hidden bg-[#f8fafc] dark:bg-slate-900 relative transition-colors duration-300">
+            <header class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-gray-200 dark:border-slate-700 px-8 py-5 sticky top-0 z-20 transition-colors duration-300">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div>
-                        <h1 id="pageTitle" class="text-2xl font-bold text-slate-800" data-i18n="title_ops">OM & OY Genel Bakış</h1>
+                        <h1 id="pageTitle" class="text-2xl font-bold text-slate-800 dark:text-white" data-i18n="title_ops">OM & OY Genel Bakış</h1>
                     </div>
                     <div class="flex items-center gap-3">
-                        <!-- DASHBOARD LANGUAGE SWITCHER -->
-                        <div class="flex bg-white rounded-full border border-gray-200 p-1 shadow-sm">
+                        <!-- THEME TOGGLE -->
+                        <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center shadow-sm border border-gray-200 dark:border-slate-600">
+                            <i id="themeIcon" class="fa-solid fa-moon"></i>
+                        </button>
+
+                        <!-- LANGUAGE SWITCHER -->
+                        <div class="flex bg-white dark:bg-slate-700 rounded-full border border-gray-200 dark:border-slate-600 p-1 shadow-sm">
                             <button onclick="changeLanguage('tr')" class="px-3 py-1 rounded-full text-xs font-bold transition-all" id="lang-tr">TR</button>
                             <button onclick="changeLanguage('en')" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400" id="lang-en">EN</button>
                         </div>
 
                         <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors"><i class="fa-solid fa-file-excel"></i> <span data-i18n="export_btn">Excel'i Dışa Aktar</span></button>
-                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span><span data-i18n="last_update">Son Güncelleme</span>: <span id="lastUpdate" class="text-slate-700">-</span></span></div>
+                        <div class="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-700 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-600 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span><span data-i18n="last_update">Son Güncelleme</span>: <span id="lastUpdate" class="text-slate-700 dark:text-slate-300">-</span></span></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
-                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="OM & OY Ara..." class="pl-10 w-full bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
+                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="OM & OY Ara..." class="pl-10 w-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
-                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option><option value="Tutku Akgül">Tutku Akgül</option></select>
-                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option></select>
-                    <select id="filterSub" onchange="applyFilters()" class="bg-white border border-gray-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 disabled:text-gray-400" disabled><option value="all">-</option></select>
+                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option><option value="Tutku Akgül">Tutku Akgül</option></select>
+                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option></select>
+                    <select id="filterSub" onchange="applyFilters()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 dark:disabled:bg-slate-800 disabled:text-gray-400 dark:disabled:text-slate-600" disabled><option value="all">-</option></select>
                 </div>
             </header>
 
             <div class="flex-1 overflow-auto p-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="card p-6 relative overflow-hidden group border-l-4 border-blue-500">
+                    <div class="card bg-white dark:bg-slate-800 p-6 relative overflow-hidden group border-l-4 border-blue-500">
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_total_fee">Toplam Ücret</p><div class="p-2 bg-blue-50 rounded-lg text-blue-600"><i class="fa-solid fa-wallet"></i></div></div>
-                            <h3 id="kpi-total-fee" class="text-2xl font-extrabold text-slate-800 mt-2">...</h3>
+                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_total_fee">Toplam Ücret</p><div class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400"><i class="fa-solid fa-wallet"></i></div></div>
+                            <h3 id="kpi-total-fee" class="text-2xl font-extrabold text-slate-800 dark:text-white mt-2">...</h3>
                             <div id="kpi-fee-diff" class="mt-2 text-xs font-semibold">...</div>
                         </div>
                     </div>
-                    <div class="card p-6 relative overflow-hidden group border-l-4 border-emerald-500">
+                    <div class="card bg-white dark:bg-slate-800 p-6 relative overflow-hidden group border-l-4 border-emerald-500">
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_produced_fte">Gerçekleşen FTE</p><div class="p-2 bg-emerald-50 rounded-lg text-emerald-600"><i class="fa-solid fa-users-viewfinder"></i></div></div>
-                            <h3 id="kpi-produced-fte" class="text-2xl font-extrabold text-slate-800 mt-2">...</h3>
+                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_produced_fte">Gerçekleşen FTE</p><div class="p-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-users-viewfinder"></i></div></div>
+                            <h3 id="kpi-produced-fte" class="text-2xl font-extrabold text-slate-800 dark:text-white mt-2">...</h3>
                         </div>
                     </div>
-                    <div class="card p-2 flex items-center justify-between relative overflow-hidden">
+                    <div class="card bg-white dark:bg-slate-800 p-2 flex items-center justify-between relative overflow-hidden">
                         <div class="pl-4 z-10">
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_target_rate">Hedef Gerçekleşme Oranı</p>
-                            <h3 id="kpi-target-percent" class="text-3xl font-extrabold text-slate-800 mt-1">%...</h3>
+                            <h3 id="kpi-target-percent" class="text-3xl font-extrabold text-slate-800 dark:text-white mt-1">%...</h3>
                             <p class="text-xs text-slate-400 mt-1" data-i18n="kpi_target_desc">Öngörülen vs Gerçekleşen</p>
                         </div>
                         <div id="targetDonutChart" style="width: 140px; height: 140px;"></div>
                     </div>
-                    <div class="card p-6 relative overflow-hidden group border-l-4 border-purple-500">
+                    <div class="card bg-white dark:bg-slate-800 p-6 relative overflow-hidden group border-l-4 border-purple-500">
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_hours">Net Çalışma Saati</p><div class="p-2 bg-purple-50 rounded-lg text-purple-600"><i class="fa-solid fa-clock"></i></div></div>
-                            <h3 id="kpi-hours" class="text-2xl font-extrabold text-slate-800 mt-2">...</h3>
+                            <div class="flex justify-between items-start"><p class="text-xs font-bold text-slate-400 uppercase tracking-wide" data-i18n="kpi_hours">Net Çalışma Saati</p><div class="p-2 bg-purple-50 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400"><i class="fa-solid fa-clock"></i></div></div>
+                            <h3 id="kpi-hours" class="text-2xl font-extrabold text-slate-800 dark:text-white mt-2">...</h3>
                             <p class="text-xs text-slate-400 mt-2" data-i18n="kpi_hours_desc">Toplam Net Çalışma Saati</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="card overflow-hidden border-0 shadow-lg">
+                <div class="card bg-white dark:bg-slate-800 overflow-hidden border-0 shadow-lg">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
-                            <thead><tr id="tableHeader" class="border-b border-gray-200"></tr></thead>
-                            <tbody id="tableBody" class="divide-y divide-gray-100 bg-white"></tbody>
-                            <tfoot class="bg-slate-50"><tr id="tableFooter"></tr></tfoot>
+                            <thead><tr id="tableHeader" class="border-b border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400"></tr></thead>
+                            <tbody id="tableBody" class="divide-y divide-gray-100 dark:divide-slate-700 bg-white dark:bg-slate-800"></tbody>
+                            <tfoot class="bg-slate-50 dark:bg-slate-700/50 border-t-2 border-slate-200 dark:border-slate-600"><tr id="tableFooter"></tr></tfoot>
                         </table>
                     </div>
                 </div>
@@ -411,12 +439,22 @@
         let advisorData = []; 
         let donutChartInstance = null;
 
-        // --- AUTHENTICATION LOGIC ---
+        // --- AUTHENTICATION & THEME LOGIC ---
         document.addEventListener('DOMContentLoaded', async () => {
             // Load language preference
             const savedLang = localStorage.getItem('appLang');
             if(savedLang) changeLanguage(savedLang);
             else changeLanguage('tr');
+
+            // Load theme preference
+            const savedTheme = localStorage.getItem('appTheme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            }
 
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
@@ -425,6 +463,31 @@
                 showLogin();
             }
         });
+
+        // --- THEME FUNCTIONS ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('appTheme', 'light');
+                updateThemeIcon(false);
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('appTheme', 'dark');
+                updateThemeIcon(true);
+            }
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                if (isDark) {
+                    icon.className = 'fa-solid fa-sun'; // Show sun icon when in dark mode
+                } else {
+                    icon.className = 'fa-solid fa-moon'; // Show moon icon when in light mode
+                }
+            }
+        }
 
         // --- LOCALIZATION FUNCTION ---
         function t(key) {
@@ -442,8 +505,8 @@
                 
                 if (isDarkBg) { // Login page style (dark background)
                     btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`;
-                } else { // Dashboard style (light background)
-                    btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`;
+                } else { // Dashboard style (light/dark adaptive)
+                    btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`;
                 }
             };
 
@@ -472,7 +535,6 @@
 
             // Re-render data if available
             if(rawData.length > 0) {
-                // Re-populate filters to update "All" text
                 populateFilters();
                 renderData(rawData);
             }
@@ -564,7 +626,7 @@
         }
 
         async function fetchData() {
-            document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
+            document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400 dark:text-slate-500"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
             let tableName = '';
             if (currentView === 'ops') tableName = 'view_operations_performance';
             else if (currentView === 'leader') tableName = 'view_leader_performance';
@@ -709,7 +771,7 @@
             let totals = { hours: 0, prodFte: 0, foreFte: 0, fee: 0, feeDiff: 0 };
 
             if (data.length === 0) {
-                html = `<tr><td colspan="8" class="p-8 text-center text-slate-400">${t('no_data')}</td></tr>`;
+                html = `<tr><td colspan="8" class="p-8 text-center text-slate-400 dark:text-slate-500">${t('no_data')}</td></tr>`;
             } else {
                 data.forEach(row => {
                     let name = row.manager_name || row.leader_name || row.channel_name;
@@ -728,35 +790,35 @@
                     totals.fee += fee;
                     totals.feeDiff += feeDiff;
 
-                    const fteClass = fteDiff >= 0 ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50';
-                    const feeClass = feeDiff >= 0 ? 'text-emerald-600' : 'text-rose-600';
+                    const fteClass = fteDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20' : 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20';
+                    const feeClass = feeDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
 
-                    html += `<tr class="border-b border-slate-50 hover:bg-slate-50 transition duration-150">
-                        <td class="px-6 py-4 font-semibold text-slate-700 flex items-center gap-3">
+                    html += `<tr class="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-150">
+                        <td class="px-6 py-4 font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-3">
                             <div class="w-2.5 h-2.5 rounded-full ${fteDiff >= 0 ? 'bg-emerald-500' : 'bg-rose-500'} shadow-sm"></div>${name}
                         </td>
-                        ${currentView === 'leader' ? `<td class="px-6 py-4 text-slate-500 text-xs">${manager}</td>` : ''}
-                        ${currentView === 'channel' ? `<td class="px-6 py-4 text-slate-500 text-xs">${formatMoney(unitPrice)}</td>` : ''}
-                        <td class="px-6 py-4 text-slate-600">${hours.toFixed(1)}</td>
-                        <td class="px-6 py-4 font-bold text-slate-800">${prodFte.toFixed(2)}</td>
-                        <td class="px-6 py-4 text-slate-400">${foreFte.toFixed(2)}</td>
+                        ${currentView === 'leader' ? `<td class="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs">${manager}</td>` : ''}
+                        ${currentView === 'channel' ? `<td class="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs">${formatMoney(unitPrice)}</td>` : ''}
+                        <td class="px-6 py-4 text-slate-600 dark:text-slate-400">${hours.toFixed(1)}</td>
+                        <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">${prodFte.toFixed(2)}</td>
+                        <td class="px-6 py-4 text-slate-400 dark:text-slate-500">${foreFte.toFixed(2)}</td>
                         <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-md text-xs font-bold ${fteClass}">${fteDiff.toFixed(2)}</span></td>
-                        <td class="px-6 py-4 font-bold text-slate-800">${formatMoney(fee)}</td>
+                        <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">${formatMoney(fee)}</td>
                         <td class="px-6 py-4 font-bold text-xs ${feeClass}">${formatMoney(feeDiff)}</td>
                     </tr>`;
                 });
             }
             tbody.innerHTML = html;
-            let footerHtml = `<td class="px-6 py-5">${t('total')}</td>`;
+            let footerHtml = `<td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${t('total')}</td>`;
             if (currentView === 'leader') footerHtml += `<td></td>`;
             if (currentView === 'channel') footerHtml += `<td></td>`;
             footerHtml += `
-                <td class="px-6 py-5">${totals.hours.toFixed(1)}</td>
-                <td class="px-6 py-5">${totals.prodFte.toFixed(2)}</td>
-                <td class="px-6 py-5">${totals.foreFte.toFixed(2)}</td>
-                <td class="px-6 py-5 ${totals.prodFte - totals.foreFte >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${(totals.prodFte - totals.foreFte).toFixed(2)}</td>
-                <td class="px-6 py-5">${formatMoney(totals.fee)}</td>
-                <td class="px-6 py-5 ${totals.feeDiff >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${formatMoney(totals.feeDiff)}</td>
+                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${totals.hours.toFixed(1)}</td>
+                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${totals.prodFte.toFixed(2)}</td>
+                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${totals.foreFte.toFixed(2)}</td>
+                <td class="px-6 py-5 font-bold ${totals.prodFte - totals.foreFte >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${(totals.prodFte - totals.foreFte).toFixed(2)}</td>
+                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${formatMoney(totals.fee)}</td>
+                <td class="px-6 py-5 font-bold ${totals.feeDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${formatMoney(totals.feeDiff)}</td>
             `;
             tfoot.innerHTML = footerHtml;
             updateKPIs(totals);
@@ -771,10 +833,10 @@
             const diff = totals.feeDiff;
             const icon = diff >= 0 ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
             feeDiffEl.innerHTML = `${icon} ${formatMoney(Math.abs(diff))}`;
-            feeDiffEl.className = `mt-2 text-xs font-bold ${diff >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+            feeDiffEl.className = `mt-2 text-xs font-bold ${diff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
             const percent = totals.foreFte > 0 ? (totals.prodFte / totals.foreFte) * 100 : 0;
             document.getElementById('kpi-target-percent').innerText = `%${percent.toFixed(1)}`;
-            document.getElementById('kpi-target-percent').className = `text-3xl font-extrabold mt-1 ${percent >= 100 ? 'text-emerald-600' : (percent >= 90 ? 'text-amber-500' : 'text-rose-600')}`;
+            document.getElementById('kpi-target-percent').className = `text-3xl font-extrabold mt-1 ${percent >= 100 ? 'text-emerald-600 dark:text-emerald-400' : (percent >= 90 ? 'text-amber-500 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400')}`;
         }
 
         function update3DChart(totals) {

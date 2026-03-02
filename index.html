@@ -664,6 +664,15 @@
             return [...new Set(data.map(item => item[key]))].filter(x => x);
         }
 
+        // Helper to find the correct column name dynamically
+        function getColumnName(data, possibleNames) {
+            if (!data || data.length === 0) return possibleNames[0];
+            for (const name of possibleNames) {
+                if (name in data[0]) return name;
+            }
+            return possibleNames[0];
+        }
+
         function populateFilters() {
             handleSeniorChange();
         }
@@ -679,7 +688,8 @@
                 filteredBySM = rawData.filter(item => item.senior_manager === smVal);
             }
 
-            const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
+            // Try to find the correct OM column name
+            const omKey = getColumnName(filteredBySM, ['operation_manager', 'manager_name']);
             const managers = getUniqueValues(filteredBySM, omKey).sort();
 
             managerSelect.innerHTML = `<option value="all">${t('all')}</option>` + managers.map(m => `<option value="${m}">${m}</option>`).join('');
@@ -703,16 +713,20 @@
             subFilter.disabled = false;
             
             let relevantData = rawData;
+            
+            // 1. Filter by SM
             const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
             if (smVal !== 'all' && hasSM) {
                 relevantData = relevantData.filter(item => item.senior_manager === smVal);
             }
 
-            const omKey = 'operation_manager';
+            // 2. Filter by OM
+            const omKey = getColumnName(relevantData, ['operation_manager', 'manager_name']);
             if (managerVal !== 'all') {
                 relevantData = relevantData.filter(item => item[omKey] === managerVal);
             }
 
+            // 3. Populate Sub Filter
             let subItems = [];
             if (currentView === 'leader') {
                 subItems = getUniqueValues(relevantData, 'leader_name');
@@ -735,20 +749,24 @@
             let filteredData = rawData;
             const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
 
+            // Senior Manager Filtresi
             if (smVal !== 'all' && hasSM) {
                 filteredData = filteredData.filter(item => item.senior_manager === smVal);
             }
 
+            // Manager Filtresi
             if (managerVal !== 'all') {
-                const omKey = currentView === 'ops' ? 'manager_name' : 'operation_manager';
+                const omKey = getColumnName(filteredData, ['operation_manager', 'manager_name']);
                 filteredData = filteredData.filter(item => item[omKey] === managerVal);
             }
 
+            // Alt Filtre (Lider veya Kanal)
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
                 if (currentView === 'leader') filteredData = filteredData.filter(item => item.leader_name === subVal);
                 else if (currentView === 'channel') filteredData = filteredData.filter(item => item.channel_name === subVal);
             }
 
+            // Arama
             if (searchVal) {
                 filteredData = filteredData.filter(item => {
                     const name = (item.manager_name || item.leader_name || item.channel_name || '').toLowerCase();
@@ -951,19 +969,41 @@
 
                 let filtered = summaryData;
                 
-                // Hiyerarşik Filtreleme
-                if (sm !== 'all') {
-                    filtered = filtered.filter(i => i.senior_manager === sm);
+                // --- AKILLI EŞLEŞTİRME (Smart Matching) ---
+                // Özet tablolarda hiyerarşi sütunları eksik olsa bile, advisorData'dan hiyerarşiyi doğrulayıp filtreliyoruz.
+                let validTargets = null;
+                
+                if (reportLevel !== 'manager') {
+                     let hierarchySource = advisorData;
+                     if (sm !== 'all') hierarchySource = hierarchySource.filter(i => i.senior_manager === sm);
+                     if (om !== 'all') hierarchySource = hierarchySource.filter(i => i.operation_manager === om);
+                     
+                     if (reportLevel === 'leader') {
+                         validTargets = new Set(hierarchySource.map(i => i.team_leader));
+                     } else if (reportLevel === 'channel') {
+                         validTargets = new Set(hierarchySource.map(i => i.channel_name));
+                     }
                 }
-                if (om !== 'all') {
-                    const omKey = reportLevel === 'manager' ? 'manager_name' : 'operation_manager';
-                    filtered = filtered.filter(i => i[omKey] === om);
-                }
-                if (tl !== 'all' && reportLevel === 'leader') {
-                    filtered = filtered.filter(i => i.leader_name === tl);
-                }
-                if (ch !== 'all' && reportLevel === 'channel') {
-                    filtered = filtered.filter(i => i.channel_name === ch);
+
+                // Filtreleme Mantığı
+                if (validTargets) {
+                    // Eğer hedef listemiz varsa (örn: seçili OY'ye bağlı kanallar), sadece onları al.
+                    if (reportLevel === 'leader') {
+                        filtered = filtered.filter(i => validTargets.has(i.leader_name));
+                    } else if (reportLevel === 'channel') {
+                        filtered = filtered.filter(i => validTargets.has(i.channel_name));
+                    }
+                } else {
+                    // Fallback: Standart filtreleme (Manager raporu veya liste oluşamadıysa)
+                    if (sm !== 'all' && 'senior_manager' in filtered[0]) {
+                        filtered = filtered.filter(i => i.senior_manager === sm);
+                    }
+                    if (om !== 'all') {
+                        const omKey = getColumnName(filtered, ['operation_manager', 'manager_name']);
+                        if (omKey in filtered[0]) {
+                            filtered = filtered.filter(i => i[omKey] === om);
+                        }
+                    }
                 }
 
                 // Veri Eşleştirme

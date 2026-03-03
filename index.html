@@ -440,6 +440,7 @@
         // --- DATA FETCHING & PERIOD MANAGEMENT ---
         async function populatePeriodSelector() {
             const selector = document.getElementById('periodSelector');
+            // DÜZELTME: Artık view_advisor_performance'dan dönemleri çekiyoruz
             const { data, error } = await _supabase.from('view_advisor_performance').select('period', { count: 'exact', head: false });
 
             if (error || !data) {
@@ -552,7 +553,10 @@
                 grouped[key].produced_fte += parseFloat(row.produced_fte || 0);
                 grouped[key].forecast_fte += parseFloat(row.forecast_fte || 0);
                 grouped[key].total_fee += parseFloat(row.total_fee || 0);
-                grouped[key].fee_diff += parseFloat(row.fee_diff || 0);
+                // DÜZELTME: Fee diff'i de doğru topla
+                const fteDiff = (row.produced_fte || 0) - (row.forecast_fte || 0);
+                const unitPrice = row.unit_price || 0;
+                grouped[key].fee_diff += fteDiff * unitPrice;
             });
 
             return Object.values(grouped);
@@ -565,6 +569,7 @@
 
         function populateFilters() {
             const seniorSelect = document.getElementById('filterSenior');
+            // DÜZELTME: Hiyerarşi için advisor view'dan çekiyoruz
             const seniors = getUniqueValues(hierarchyData, 'senior_manager').sort();
             
             const currentVal = seniorSelect.value;
@@ -698,8 +703,8 @@
                     let foreFte = parseFloat(row.forecast_fte || 0);
                     let fteDiff = prodFte - foreFte; 
                     let fee = parseFloat(row.total_fee || 0);
-                    let feeDiff = parseFloat(row.fee_diff || 0);
                     let unitPrice = row.unit_price || 0;
+                    let feeDiff = fteDiff * unitPrice;
 
                     totals.hours += hours;
                     totals.prodFte += prodFte;
@@ -846,7 +851,7 @@
                 if (ch !== 'all') filtered = filtered.filter(i => i.channel_name === ch);
 
                 exportData = filtered.map(row => ({
-                    [t('xls_reg')]: row.cnx_reg_number, [t('xls_name')]: row.user_name, [t('xls_clean_hours')]: parseFloat(row.clean_working_time || 0), [t('xls_raw_fte')]: parseFloat(row.raw_fte || 0), [t('xls_fte')]: parseFloat(row.capped_fte || 0), [t('xls_tl')]: row.team_leader, [t('xls_om')]: row.operation_manager, [t('xls_sm')]: row.senior_manager, [t('xls_channel')]: row.channel_name
+                    [t('xls_reg')]: row.cnx_register_number, [t('xls_name')]: row.user_name, [t('xls_clean_hours')]: parseFloat(row.clean_working_time || 0), [t('xls_raw_fte')]: parseFloat(row.raw_fte || 0), [t('xls_fte')]: parseFloat(row.capped_fte || 0), [t('xls_tl')]: row.team_leader, [t('xls_om')]: row.operation_manager, [t('xls_sm')]: row.senior_manager, [t('xls_channel')]: row.channel_name
                 }));
             } else {
                 let tableName = '';
@@ -951,4 +956,3 @@
     </script>
 </body>
 </html>
-	

@@ -12,13 +12,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', // Dark mode'u class tabanlı yapıyoruz
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
                         slate: {
-                            850: '#1e293b', // Özel ara renk
-                            950: '#020617', // Çok koyu arka plan
+                            850: '#1e293b',
+                            950: '#020617',
                         }
                     }
                 }
@@ -44,12 +44,10 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* Dark mode transitions */
         body, .card, input, select, th, td { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         
         .card { border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
         .dark .card { border-color: #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
-        
         .card:hover { transform: translateY(-2px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08); }
         
         .nav-link { display: flex; align-items: center; padding: 14px 20px; border-radius: 12px; color: #94a3b8; font-weight: 500; transition: all 0.2s; margin-bottom: 6px; cursor: pointer; }
@@ -60,7 +58,6 @@
         th { font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 16px; }
         td { font-size: 0.9rem; padding: 14px; }
         
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -79,7 +76,6 @@
         <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px]"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[120px]"></div>
 
-        <!-- LOGIN LANGUAGE SWITCHER -->
         <div class="absolute top-6 right-6 z-50">
              <div class="flex bg-white/10 backdrop-blur-md rounded-full border border-white/20 p-1 shadow-lg">
                 <button onclick="changeLanguage('tr')" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-white" id="login-lang-tr">TR</button>
@@ -181,12 +177,10 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="relative">
-                            <!-- DİNAMİK AVATAR -->
                             <img id="userAvatar" src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-slate-600 object-cover object-top shadow-md">
                             <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0b1120] rounded-full"></div>
                         </div>
                         <div>
-                            <!-- DİNAMİK İSİM -->
                             <div id="userName" class="text-sm font-bold text-white">Loading...</div>
                             <div class="text-xs text-slate-400" data-i18n="admin_panel">Yönetici Paneli</div>
                         </div>
@@ -204,12 +198,10 @@
                         <h1 id="pageTitle" class="text-2xl font-bold text-slate-800 dark:text-white" data-i18n="title_ops">OM & OY Genel Bakış</h1>
                     </div>
                     <div class="flex items-center gap-3">
-                        <!-- THEME TOGGLE -->
                         <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center shadow-sm border border-gray-200 dark:border-slate-600">
                             <i id="themeIcon" class="fa-solid fa-moon"></i>
                         </button>
 
-                        <!-- LANGUAGE SWITCHER -->
                         <div class="flex bg-white dark:bg-slate-700 rounded-full border border-gray-200 dark:border-slate-600 p-1 shadow-sm">
                             <button onclick="changeLanguage('tr')" class="px-3 py-1 rounded-full text-xs font-bold transition-all" id="lang-tr">TR</button>
                             <button onclick="changeLanguage('en')" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400" id="lang-en">EN</button>
@@ -224,7 +216,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
                         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="OM & OY Ara..." class="pl-10 w-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
-                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option><option value="Tutku Akgül">Tutku Akgül</option></select>
+                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option></select>
                     <select id="filterManager" onchange="handleManagerChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option></select>
                     <select id="filterSub" onchange="applyFilters()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 dark:disabled:bg-slate-800 disabled:text-gray-400 dark:disabled:text-slate-600" disabled><option value="all">-</option></select>
                 </div>
@@ -277,14 +269,9 @@
     </div>
 
     <script>
-        // ============================================================
-        // AYARLAR
-        // ============================================================
         const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co'; 
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8'; 
-        // ============================================================
 
-        // --- LOCALIZATION DICTIONARY ---
         const translations = {
             tr: {
                 welcome: "Hoşgeldiniz",
@@ -332,7 +319,6 @@
                 total: "GENEL TOPLAM",
                 chart_achieved: "Gerçekleşen",
                 chart_remaining: "Geriye Kalan",
-                // Table Headers
                 th_om: "Operasyon Yöneticisi",
                 th_hours: "Net Çalışma Saati",
                 th_prod_fte: "Gerçekleşen FTE",
@@ -343,7 +329,6 @@
                 th_tl: "Takım Lideri",
                 th_channel: "Kanal",
                 th_unit_price: "Birim Fiyatı",
-                // Excel Headers
                 xls_reg: "Sicil No",
                 xls_name: "İsim Soyisim",
                 xls_clean_hours: "Net Çalışma Saati",
@@ -406,7 +391,6 @@
                 total: "GRAND TOTAL",
                 chart_achieved: "Achieved",
                 chart_remaining: "Remaining",
-                // Table Headers
                 th_om: "Operation Manager",
                 th_hours: "Net Hours",
                 th_prod_fte: "Produced FTE",
@@ -417,7 +401,6 @@
                 th_tl: "Team Leader",
                 th_channel: "Channel",
                 th_unit_price: "Unit Price",
-                // Excel Headers
                 xls_reg: "Register No",
                 xls_name: "Full Name",
                 xls_clean_hours: "Net Working Hours",
@@ -438,19 +421,16 @@
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentView = 'ops';
-        let currentLang = 'tr'; // Default Language
+        let currentLang = 'tr';
         let rawData = []; 
-        let advisorData = []; 
-        let donutChartInstance = null;
+        let hierarchyData = []; // Filtreler için tam hiyerarşi verisi
+        let advisorData = []; // Excel için detay verisi
 
-        // --- AUTHENTICATION & THEME LOGIC ---
         document.addEventListener('DOMContentLoaded', async () => {
-            // Load language preference
             const savedLang = localStorage.getItem('appLang');
             if(savedLang) changeLanguage(savedLang);
             else changeLanguage('tr');
 
-            // Load theme preference
             const savedTheme = localStorage.getItem('appTheme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -468,7 +448,6 @@
             }
         });
 
-        // --- THEME FUNCTIONS ---
         function toggleTheme() {
             const html = document.documentElement;
             if (html.classList.contains('dark')) {
@@ -485,15 +464,10 @@
         function updateThemeIcon(isDark) {
             const icon = document.getElementById('themeIcon');
             if (icon) {
-                if (isDark) {
-                    icon.className = 'fa-solid fa-sun'; // Show sun icon when in dark mode
-                } else {
-                    icon.className = 'fa-solid fa-moon'; // Show moon icon when in light mode
-                }
+                icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
             }
         }
 
-        // --- LOCALIZATION FUNCTION ---
         function t(key) {
             return translations[currentLang][key] || key;
         }
@@ -502,27 +476,21 @@
             currentLang = lang;
             localStorage.setItem('appLang', lang);
 
-            // Helper to update button styles
             const updateBtn = (btnId, isActive, isDarkBg = false) => {
                 const btn = document.getElementById(btnId);
                 if (!btn) return;
-                
-                if (isDarkBg) { // Login page style (dark background)
+                if (isDarkBg) {
                     btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`;
-                } else { // Dashboard style (light/dark adaptive)
+                } else {
                     btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`;
                 }
             };
 
-            // Update Dashboard Buttons
             updateBtn('lang-tr', lang === 'tr');
             updateBtn('lang-en', lang === 'en');
-
-            // Update Login Page Buttons
             updateBtn('login-lang-tr', lang === 'tr', true);
             updateBtn('login-lang-en', lang === 'en', true);
 
-            // Update Text
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if(translations[lang][key]) {
@@ -530,29 +498,21 @@
                 }
             });
 
-            // Update Placeholders
             const searchInput = document.getElementById('searchInput');
             if(searchInput) {
                 const placeholders = { 'ops': t('search_ops'), 'leader': t('search_leader'), 'channel': t('search_channel') };
                 searchInput.placeholder = placeholders[currentView];
             }
 
-            // Update Email Placeholder
             const emailInput = document.getElementById('email');
-            if(emailInput) {
-                emailInput.placeholder = t('email_placeholder');
-            }
+            if(emailInput) emailInput.placeholder = t('email_placeholder');
 
-            // Update Logout Title
             const logoutBtn = document.getElementById('logoutBtn');
-            if(logoutBtn) {
-                logoutBtn.title = t('logout_title');
-            }
+            if(logoutBtn) logoutBtn.title = t('logout_title');
 
-            // Re-render data if available
             if(rawData.length > 0) {
                 populateFilters();
-                applyFilters(); // applyFilters will call renderData
+                applyFilters();
             }
         }
 
@@ -570,7 +530,6 @@
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
 
             if (error) {
-                console.error("Login Error:", error);
                 errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${t('login_error')}`;
                 errorDiv.classList.remove('hidden');
                 btn.innerText = t('login_btn');
@@ -585,28 +544,23 @@
             showLogin();
         }
 
-        function showDashboard(user) {
+        async function showDashboard(user) {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('tr-TR');
             
-            // --- DİNAMİK PROFİL GÜNCELLEME ---
             if (user && user.email) {
                 const email = user.email;
                 let formattedName = "";
-                let avatarUrl = "";
-
-                // İsim Formatlama (birand.erguven -> Birand Ergüven)
                 const namePart = email.split('@')[0];
                 formattedName = namePart.split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
-
-                // Herkes için standart avatar (İsim Baş Harfleri)
-                avatarUrl = `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff&size=128`;
-                
+                const avatarUrl = `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff&size=128`;
                 document.getElementById('userName').innerText = formattedName;
                 document.getElementById('userAvatar').src = avatarUrl;
             }
 
+            // Hiyerarşi verisini bir kez çekiyoruz (Filtreler için)
+            await fetchHierarchyData();
             switchView('ops');
         }
 
@@ -619,7 +573,18 @@
             document.getElementById('password').value = '';
         }
 
-        // --- DASHBOARD LOGIC ---
+        // --- DATA FETCHING ---
+        async function fetchHierarchyData() {
+            // Sadece hiyerarşi sütunlarını çekiyoruz
+            const { data, error } = await _supabase.from('view_advisor_performance').select('senior_manager, operation_manager, team_leader, channel_name');
+            if (error) {
+                console.error("Hierarchy fetch error:", error);
+                hierarchyData = [];
+            } else {
+                hierarchyData = data;
+            }
+        }
+
         function switchView(view) {
             currentView = view;
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
@@ -631,7 +596,7 @@
             const placeholders = { 'ops': 'search_ops', 'leader': 'search_leader', 'channel': 'search_channel' };
             document.getElementById('searchInput').placeholder = t(placeholders[view]);
             
-            // Reset Filters
+            // Filtreleri sıfırla
             document.getElementById('filterSenior').value = 'all';
             document.getElementById('filterManager').innerHTML = `<option value="all" data-i18n="all">${t('all')}</option>`;
             const subFilter = document.getElementById('filterSub');
@@ -650,7 +615,6 @@
 
             const { data, error } = await _supabase.from(tableName).select('*');
             if (error) { 
-                console.error(error); 
                 if(error.code === 'PGRST301' || error.message.includes('JWT')) { handleLogout(); return; }
                 alert('Veri çekme hatası.'); return; 
             }
@@ -659,21 +623,21 @@
             applyFilters(); 
         }
 
-        // Helper to get unique non-null values
+        // --- FILTER LOGIC ---
         function getUniqueValues(data, key) {
             return [...new Set(data.map(item => item[key]))].filter(x => x);
         }
 
-        // Helper to find the correct column name dynamically
-        function getColumnName(data, possibleNames) {
-            if (!data || data.length === 0) return possibleNames[0];
-            for (const name of possibleNames) {
-                if (name in data[0]) return name;
-            }
-            return possibleNames[0];
-        }
-
         function populateFilters() {
+            // İlk açılışta Senior Manager listesini doldur
+            const seniorSelect = document.getElementById('filterSenior');
+            const seniors = getUniqueValues(hierarchyData, 'senior_manager').sort();
+            
+            // Mevcut seçimi korumaya çalış, yoksa 'all' yap
+            const currentVal = seniorSelect.value;
+            seniorSelect.innerHTML = `<option value="all">${t('all')}</option>` + seniors.map(s => `<option value="${s}">${s}</option>`).join('');
+            if (seniors.includes(currentVal)) seniorSelect.value = currentVal;
+            
             handleSeniorChange();
         }
 
@@ -681,17 +645,14 @@
             const smVal = document.getElementById('filterSenior').value;
             const managerSelect = document.getElementById('filterManager');
             
-            let filteredBySM = rawData;
-            const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
-
-            if (smVal !== 'all' && hasSM) {
-                filteredBySM = rawData.filter(item => item.senior_manager === smVal);
+            // Hiyerarşi verisinden filtrele (Tablo verisinden değil!)
+            let filteredHierarchy = hierarchyData;
+            if (smVal !== 'all') {
+                filteredHierarchy = filteredHierarchy.filter(item => item.senior_manager === smVal);
             }
 
-            // Try to find the correct OM column name
-            const omKey = getColumnName(filteredBySM, ['operation_manager', 'manager_name']);
-            const managers = getUniqueValues(filteredBySM, omKey).sort();
-
+            const managers = getUniqueValues(filteredHierarchy, 'operation_manager').sort();
+            
             managerSelect.innerHTML = `<option value="all">${t('all')}</option>` + managers.map(m => `<option value="${m}">${m}</option>`).join('');
             managerSelect.value = 'all';
             
@@ -712,26 +673,20 @@
 
             subFilter.disabled = false;
             
-            let relevantData = rawData;
-            
-            // 1. Filter by SM
-            const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
-            if (smVal !== 'all' && hasSM) {
-                relevantData = relevantData.filter(item => item.senior_manager === smVal);
+            // Hiyerarşi verisinden filtrele
+            let filteredHierarchy = hierarchyData;
+            if (smVal !== 'all') {
+                filteredHierarchy = filteredHierarchy.filter(item => item.senior_manager === smVal);
             }
-
-            // 2. Filter by OM
-            const omKey = getColumnName(relevantData, ['operation_manager', 'manager_name']);
             if (managerVal !== 'all') {
-                relevantData = relevantData.filter(item => item[omKey] === managerVal);
+                filteredHierarchy = filteredHierarchy.filter(item => item.operation_manager === managerVal);
             }
 
-            // 3. Populate Sub Filter
             let subItems = [];
             if (currentView === 'leader') {
-                subItems = getUniqueValues(relevantData, 'leader_name');
+                subItems = getUniqueValues(filteredHierarchy, 'team_leader');
             } else if (currentView === 'channel') {
-                subItems = getUniqueValues(relevantData, 'channel_name');
+                subItems = getUniqueValues(filteredHierarchy, 'channel_name');
             }
             subItems.sort();
 
@@ -747,20 +702,38 @@
             const subVal = document.getElementById('filterSub').value;
             
             let filteredData = rawData;
-            const hasSM = rawData.length > 0 && 'senior_manager' in rawData[0];
 
-            // Senior Manager Filtresi
-            if (smVal !== 'all' && hasSM) {
-                filteredData = filteredData.filter(item => item.senior_manager === smVal);
+            // --- AKILLI FİLTRELEME (Smart Filtering) ---
+            // Özet tablolarda (rawData) hiyerarşi sütunları eksik olabilir.
+            // Bu yüzden önce hierarchyData'dan geçerli hedef listesini (whitelist) buluyoruz.
+            
+            let validTargets = null; // Set of valid names (Channels or Leaders)
+
+            if (smVal !== 'all' || managerVal !== 'all') {
+                let hData = hierarchyData;
+                if (smVal !== 'all') hData = hData.filter(i => i.senior_manager === smVal);
+                if (managerVal !== 'all') hData = hData.filter(i => i.operation_manager === managerVal);
+
+                if (currentView === 'leader') {
+                    validTargets = new Set(hData.map(i => i.team_leader));
+                } else if (currentView === 'channel') {
+                    validTargets = new Set(hData.map(i => i.channel_name));
+                } else if (currentView === 'ops') {
+                    // Ops view'da genellikle manager_name sütunu vardır, doğrudan filtreleyebiliriz
+                    // Ama yine de hiyerarşiden gelen manager listesini kullanmak daha güvenli
+                    validTargets = new Set(hData.map(i => i.operation_manager));
+                }
             }
 
-            // Manager Filtresi
-            if (managerVal !== 'all') {
-                const omKey = getColumnName(filteredData, ['operation_manager', 'manager_name']);
-                filteredData = filteredData.filter(item => item[omKey] === managerVal);
+            // Şimdi rawData'yı bu listeye göre süzüyoruz
+            if (validTargets) {
+                filteredData = filteredData.filter(row => {
+                    const name = row.manager_name || row.leader_name || row.channel_name;
+                    return validTargets.has(name);
+                });
             }
 
-            // Alt Filtre (Lider veya Kanal)
+            // 3. Kutu Filtresi (Doğrudan isim eşleşmesi)
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
                 if (currentView === 'leader') filteredData = filteredData.filter(item => item.leader_name === subVal);
                 else if (currentView === 'channel') filteredData = filteredData.filter(item => item.channel_name === subVal);
@@ -873,7 +846,6 @@
         }
 
         function formatMoney(amount) {
-            // Use 'tr-TR' locale for currency formatting regardless of UI language to keep currency format consistent (TL)
             return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(amount);
         }
 
@@ -935,7 +907,6 @@
             let exportData = [];
             let sheetName = "Rapor";
 
-            // Rapor tipine göre doğru View'dan veri çek ve filtrele
             if (reportLevel === 'advisor') {
                 sheetName = "Temsilci Detay";
                 let filtered = advisorData;
@@ -958,7 +929,6 @@
                     return obj;
                 });
             } else {
-                // Özet raporlar için ilgili View'ları çekiyoruz (Metriklerin doğru gelmesi için)
                 let tableName = '';
                 if (reportLevel === 'leader') tableName = 'view_leader_performance';
                 else if (reportLevel === 'channel') tableName = 'view_channel_performance';
@@ -969,8 +939,7 @@
 
                 let filtered = summaryData;
                 
-                // --- AKILLI EŞLEŞTİRME (Smart Matching) ---
-                // Özet tablolarda hiyerarşi sütunları eksik olsa bile, advisorData'dan hiyerarşiyi doğrulayıp filtreliyoruz.
+                // --- EXCEL İÇİN AKILLI EŞLEŞTİRME ---
                 let validTargets = null;
                 
                 if (reportLevel !== 'manager') {
@@ -985,28 +954,25 @@
                      }
                 }
 
-                // Filtreleme Mantığı
                 if (validTargets) {
-                    // Eğer hedef listemiz varsa (örn: seçili OY'ye bağlı kanallar), sadece onları al.
                     if (reportLevel === 'leader') {
                         filtered = filtered.filter(i => validTargets.has(i.leader_name));
                     } else if (reportLevel === 'channel') {
                         filtered = filtered.filter(i => validTargets.has(i.channel_name));
                     }
                 } else {
-                    // Fallback: Standart filtreleme (Manager raporu veya liste oluşamadıysa)
+                    // Fallback
                     if (sm !== 'all' && 'senior_manager' in filtered[0]) {
                         filtered = filtered.filter(i => i.senior_manager === sm);
                     }
                     if (om !== 'all') {
-                        const omKey = getColumnName(filtered, ['operation_manager', 'manager_name']);
+                        const omKey = reportLevel === 'manager' ? 'manager_name' : 'operation_manager';
                         if (omKey in filtered[0]) {
                             filtered = filtered.filter(i => i[omKey] === om);
                         }
                     }
                 }
 
-                // Veri Eşleştirme
                 if (reportLevel === 'leader') {
                     sheetName = "Takim Lideri Ozeti";
                     exportData = filtered.map(row => {
@@ -1056,15 +1022,13 @@
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
             
-            // Formatlama Tanımları
             const numberColumns = [t('xls_clean_hours'), t('xls_prod_fte'), t('xls_fore_fte'), t('xls_fte_diff'), t('xls_raw_fte'), t('xls_fte')];
             const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
             
             const range = XLSX.utils.decode_range(ws['!ref']);
-            const currencyFmt = '"₺" #,##0'; // Para birimi formatı (Küsüratsız görünüm)
-            const numberFmt = '0.00'; // Sayı formatı (2 basamak)
+            const currencyFmt = '"₺" #,##0'; 
+            const numberFmt = '0.00'; 
             
-            // Başlık satırını kontrol et ve formatları uygula
             for (let C = range.s.c; C <= range.e.c; ++C) {
                 const address = XLSX.utils.encode_cell({r: 0, c: C});
                 if (!ws[address]) continue;

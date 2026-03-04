@@ -5,54 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trendyol Financial Dashboard</title>
     
-    <!-- FAVICON -->
     <link rel="icon" href="https://appexchange.salesforce.com/image_host/0f3dad29-4a38-468b-8fb9-cbabe4acb8f1.png" type="image/png">
     
-    <!-- Tailwind CSS & Config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        slate: {
-                            850: '#1e293b',
-                            950: '#020617',
-                        }
-                    }
-                }
-            }
+            theme: { extend: { colors: { slate: { 850: '#1e293b', 950: '#020617' } } } }
         }
     </script>
     
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Highcharts -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
-
-    <!-- SheetJS -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-    
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Inter', sans-serif; }
         body, .card, input, select, th, td { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         
-        .card { border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
-        .dark .card { border-color: #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08); }
+        .card { border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .dark .card { border-color: #334155; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 12px 20px -5px rgba(0,0,0,0.08); }
         
         .nav-link { display: flex; align-items: center; padding: 14px 20px; border-radius: 12px; color: #94a3b8; font-weight: 500; transition: all 0.2s; margin-bottom: 6px; cursor: pointer; }
         .nav-link:hover { background-color: #1e293b; color: #f8fafc; }
-        .nav-link.active { background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .nav-link.active { background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
         .nav-link i { margin-right: 14px; width: 20px; text-align: center; font-size: 1.1em; }
         
         th { font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 16px; }
@@ -67,6 +47,49 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .modal-enter { animation: modalIn 0.3s ease-out forwards; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Dönem seçici stil */
+        .period-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 6px 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .dark .period-selector {
+            background: #334155;
+            border-color: #475569;
+        }
+        .period-selector select {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+        }
+        .dark .period-selector select { color: #f1f5f9; }
+        .period-selector select option { background: white; color: #1e293b; }
+        .dark .period-selector select option { background: #334155; color: #f1f5f9; }
+
+        /* Geçmiş dönem banner */
+        #historicalBanner {
+            display: none;
+            background: linear-gradient(90deg, #7c3aed10, #2563eb10);
+            border: 1px solid #7c3aed30;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #7c3aed;
+            align-items: center;
+            gap: 8px;
+        }
+        .dark #historicalBanner { color: #a78bfa; border-color: #7c3aed40; }
     </style>
 </head>
 <body class="h-screen overflow-hidden text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900">
@@ -75,14 +98,12 @@
     <div id="loginPage" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 relative overflow-hidden">
         <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px]"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[120px]"></div>
-
         <div class="absolute top-6 right-6 z-50">
-             <div class="flex bg-white/10 backdrop-blur-md rounded-full border border-white/20 p-1 shadow-lg">
+            <div class="flex bg-white/10 backdrop-blur-md rounded-full border border-white/20 p-1 shadow-lg">
                 <button onclick="changeLanguage('tr')" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-white" id="login-lang-tr">TR</button>
                 <button onclick="changeLanguage('en')" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400" id="login-lang-en">EN</button>
             </div>
         </div>
-
         <div class="relative z-10 w-full max-w-md p-8 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl fade-in">
             <div class="text-center mb-8">
                 <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -90,7 +111,6 @@
                 </div>
                 <h2 class="text-3xl font-bold text-white tracking-tight" data-i18n="welcome">Hoşgeldiniz</h2>
             </div>
-
             <form onsubmit="handleLogin(event)" class="space-y-5">
                 <div>
                     <label class="block text-xs font-bold text-slate-300 uppercase mb-2 ml-1" data-i18n="email_label">E-posta Adresi</label>
@@ -115,7 +135,7 @@
 
     <!-- MAIN DASHBOARD -->
     <div id="mainDashboard" class="flex h-screen overflow-hidden hidden">
-        
+
         <!-- EXPORT MODAL -->
         <div id="exportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200 dark:border-slate-700">
@@ -136,20 +156,20 @@
                     <hr class="border-slate-100 dark:border-slate-700">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="senior_manager">Operasyon Müdürü</label>
-                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
+                        <select id="expSenior" onchange="updateExportFilters('sm')" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all">Tümü</option></select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="operation_manager">Operasyon Yöneticisi</label>
-                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
+                        <select id="expManager" onchange="updateExportFilters('om')" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all">Tümü</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="team_leader">Takım Lideri</label>
-                            <select id="expLeader" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
+                            <select id="expLeader" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all">Tümü</option></select>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1" data-i18n="channel">Kanal</label>
-                            <select id="expChannel" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all" data-i18n="all">Tümü</option></select>
+                            <select id="expChannel" class="w-full p-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"><option value="all">Tümü</option></select>
                         </div>
                     </div>
                 </div>
@@ -193,20 +213,32 @@
         <!-- CONTENT -->
         <main class="flex-1 flex flex-col overflow-hidden bg-[#f8fafc] dark:bg-slate-900 relative transition-colors duration-300">
             <header class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-gray-200 dark:border-slate-700 px-8 py-5 sticky top-0 z-20 transition-colors duration-300">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h1 id="pageTitle" class="text-2xl font-bold text-slate-800 dark:text-white" data-i18n="title_ops">OM & OY Genel Bakış</h1>
-                    </div>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div class="flex items-center gap-3">
+                        <h1 id="pageTitle" class="text-2xl font-bold text-slate-800 dark:text-white" data-i18n="title_ops">OM & OY Genel Bakış</h1>
+                        <!-- GEÇMİŞ DÖNEM BANNER -->
+                        <div id="historicalBanner">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <span id="historicalBannerText">Geçmiş Dönem</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+
+                        <!-- DÖNEM SEÇİCİ -->
+                        <div class="period-selector">
+                            <i class="fa-regular fa-calendar text-blue-500 text-xs"></i>
+                            <select id="periodSelector" onchange="handlePeriodChange()" class="text-sm">
+                                <option value="">Yükleniyor...</option>
+                            </select>
+                        </div>
+
                         <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center shadow-sm border border-gray-200 dark:border-slate-600">
                             <i id="themeIcon" class="fa-solid fa-moon"></i>
                         </button>
-
                         <div class="flex bg-white dark:bg-slate-700 rounded-full border border-gray-200 dark:border-slate-600 p-1 shadow-sm">
                             <button onclick="changeLanguage('tr')" class="px-3 py-1 rounded-full text-xs font-bold transition-all" id="lang-tr">TR</button>
                             <button onclick="changeLanguage('en')" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400" id="lang-en">EN</button>
                         </div>
-
                         <button onclick="openExportModal()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 rounded-full shadow-sm transition-colors"><i class="fa-solid fa-file-excel"></i> <span data-i18n="export_btn">Excel'i Dışa Aktar</span></button>
                         <div class="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-700 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-600 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span><span data-i18n="last_update">Son Güncelleme</span>: <span id="lastUpdate" class="text-slate-700 dark:text-slate-300">-</span></span></div>
                     </div>
@@ -216,8 +248,8 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
                         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="OM & OY Ara..." class="pl-10 w-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
                     </div>
-                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option></select>
-                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all" data-i18n="all">Tümü</option></select>
+                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option></select>
+                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option></select>
                     <select id="filterSub" onchange="applyFilters()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 dark:disabled:bg-slate-800 disabled:text-gray-400 dark:disabled:text-slate-600" disabled><option value="all">-</option></select>
                 </div>
             </header>
@@ -269,167 +301,36 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8'; 
+        const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8';
 
         const translations = {
             tr: {
-                welcome: "Hoşgeldiniz",
-                email_label: "E-POSTA ADRESİ",
-                password_label: "ŞİFRE",
-                login_error: "Geçersiz e-posta veya şifre",
-                login_btn: "Giriş",
-                login_loading: "Giriş Yapılıyor...",
-                email_placeholder: "isim.soyisim@concentrix.com",
-                logout_title: "Çıkış",
-                export_title: "Excel'i Dışa Aktar",
-                report_type: "RAPOR TİPİ",
-                opt_advisor: "Temsilci Bazlı",
-                opt_leader: "Takım Lideri Özeti",
-                opt_channel: "Kanal Özeti",
-                opt_manager: "Operasyon Yöneticisi Özeti",
-                senior_manager: "OPERASYON MÜDÜRÜ",
-                operation_manager: "OPERASYON YÖNETİCİSİ",
-                team_leader: "TAKIM LİDERİ",
-                channel: "KANAL",
-                all: "Tümü",
-                cancel: "İptal",
-                download_excel: "Excel'i İndir",
-                downloading: "Veriler Yükleniyor...",
-                nav_ops: "OM & OY",
-                nav_leaders: "Takım Liderleri",
-                nav_channels: "Kanallar",
-                admin_panel: "Yönetici Paneli",
-                title_ops: "OM & OY Genel Bakış",
-                title_leader: "Takım Lideri Performansı",
-                title_channel: "Kanal Performansı",
-                export_btn: "Excel'i Dışa Aktar",
-                last_update: "Son Güncelleme",
-                search_ops: "OM & OY Ara...",
-                search_leader: "TL Ara...",
-                search_channel: "Kanal Ara...",
-                kpi_total_fee: "TOPLAM ÜCRET",
-                kpi_produced_fte: "GERÇEKLEŞEN FTE",
-                kpi_target_rate: "HEDEF GERÇEKLEŞME ORANI",
-                kpi_target_desc: "Öngörülen vs Gerçekleşen",
-                kpi_hours: "NET ÇALIŞMA SAATİ",
-                kpi_hours_desc: "Toplam Net Çalışma Saati",
-                loading_data: "Veriler Yükleniyor...",
-                no_data: "Eşleşen veri bulunamadı.",
-                total: "GENEL TOPLAM",
-                chart_achieved: "Gerçekleşen",
-                chart_remaining: "Geriye Kalan",
-                th_om: "Operasyon Yöneticisi",
-                th_hours: "Net Çalışma Saati",
-                th_prod_fte: "Gerçekleşen FTE",
-                th_fore_fte: "Öngörülen FTE",
-                th_fte_diff: "FTE Farkı",
-                th_fee: "Toplam Ücret",
-                th_fee_diff: "Ücret Farkı",
-                th_tl: "Takım Lideri",
-                th_channel: "Kanal",
-                th_unit_price: "Birim Fiyatı",
-                xls_reg: "Sicil No",
-                xls_name: "İsim Soyisim",
-                xls_clean_hours: "Net Çalışma Saati",
-                xls_raw_fte: "Ham FTE",
-                xls_fte: "FTE",
-                xls_tl: "Takım Lideri",
-                xls_om: "Operasyon Yöneticisi",
-                xls_sm: "Operasyon Müdürü",
-                xls_channel: "Kanal",
-                xls_unit_price: "Birim Fiyat",
-                xls_prod_fte: "Gerçekleşen FTE",
-                xls_fore_fte: "Öngörülen FTE",
-                xls_fte_diff: "FTE Farkı",
-                xls_total_fee: "Toplam Ücret",
-                xls_fee_diff: "Ücret Farkı"
+                welcome:"Hoşgeldiniz",email_label:"E-POSTA ADRESİ",password_label:"ŞİFRE",login_error:"Geçersiz e-posta veya şifre",login_btn:"Giriş",login_loading:"Giriş Yapılıyor...",email_placeholder:"isim.soyisim@concentrix.com",logout_title:"Çıkış",export_title:"Excel'i Dışa Aktar",report_type:"RAPOR TİPİ",opt_advisor:"Temsilci Bazlı",opt_leader:"Takım Lideri Özeti",opt_channel:"Kanal Özeti",opt_manager:"Operasyon Yöneticisi Özeti",senior_manager:"OPERASYON MÜDÜRÜ",operation_manager:"OPERASYON YÖNETİCİSİ",team_leader:"TAKIM LİDERİ",channel:"KANAL",all:"Tümü",cancel:"İptal",download_excel:"Excel'i İndir",downloading:"Veriler Yükleniyor...",nav_ops:"OM & OY",nav_leaders:"Takım Liderleri",nav_channels:"Kanallar",admin_panel:"Yönetici Paneli",title_ops:"OM & OY Genel Bakış",title_leader:"Takım Lideri Performansı",title_channel:"Kanal Performansı",export_btn:"Excel'i Dışa Aktar",last_update:"Son Güncelleme",search_ops:"OM & OY Ara...",search_leader:"TL Ara...",search_channel:"Kanal Ara...",kpi_total_fee:"TOPLAM ÜCRET",kpi_produced_fte:"GERÇEKLEŞEN FTE",kpi_target_rate:"HEDEF GERÇEKLEŞME ORANI",kpi_target_desc:"Öngörülen vs Gerçekleşen",kpi_hours:"NET ÇALIŞMA SAATİ",kpi_hours_desc:"Toplam Net Çalışma Saati",loading_data:"Veriler Yükleniyor...",no_data:"Eşleşen veri bulunamadı.",total:"GENEL TOPLAM",chart_achieved:"Gerçekleşen",chart_remaining:"Geriye Kalan",th_om:"Operasyon Yöneticisi",th_hours:"Net Çalışma Saati",th_prod_fte:"Gerçekleşen FTE",th_fore_fte:"Öngörülen FTE",th_fte_diff:"FTE Farkı",th_fee:"Toplam Ücret",th_fee_diff:"Ücret Farkı",th_tl:"Takım Lideri",th_channel:"Kanal",th_unit_price:"Birim Fiyatı",xls_reg:"Sicil No",xls_name:"İsim Soyisim",xls_clean_hours:"Net Çalışma Saati",xls_raw_fte:"Ham FTE",xls_fte:"FTE",xls_tl:"Takım Lideri",xls_om:"Operasyon Yöneticisi",xls_sm:"Operasyon Müdürü",xls_channel:"Kanal",xls_unit_price:"Birim Fiyat",xls_prod_fte:"Gerçekleşen FTE",xls_fore_fte:"Öngörülen FTE",xls_fte_diff:"FTE Farkı",xls_total_fee:"Toplam Ücret",xls_fee_diff:"Ücret Farkı"
             },
             en: {
-                welcome: "Welcome",
-                email_label: "EMAIL ADDRESS",
-                password_label: "PASSWORD",
-                login_error: "Invalid email or password",
-                login_btn: "Login",
-                login_loading: "Logging in...",
-                email_placeholder: "name.surname@concentrix.com",
-                logout_title: "Logout",
-                export_title: "Export Excel",
-                report_type: "REPORT TYPE",
-                opt_advisor: "Advisor Details",
-                opt_leader: "Team Leader Summary",
-                opt_channel: "Channel Summary",
-                opt_manager: "Operation Manager Summary",
-                senior_manager: "SENIOR MANAGER",
-                operation_manager: "OPERATION MANAGER",
-                team_leader: "TEAM LEADER",
-                channel: "CHANNEL",
-                all: "All",
-                cancel: "Cancel",
-                download_excel: "Download Excel",
-                downloading: "Loading Data...",
-                nav_ops: "SM & OM Overview",
-                nav_leaders: "Team Leaders",
-                nav_channels: "Channels",
-                admin_panel: "Admin Panel",
-                title_ops: "SM & OM Overview",
-                title_leader: "Team Leader Performance",
-                title_channel: "Channel Performance",
-                export_btn: "Export Excel",
-                last_update: "Last Update",
-                search_ops: "Search SM & OM...",
-                search_leader: "Search TL...",
-                search_channel: "Search Channel...",
-                kpi_total_fee: "Total Fee",
-                kpi_produced_fte: "Produced FTE",
-                kpi_target_rate: "Target Realization",
-                kpi_target_desc: "Forecast vs Actual",
-                kpi_hours: "Net Working Hours",
-                kpi_hours_desc: "Total clean hours",
-                loading_data: "Loading Data...",
-                no_data: "No matching data found.",
-                total: "GRAND TOTAL",
-                chart_achieved: "Achieved",
-                chart_remaining: "Remaining",
-                th_om: "Operation Manager",
-                th_hours: "Net Hours",
-                th_prod_fte: "Produced FTE",
-                th_fore_fte: "Forecast FTE",
-                th_fte_diff: "FTE Diff",
-                th_fee: "Total Fee",
-                th_fee_diff: "Fee Diff",
-                th_tl: "Team Leader",
-                th_channel: "Channel",
-                th_unit_price: "Unit Price",
-                xls_reg: "Register No",
-                xls_name: "Full Name",
-                xls_clean_hours: "Net Working Hours",
-                xls_raw_fte: "Raw FTE",
-                xls_fte: "FTE",
-                xls_tl: "Team Leader",
-                xls_om: "Operation Manager",
-                xls_sm: "Senior Manager",
-                xls_channel: "Channel",
-                xls_unit_price: "Unit Price",
-                xls_prod_fte: "Produced FTE",
-                xls_fore_fte: "Forecast FTE",
-                xls_fte_diff: "FTE Diff",
-                xls_total_fee: "Total Fee",
-                xls_fee_diff: "Fee Diff"
+                welcome:"Welcome",email_label:"EMAIL ADDRESS",password_label:"PASSWORD",login_error:"Invalid email or password",login_btn:"Login",login_loading:"Logging in...",email_placeholder:"name.surname@concentrix.com",logout_title:"Logout",export_title:"Export Excel",report_type:"REPORT TYPE",opt_advisor:"Advisor Details",opt_leader:"Team Leader Summary",opt_channel:"Channel Summary",opt_manager:"Operation Manager Summary",senior_manager:"SENIOR MANAGER",operation_manager:"OPERATION MANAGER",team_leader:"TEAM LEADER",channel:"CHANNEL",all:"All",cancel:"Cancel",download_excel:"Download Excel",downloading:"Loading Data...",nav_ops:"SM & OM Overview",nav_leaders:"Team Leaders",nav_channels:"Channels",admin_panel:"Admin Panel",title_ops:"SM & OM Overview",title_leader:"Team Leader Performance",title_channel:"Channel Performance",export_btn:"Export Excel",last_update:"Last Update",search_ops:"Search SM & OM...",search_leader:"Search TL...",search_channel:"Search Channel...",kpi_total_fee:"Total Fee",kpi_produced_fte:"Produced FTE",kpi_target_rate:"Target Realization",kpi_target_desc:"Forecast vs Actual",kpi_hours:"Net Working Hours",kpi_hours_desc:"Total clean hours",loading_data:"Loading Data...",no_data:"No matching data found.",total:"GRAND TOTAL",chart_achieved:"Achieved",chart_remaining:"Remaining",th_om:"Operation Manager",th_hours:"Net Hours",th_prod_fte:"Produced FTE",th_fore_fte:"Forecast FTE",th_fte_diff:"FTE Diff",th_fee:"Total Fee",th_fee_diff:"Fee Diff",th_tl:"Team Leader",th_channel:"Channel",th_unit_price:"Unit Price",xls_reg:"Register No",xls_name:"Full Name",xls_clean_hours:"Net Working Hours",xls_raw_fte:"Raw FTE",xls_fte:"FTE",xls_tl:"Team Leader",xls_om:"Operation Manager",xls_sm:"Senior Manager",xls_channel:"Channel",xls_unit_price:"Unit Price",xls_prod_fte:"Produced FTE",xls_fore_fte:"Forecast FTE",xls_fte_diff:"FTE Diff",xls_total_fee:"Total Fee",xls_fee_diff:"Fee Diff"
             }
         };
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentView = 'ops';
         let currentLang = 'tr';
-        let rawData = []; 
-        let hierarchyData = []; // Filtreler için tam hiyerarşi verisi
-        let advisorData = []; // Excel için detay verisi
+        let rawData = [];
+        let hierarchyData = [];
+        let advisorData = [];
 
+        // ---- DÖNEM STATE ----
+        let allPeriods = [];          // billing_periods tablosundan gelen tüm dönemler
+        let activePeriodStart = null; // is_active=true dönemin start_date'i
+        let selectedPeriodStart = null; // Şu an seçili dönem (null = aktif)
+
+        // =============================================
+        // INIT
+        // =============================================
         document.addEventListener('DOMContentLoaded', async () => {
             const savedLang = localStorage.getItem('appLang');
-            if(savedLang) changeLanguage(savedLang);
-            else changeLanguage('tr');
+            changeLanguage(savedLang || 'tr');
 
             const savedTheme = localStorage.getItem('appTheme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -441,94 +342,61 @@
             }
 
             const { data: { session } } = await _supabase.auth.getSession();
-            if (session) {
-                showDashboard(session.user);
-            } else {
-                showLogin();
-            }
+            if (session) showDashboard(session.user);
+            else showLogin();
         });
 
+        // =============================================
+        // TEMA & DİL
+        // =============================================
         function toggleTheme() {
             const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('appTheme', 'light');
-                updateThemeIcon(false);
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('appTheme', 'dark');
-                updateThemeIcon(true);
-            }
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('appTheme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
         }
 
         function updateThemeIcon(isDark) {
             const icon = document.getElementById('themeIcon');
-            if (icon) {
-                icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-            }
+            if (icon) icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
 
-        function t(key) {
-            return translations[currentLang][key] || key;
-        }
+        function t(key) { return translations[currentLang][key] || key; }
 
         function changeLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('appLang', lang);
-
-            const updateBtn = (btnId, isActive, isDarkBg = false) => {
-                const btn = document.getElementById(btnId);
+            const upd = (id, active, dark=false) => {
+                const btn = document.getElementById(id);
                 if (!btn) return;
-                if (isDarkBg) {
-                    btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`;
-                } else {
-                    btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`;
-                }
+                btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${active ? 'bg-blue-600 text-white shadow-md' : (dark ? 'text-slate-400 hover:text-white' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300')}`;
             };
-
-            updateBtn('lang-tr', lang === 'tr');
-            updateBtn('lang-en', lang === 'en');
-            updateBtn('login-lang-tr', lang === 'tr', true);
-            updateBtn('login-lang-en', lang === 'en', true);
-
+            upd('lang-tr', lang==='tr'); upd('lang-en', lang==='en');
+            upd('login-lang-tr', lang==='tr', true); upd('login-lang-en', lang==='en', true);
             document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
+                const k = el.getAttribute('data-i18n');
+                if (translations[lang][k]) el.innerText = translations[lang][k];
             });
-
-            const searchInput = document.getElementById('searchInput');
-            if(searchInput) {
-                const placeholders = { 'ops': t('search_ops'), 'leader': t('search_leader'), 'channel': t('search_channel') };
-                searchInput.placeholder = placeholders[currentView];
-            }
-
-            const emailInput = document.getElementById('email');
-            if(emailInput) emailInput.placeholder = t('email_placeholder');
-
-            const logoutBtn = document.getElementById('logoutBtn');
-            if(logoutBtn) logoutBtn.title = t('logout_title');
-
-            if(rawData.length > 0) {
-                populateFilters();
-                applyFilters();
-            }
+            const si = document.getElementById('searchInput');
+            if (si) si.placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[currentView]);
+            const ei = document.getElementById('email');
+            if (ei) ei.placeholder = t('email_placeholder');
+            if (rawData.length > 0) { populateFilters(); applyFilters(); }
         }
 
+        // =============================================
+        // AUTH
+        // =============================================
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('loginError');
             const btn = document.getElementById('loginBtn');
-
             btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('login_loading')}`;
             btn.disabled = true;
             errorDiv.classList.add('hidden');
-
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-
             if (error) {
                 errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${t('login_error')}`;
                 errorDiv.classList.remove('hidden');
@@ -548,18 +416,14 @@
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('tr-TR');
-            
-            if (user && user.email) {
-                const email = user.email;
-                let formattedName = "";
-                const namePart = email.split('@')[0];
-                formattedName = namePart.split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
-                const avatarUrl = `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff&size=128`;
-                document.getElementById('userName').innerText = formattedName;
-                document.getElementById('userAvatar').src = avatarUrl;
+
+            if (user?.email) {
+                const name = user.email.split('@')[0].split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
+                document.getElementById('userName').innerText = name;
+                document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${name}&background=random&color=fff&size=128`;
             }
 
-            // Hiyerarşi verisini bir kez çekiyoruz (Filtreler için)
+            await loadPeriods();
             await fetchHierarchyData();
             switchView('ops');
         }
@@ -573,34 +437,97 @@
             document.getElementById('password').value = '';
         }
 
-        // --- DATA FETCHING ---
-        async function fetchHierarchyData() {
-            // Sadece hiyerarşi sütunlarını çekiyoruz
-            const { data, error } = await _supabase.from('view_advisor_performance').select('senior_manager, operation_manager, team_leader, channel_name');
-            if (error) {
-                console.error("Hierarchy fetch error:", error);
-                hierarchyData = [];
+        // =============================================
+        // DÖNEM YÖNETİMİ
+        // =============================================
+        async function loadPeriods() {
+            const { data, error } = await _supabase
+                .from('billing_periods')
+                .select('name, start_date, end_date, is_active')
+                .order('start_date', { ascending: false });
+
+            if (error || !data) return;
+
+            allPeriods = data;
+            activePeriodStart = data.find(p => p.is_active)?.start_date || null;
+            selectedPeriodStart = null; // aktif dönem
+
+            const sel = document.getElementById('periodSelector');
+            sel.innerHTML = data.map(p => `
+                <option value="${p.start_date}" ${p.is_active ? 'data-active="true"' : ''}>
+                    ${p.name}${p.is_active ? ' ●' : ''}
+                </option>
+            `).join('');
+
+            // Aktif dönemi seç
+            if (activePeriodStart) sel.value = activePeriodStart;
+        }
+
+        async function handlePeriodChange() {
+            const sel = document.getElementById('periodSelector');
+            const chosen = sel.value;
+            const isActive = allPeriods.find(p => p.start_date === chosen)?.is_active;
+
+            selectedPeriodStart = isActive ? null : chosen;
+
+            // Banner göster/gizle
+            const banner = document.getElementById('historicalBanner');
+            if (selectedPeriodStart) {
+                const period = allPeriods.find(p => p.start_date === chosen);
+                document.getElementById('historicalBannerText').textContent = `Geçmiş Dönem: ${period?.name || chosen}`;
+                banner.style.display = 'flex';
             } else {
-                hierarchyData = data;
+                banner.style.display = 'none';
             }
+
+            // Hiyerarşiyi yenile (geçmiş dönem için farklı fonksiyon)
+            await fetchHierarchyData();
+
+            // Filtreleri sıfırla ve veriyi yenile
+            document.getElementById('filterSenior').value = 'all';
+            document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
+            const subFilter = document.getElementById('filterSub');
+            subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
+            subFilter.disabled = true;
+
+            fetchData();
+        }
+
+        function isHistoricalPeriod() {
+            return selectedPeriodStart !== null;
+        }
+
+        // =============================================
+        // VERİ ÇEKME
+        // =============================================
+        async function fetchHierarchyData() {
+            let data, error;
+
+            if (isHistoricalPeriod()) {
+                // Geçmiş dönem: RPC fonksiyonu
+                ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
+            } else {
+                // Aktif dönem: view
+                ({ data, error } = await _supabase
+                    .from('view_advisor_performance')
+                    .select('senior_manager, operation_manager, team_leader, channel_name'));
+            }
+
+            if (error) { console.error('Hierarchy fetch error:', error); hierarchyData = []; }
+            else hierarchyData = data || [];
         }
 
         function switchView(view) {
             currentView = view;
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-${view}`).classList.add('active');
-            
-            const titles = { 'ops': 'title_ops', 'leader': 'title_leader', 'channel': 'title_channel' };
-            document.getElementById('pageTitle').innerText = t(titles[view]);
-            
-            const placeholders = { 'ops': 'search_ops', 'leader': 'search_leader', 'channel': 'search_channel' };
-            document.getElementById('searchInput').placeholder = t(placeholders[view]);
-            
-            // Filtreleri sıfırla
+            document.getElementById('pageTitle').innerText = t({'ops':'title_ops','leader':'title_leader','channel':'title_channel'}[view]);
+            document.getElementById('searchInput').placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[view]);
+
             document.getElementById('filterSenior').value = 'all';
-            document.getElementById('filterManager').innerHTML = `<option value="all" data-i18n="all">${t('all')}</option>`;
+            document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
             const subFilter = document.getElementById('filterSub');
-            subFilter.innerHTML = `<option value="all" data-i18n="all">${t('all')}</option>`;
+            subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
             subFilter.disabled = true;
 
             fetchData();
@@ -608,54 +535,64 @@
 
         async function fetchData() {
             document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400 dark:text-slate-500"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
-            let tableName = '';
-            if (currentView === 'ops') tableName = 'view_operations_performance';
-            else if (currentView === 'leader') tableName = 'view_leader_performance';
-            else tableName = 'view_channel_performance';
 
-            const { data, error } = await _supabase.from(tableName).select('*');
-            if (error) { 
-                if(error.code === 'PGRST301' || error.message.includes('JWT')) { handleLogout(); return; }
-                alert('Veri çekme hatası.'); return; 
+            let data, error;
+
+            if (isHistoricalPeriod()) {
+                // Geçmiş dönem: RPC fonksiyonları
+                const rpcMap = { 'ops': 'get_period_operations', 'leader': 'get_period_leaders', 'channel': 'get_period_channels' };
+                ({ data, error } = await _supabase.rpc(rpcMap[currentView], { p_start: selectedPeriodStart }));
+
+                // RPC dönüş alanlarını view alanlarıyla eşleştir
+                if (data) {
+                    data = data.map(row => {
+                        if (currentView === 'ops') return { ...row, manager_name: row.manager_name };
+                        if (currentView === 'leader') return { ...row, leader_name: row.leader_name, operation_manager: row.operation_manager };
+                        if (currentView === 'channel') return { ...row, channel_name: row.channel_name };
+                        return row;
+                    });
+                }
+            } else {
+                // Aktif dönem: view'lar
+                const viewMap = { 'ops': 'view_operations_performance', 'leader': 'view_leader_performance', 'channel': 'view_channel_performance' };
+                ({ data, error } = await _supabase.from(viewMap[currentView]).select('*'));
             }
-            rawData = data;
-            populateFilters(); 
-            applyFilters(); 
+
+            if (error) {
+                if (error.code === 'PGRST301' || error.message?.includes('JWT')) { handleLogout(); return; }
+                console.error('fetchData error:', error);
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-8 text-center text-rose-500">Veri çekme hatası: ${error.message}</td></tr>`;
+                return;
+            }
+
+            rawData = data || [];
+            populateFilters();
+            applyFilters();
         }
 
-        // --- FILTER LOGIC ---
+        // =============================================
+        // FİLTRELER
+        // =============================================
         function getUniqueValues(data, key) {
             return [...new Set(data.map(item => item[key]))].filter(x => x);
         }
 
         function populateFilters() {
-            // İlk açılışta Senior Manager listesini doldur
             const seniorSelect = document.getElementById('filterSenior');
             const seniors = getUniqueValues(hierarchyData, 'senior_manager').sort();
-            
-            // Mevcut seçimi korumaya çalış, yoksa 'all' yap
             const currentVal = seniorSelect.value;
             seniorSelect.innerHTML = `<option value="all">${t('all')}</option>` + seniors.map(s => `<option value="${s}">${s}</option>`).join('');
             if (seniors.includes(currentVal)) seniorSelect.value = currentVal;
-            
             handleSeniorChange();
         }
 
         function handleSeniorChange() {
             const smVal = document.getElementById('filterSenior').value;
             const managerSelect = document.getElementById('filterManager');
-            
-            // Hiyerarşi verisinden filtrele (Tablo verisinden değil!)
-            let filteredHierarchy = hierarchyData;
-            if (smVal !== 'all') {
-                filteredHierarchy = filteredHierarchy.filter(item => item.senior_manager === smVal);
-            }
-
-            const managers = getUniqueValues(filteredHierarchy, 'operation_manager').sort();
-            
+            let filtered = smVal === 'all' ? hierarchyData : hierarchyData.filter(i => i.senior_manager === smVal);
+            const managers = getUniqueValues(filtered, 'operation_manager').sort();
             managerSelect.innerHTML = `<option value="all">${t('all')}</option>` + managers.map(m => `<option value="${m}">${m}</option>`).join('');
             managerSelect.value = 'all';
-            
             handleManagerChange();
         }
 
@@ -663,7 +600,7 @@
             const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subFilter = document.getElementById('filterSub');
-            
+
             if (currentView === 'ops') {
                 subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
                 subFilter.disabled = true;
@@ -672,26 +609,15 @@
             }
 
             subFilter.disabled = false;
-            
-            // Hiyerarşi verisinden filtrele
-            let filteredHierarchy = hierarchyData;
-            if (smVal !== 'all') {
-                filteredHierarchy = filteredHierarchy.filter(item => item.senior_manager === smVal);
-            }
-            if (managerVal !== 'all') {
-                filteredHierarchy = filteredHierarchy.filter(item => item.operation_manager === managerVal);
-            }
+            let filtered = hierarchyData;
+            if (smVal !== 'all') filtered = filtered.filter(i => i.senior_manager === smVal);
+            if (managerVal !== 'all') filtered = filtered.filter(i => i.operation_manager === managerVal);
 
-            let subItems = [];
-            if (currentView === 'leader') {
-                subItems = getUniqueValues(filteredHierarchy, 'team_leader');
-            } else if (currentView === 'channel') {
-                subItems = getUniqueValues(filteredHierarchy, 'channel_name');
-            }
-            subItems.sort();
+            const subItems = (currentView === 'leader'
+                ? getUniqueValues(filtered, 'team_leader')
+                : getUniqueValues(filtered, 'channel_name')).sort();
 
             subFilter.innerHTML = `<option value="all">${t('all')}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
-            
             applyFilters();
         }
 
@@ -700,32 +626,19 @@
             const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subVal = document.getElementById('filterSub').value;
-            
-            let filteredData = rawData;
 
-            // --- AKILLI FİLTRELEME (Smart Filtering) ---
-            // Özet tablolarda (rawData) hiyerarşi sütunları eksik olabilir.
-            // Bu yüzden önce hierarchyData'dan geçerli hedef listesini (whitelist) buluyoruz.
-            
-            let validTargets = null; // Set of valid names (Channels or Leaders)
+            let filteredData = rawData;
+            let validTargets = null;
 
             if (smVal !== 'all' || managerVal !== 'all') {
                 let hData = hierarchyData;
                 if (smVal !== 'all') hData = hData.filter(i => i.senior_manager === smVal);
                 if (managerVal !== 'all') hData = hData.filter(i => i.operation_manager === managerVal);
-
-                if (currentView === 'leader') {
-                    validTargets = new Set(hData.map(i => i.team_leader));
-                } else if (currentView === 'channel') {
-                    validTargets = new Set(hData.map(i => i.channel_name));
-                } else if (currentView === 'ops') {
-                    // Ops view'da genellikle manager_name sütunu vardır, doğrudan filtreleyebiliriz
-                    // Ama yine de hiyerarşiden gelen manager listesini kullanmak daha güvenli
-                    validTargets = new Set(hData.map(i => i.operation_manager));
-                }
+                if (currentView === 'leader') validTargets = new Set(hData.map(i => i.team_leader));
+                else if (currentView === 'channel') validTargets = new Set(hData.map(i => i.channel_name));
+                else if (currentView === 'ops') validTargets = new Set(hData.map(i => i.operation_manager));
             }
 
-            // Şimdi rawData'yı bu listeye göre süzüyoruz
             if (validTargets) {
                 filteredData = filteredData.filter(row => {
                     const name = row.manager_name || row.leader_name || row.channel_name;
@@ -733,32 +646,34 @@
                 });
             }
 
-            // 3. Kutu Filtresi (Doğrudan isim eşleşmesi)
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
-                if (currentView === 'leader') filteredData = filteredData.filter(item => item.leader_name === subVal);
-                else if (currentView === 'channel') filteredData = filteredData.filter(item => item.channel_name === subVal);
+                if (currentView === 'leader') filteredData = filteredData.filter(i => i.leader_name === subVal);
+                else if (currentView === 'channel') filteredData = filteredData.filter(i => i.channel_name === subVal);
             }
 
-            // Arama
             if (searchVal) {
                 filteredData = filteredData.filter(item => {
                     const name = (item.manager_name || item.leader_name || item.channel_name || '').toLowerCase();
                     return name.includes(searchVal);
                 });
             }
+
             renderData(filteredData);
         }
 
+        // =============================================
+        // RENDER
+        // =============================================
         function renderData(data) {
             const thead = document.getElementById('tableHeader');
             const tbody = document.getElementById('tableBody');
             const tfoot = document.getElementById('tableFooter');
+
             let headers = [];
-            
             if (currentView === 'ops') headers = [t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
             else if (currentView === 'leader') headers = [t('th_tl'), t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
             else headers = [t('th_channel'), t('th_unit_price'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
-            
+
             thead.innerHTML = headers.map(h => `<th class="px-6 py-4">${h}</th>`).join('');
 
             let html = '';
@@ -768,15 +683,15 @@
                 html = `<tr><td colspan="8" class="p-8 text-center text-slate-400 dark:text-slate-500">${t('no_data')}</td></tr>`;
             } else {
                 data.forEach(row => {
-                    let name = row.manager_name || row.leader_name || row.channel_name;
-                    let manager = row.operation_manager || '-';
-                    let hours = parseFloat(row.total_clean_hours || 0);
-                    let prodFte = parseFloat(row.produced_fte || 0);
-                    let foreFte = parseFloat(row.forecast_fte || 0);
-                    let fteDiff = prodFte - foreFte; 
-                    let fee = parseFloat(row.total_fee || 0);
-                    let feeDiff = parseFloat(row.fee_diff || 0);
-                    let unitPrice = row.unit_price || 0;
+                    const name = row.manager_name || row.leader_name || row.channel_name;
+                    const manager = row.operation_manager || '-';
+                    const hours = parseFloat(row.total_clean_hours || 0);
+                    const prodFte = parseFloat(row.produced_fte || 0);
+                    const foreFte = parseFloat(row.forecast_fte || 0);
+                    const fteDiff = prodFte - foreFte;
+                    const fee = parseFloat(row.total_fee || 0);
+                    const feeDiff = parseFloat(row.fee_diff || 0);
+                    const unitPrice = row.unit_price || 0;
 
                     totals.hours += hours;
                     totals.prodFte += prodFte;
@@ -802,7 +717,9 @@
                     </tr>`;
                 });
             }
+
             tbody.innerHTML = html;
+
             let footerHtml = `<td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${t('total')}</td>`;
             if (currentView === 'leader') footerHtml += `<td></td>`;
             if (currentView === 'channel') footerHtml += `<td></td>`;
@@ -823,9 +740,9 @@
             document.getElementById('kpi-total-fee').innerText = formatMoney(totals.fee);
             document.getElementById('kpi-produced-fte').innerText = totals.prodFte.toFixed(2);
             document.getElementById('kpi-hours').innerText = totals.hours.toFixed(1);
-            const feeDiffEl = document.getElementById('kpi-fee-diff');
             const diff = totals.feeDiff;
             const icon = diff >= 0 ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
+            const feeDiffEl = document.getElementById('kpi-fee-diff');
             feeDiffEl.innerHTML = `${icon} ${formatMoney(Math.abs(diff))}`;
             feeDiffEl.className = `mt-2 text-xs font-bold ${diff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
             const percent = totals.foreFte > 0 ? (totals.prodFte / totals.foreFte) * 100 : 0;
@@ -837,7 +754,7 @@
             const remaining = Math.max(0, totals.foreFte - totals.prodFte);
             const achieved = Math.min(totals.prodFte, totals.foreFte);
             Highcharts.chart('targetDonutChart', {
-                chart: { type: 'pie', options3d: { enabled: true, alpha: 45 }, backgroundColor: 'transparent', margin: [0, 0, 0, 0], spacing: [0, 0, 0, 0] },
+                chart: { type: 'pie', options3d: { enabled: true, alpha: 45 }, backgroundColor: 'transparent', margin: [0,0,0,0], spacing: [0,0,0,0] },
                 title: { text: null },
                 plotOptions: { pie: { innerSize: '50%', depth: 35, dataLabels: { enabled: false }, states: { hover: { enabled: false } } } },
                 credits: { enabled: false },
@@ -849,22 +766,29 @@
             return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(amount);
         }
 
-        // --- EXCEL EXPORT LOGIC ---
+        // =============================================
+        // EXCEL EXPORT
+        // =============================================
         async function openExportModal() {
             document.getElementById('exportModal').classList.remove('hidden');
             const btn = document.getElementById('btnGenerate');
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('downloading')}`;
 
-            // Advisor verisini filtreler için çekiyoruz
-            const { data, error } = await _supabase.from('view_advisor_performance').select('*');
+            let data, error;
+            if (isHistoricalPeriod()) {
+                ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
+            } else {
+                ({ data, error } = await _supabase.from('view_advisor_performance').select('*'));
+            }
+
             if (error) { alert('Veri çekme hatası'); return; }
-            advisorData = data;
-            
-            const sms = [...new Set(data.map(i => i.senior_manager))].filter(Boolean).sort();
+            advisorData = data || [];
+
+            const sms = [...new Set(advisorData.map(i => i.senior_manager))].filter(Boolean).sort();
             document.getElementById('expSenior').innerHTML = `<option value="all">${t('all')}</option>` + sms.map(m => `<option value="${m}">${m}</option>`).join('');
-            
-            updateExportFilters('sm'); 
+            updateExportFilters('sm');
+
             btn.disabled = false;
             btn.innerHTML = `<span>${t('download_excel')}</span><i class="fa-solid fa-download"></i>`;
         }
@@ -874,16 +798,13 @@
         function updateExportFilters(changedLevel) {
             const sm = document.getElementById('expSenior').value;
             const omSelect = document.getElementById('expManager');
-            const tlSelect = document.getElementById('expLeader');
-            const chSelect = document.getElementById('expChannel');
-
             let filtered = advisorData;
 
             if (changedLevel === 'sm') {
                 if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
                 const oms = [...new Set(filtered.map(i => i.operation_manager))].filter(Boolean).sort();
                 omSelect.innerHTML = `<option value="all">${t('all')}</option>` + oms.map(m => `<option value="${m}">${m}</option>`).join('');
-                omSelect.value = 'all'; 
+                omSelect.value = 'all';
             }
 
             const currentOM = omSelect.value;
@@ -892,9 +813,8 @@
 
             const tls = [...new Set(filtered.map(i => i.team_leader))].filter(Boolean).sort();
             const chs = [...new Set(filtered.map(i => i.channel_name))].filter(Boolean).sort();
-
-            tlSelect.innerHTML = `<option value="all">${t('all')}</option>` + tls.map(m => `<option value="${m}">${m}</option>`).join('');
-            chSelect.innerHTML = `<option value="all">${t('all')}</option>` + chs.map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('expLeader').innerHTML = `<option value="all">${t('all')}</option>` + tls.map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('expChannel').innerHTML = `<option value="all">${t('all')}</option>` + chs.map(m => `<option value="${m}">${m}</option>`).join('');
         }
 
         async function generateExcel() {
@@ -914,7 +834,6 @@
                 if (om !== 'all') filtered = filtered.filter(i => i.operation_manager === om);
                 if (tl !== 'all') filtered = filtered.filter(i => i.team_leader === tl);
                 if (ch !== 'all') filtered = filtered.filter(i => i.channel_name === ch);
-
                 exportData = filtered.map(row => {
                     let obj = {};
                     obj[t('xls_reg')] = row.cnx_register_number;
@@ -929,48 +848,27 @@
                     return obj;
                 });
             } else {
-                let tableName = '';
-                if (reportLevel === 'leader') tableName = 'view_leader_performance';
-                else if (reportLevel === 'channel') tableName = 'view_channel_performance';
-                else if (reportLevel === 'manager') tableName = 'view_operations_performance';
+                // Özet rapor: dönem seçimine göre view veya RPC
+                let summaryData, error;
 
-                const { data: summaryData, error } = await _supabase.from(tableName).select('*');
-                if (error) { alert('Rapor verisi çekilemedi.'); return; }
-
-                let filtered = summaryData;
-                
-                // --- EXCEL İÇİN AKILLI EŞLEŞTİRME ---
-                let validTargets = null;
-                
-                if (reportLevel !== 'manager') {
-                     let hierarchySource = advisorData;
-                     if (sm !== 'all') hierarchySource = hierarchySource.filter(i => i.senior_manager === sm);
-                     if (om !== 'all') hierarchySource = hierarchySource.filter(i => i.operation_manager === om);
-                     
-                     if (reportLevel === 'leader') {
-                         validTargets = new Set(hierarchySource.map(i => i.team_leader));
-                     } else if (reportLevel === 'channel') {
-                         validTargets = new Set(hierarchySource.map(i => i.channel_name));
-                     }
+                if (isHistoricalPeriod()) {
+                    const rpcMap = { 'leader': 'get_period_leaders', 'channel': 'get_period_channels', 'manager': 'get_period_operations' };
+                    ({ data: summaryData, error } = await _supabase.rpc(rpcMap[reportLevel], { p_start: selectedPeriodStart }));
+                } else {
+                    const viewMap = { 'leader': 'view_leader_performance', 'channel': 'view_channel_performance', 'manager': 'view_operations_performance' };
+                    ({ data: summaryData, error } = await _supabase.from(viewMap[reportLevel]).select('*'));
                 }
 
-                if (validTargets) {
-                    if (reportLevel === 'leader') {
-                        filtered = filtered.filter(i => validTargets.has(i.leader_name));
-                    } else if (reportLevel === 'channel') {
-                        filtered = filtered.filter(i => validTargets.has(i.channel_name));
-                    }
-                } else {
-                    // Fallback
-                    if (sm !== 'all' && 'senior_manager' in filtered[0]) {
-                        filtered = filtered.filter(i => i.senior_manager === sm);
-                    }
-                    if (om !== 'all') {
-                        const omKey = reportLevel === 'manager' ? 'manager_name' : 'operation_manager';
-                        if (omKey in filtered[0]) {
-                            filtered = filtered.filter(i => i[omKey] === om);
-                        }
-                    }
+                if (error) { alert('Rapor verisi çekilemedi.'); return; }
+                let filtered = summaryData || [];
+
+                // Hiyerarşi filtresi
+                if (reportLevel !== 'manager' && (sm !== 'all' || om !== 'all')) {
+                    let src = advisorData;
+                    if (sm !== 'all') src = src.filter(i => i.senior_manager === sm);
+                    if (om !== 'all') src = src.filter(i => i.operation_manager === om);
+                    const validTargets = new Set(reportLevel === 'leader' ? src.map(i => i.team_leader) : src.map(i => i.channel_name));
+                    filtered = filtered.filter(i => validTargets.has(reportLevel === 'leader' ? i.leader_name : i.channel_name));
                 }
 
                 if (reportLevel === 'leader') {
@@ -1021,41 +919,26 @@
 
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
-            
             const numberColumns = [t('xls_clean_hours'), t('xls_prod_fte'), t('xls_fore_fte'), t('xls_fte_diff'), t('xls_raw_fte'), t('xls_fte')];
             const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
-            
             const range = XLSX.utils.decode_range(ws['!ref']);
-            const currencyFmt = '"₺" #,##0'; 
-            const numberFmt = '0.00'; 
-            
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-                const address = XLSX.utils.encode_cell({r: 0, c: C});
-                if (!ws[address]) continue;
-                
-                const colName = ws[address].v;
 
-                if (currencyColumns.includes(colName)) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const address = XLSX.utils.encode_cell({ r: 0, c: C });
+                if (!ws[address]) continue;
+                const colName = ws[address].v;
+                const fmt = currencyColumns.includes(colName) ? '"₺" #,##0' : (numberColumns.includes(colName) ? '0.00' : null);
+                if (fmt) {
                     for (let R = 1; R <= range.e.r; ++R) {
-                        const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
-                        if (!ws[cellAddress] || ws[cellAddress].t !== 'n') continue;
-                        ws[cellAddress].z = currencyFmt;
-                    }
-                } else if (numberColumns.includes(colName)) {
-                    for (let R = 1; R <= range.e.r; ++R) {
-                        const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
-                        if (!ws[cellAddress] || ws[cellAddress].t !== 'n') continue;
-                        ws[cellAddress].z = numberFmt;
+                        const ca = XLSX.utils.encode_cell({ r: R, c: C });
+                        if (ws[ca] && ws[ca].t === 'n') ws[ca].z = fmt;
                     }
                 }
             }
 
-            const wscols = Object.keys(exportData[0]).map(k => ({ wch: 20 }));
-            ws['!cols'] = wscols;
-
+            ws['!cols'] = Object.keys(exportData[0]).map(() => ({ wch: 20 }));
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            const fileName = `Trendyol_${sheetName.replace(/ /g, '_')}_${new Date().toISOString().slice(0,10)}.xlsx`;
-            XLSX.writeFile(wb, fileName);
+            XLSX.writeFile(wb, `Trendyol_${sheetName.replace(/ /g, '_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
             closeExportModal();
         }
     </script>

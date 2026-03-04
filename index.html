@@ -21,6 +21,7 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         body { font-family: 'Inter', sans-serif; }
         body, .card, input, select, th, td { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
@@ -46,6 +47,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .modal-enter { animation: modalIn 0.3s ease-out forwards; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
         /* Dönem seçici stil */
         .period-selector {
             display: flex;
@@ -78,6 +80,7 @@
         .dark .period-selector select { color: #f1f5f9; }
         .period-selector select option { background: white; color: #1e293b; }
         .dark .period-selector select option { background: #334155; color: #f1f5f9; }
+
         /* Geçmiş dönem banner */
         #historicalBanner {
             display: none;
@@ -193,6 +196,7 @@
         .bot.typing span:nth-child(2) { animation-delay: 0.15s; }
         .bot.typing span:nth-child(3) { animation-delay: 0.3s; }
         @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
         #chatForm {
             padding: 1rem;
             border-top: 1px solid #e2e8f0;
@@ -217,6 +221,7 @@
     </style>
 </head>
 <body class="h-screen overflow-hidden text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900">
+
     <!-- LOGIN PAGE -->
     <div id="loginPage" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 relative overflow-hidden">
         <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px]"></div>
@@ -255,8 +260,10 @@
             <div class="mt-8 text-center"><p class="text-xs text-slate-500">&copy; 2026 Concentrix. Secure Access Only.</p></div>
         </div>
     </div>
+
     <!-- MAIN DASHBOARD -->
     <div id="mainDashboard" class="flex h-screen overflow-hidden hidden">
+
         <!-- EXPORT MODAL -->
         <div id="exportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200 dark:border-slate-700">
@@ -300,6 +307,7 @@
                 </div>
             </div>
         </div>
+
         <!-- SIDEBAR -->
         <aside class="w-72 bg-[#0f172a] flex flex-col hidden md:flex shadow-2xl z-30 relative">
             <div class="p-8 border-b border-slate-800 flex flex-col gap-4">
@@ -329,6 +337,7 @@
                 </div>
             </div>
         </aside>
+
         <!-- CONTENT -->
         <main class="flex-1 flex flex-col overflow-hidden bg-[#f8fafc] dark:bg-slate-900 relative transition-colors duration-300">
             <header class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-gray-200 dark:border-slate-700 px-8 py-4 sticky top-0 z-20 transition-colors duration-300">
@@ -362,15 +371,18 @@
                             <option value="">Yükleniyor...</option>
                         </select>
                     </div>
+
                     <div class="relative group flex-grow w-full">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
                         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Ara..." class="pl-10 w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5 transition-all">
                     </div>
+
                     <select id="filterSenior" onchange="handleSeniorChange()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5"><option value="all">Tümü</option></select>
                     <select id="filterManager" onchange="handleManagerChange()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5"><option value="all">Tümü</option></select>
                     <select id="filterSub" onchange="applyFilters()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500" disabled><option value="all">-</option></select>
                 </div>
             </header>
+
             <div class="flex-1 overflow-auto p-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <div class="card bg-white dark:bg-slate-800 p-6 relative overflow-hidden group border-l-4 border-blue-500">
@@ -402,6 +414,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="card bg-white dark:bg-slate-800 overflow-hidden border-0 shadow-lg">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -415,6 +428,7 @@
             </div>
         </main>
     </div>
+
     <!-- ================= AI CHATBOT MARKUP ================= -->
     <div id="aiChatContainer">
         <!-- The Chat Window -->
@@ -443,14 +457,17 @@
                 </button>
             </form>
         </div>
+
         <!-- The Toggle Button -->
         <button id="chatToggleButton" onclick="toggleChatWindow()" title="AI Asistanı Aç">
             <i class="fa-solid fa-brain fa-xl"></i>
         </button>
     </div>
+
     <script>
         const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8';
+
         const translations = {
             tr: {
                 welcome:"Hoşgeldiniz",email_label:"E-POSTA ADRESİ",password_label:"ŞİFRE",login_error:"Geçersiz e-posta veya şifre",login_btn:"Giriş",login_loading:"Giriş Yapılıyor...",email_placeholder:"isim.soyisim@concentrix.com",logout_title:"Çıkış",export_title:"Excel'i Dışa Aktar",report_type:"RAPOR TİPİ",opt_advisor:"Temsilci Bazlı",opt_leader:"Takım Lideri Özeti",opt_channel:"Kanal Özeti",opt_manager:"Operasyon Yöneticisi Özeti",senior_manager:"OPERASYON MÜDÜRÜ",operation_manager:"OPERASYON YÖNETİCİSİ",team_leader:"TAKIM LİDERİ",channel:"KANAL",all:"Tümü",cancel:"İptal",download_excel:"Excel'i İndir",downloading:"Veriler Yükleniyor...",nav_ops:"OM & OY",nav_leaders:"Takım Liderleri",nav_channels:"Kanallar",admin_panel:"Yönetici Paneli",title_ops:"OM & OY Genel Bakış",title_leader:"Takım Lideri Performansı",title_channel:"Kanal Performansı",export_btn:"Excel'i Dışa Aktar",last_update:"Son Güncelleme",search_ops:"OM, OY, TL veya Kanal ara...",search_leader:"TL veya OM ara...",search_channel:"Kanal ara...",kpi_total_fee:"TOPLAM ÜCRET",kpi_produced_fte:"GERÇEKLEŞEN FTE",kpi_target_rate:"HEDEF GERÇEKLEŞME ORANI",kpi_target_desc:"Öngörülen vs Gerçekleşen",kpi_hours:"NET ÇALIŞMA SAATİ",kpi_hours_desc:"Toplam Net Çalışma Saati",loading_data:"Veriler Yükleniyor...",no_data:"Eşleşen veri bulunamadı.",total:"GENEL TOPLAM",chart_achieved:"Gerçekleşen",chart_remaining:"Geriye Kalan",th_om:"Operasyon Yöneticisi",th_hours:"Net Çalışma Saati",th_prod_fte:"Gerçekleşen FTE",th_fore_fte:"Öngörülen FTE",th_fte_diff:"FTE Farkı",th_fee:"Toplam Ücret",th_fee_diff:"Ücret Farkı",th_tl:"Takım Lideri",th_channel:"Kanal",th_unit_price:"Birim Fiyatı",xls_reg:"Sicil No",xls_name:"İsim Soyisim",xls_clean_hours:"Net Çalışma Saati",xls_raw_fte:"Ham FTE",xls_fte:"FTE",xls_tl:"Takım Lideri",xls_om:"Operasyon Yöneticisi",xls_sm:"Operasyon Müdürü",xls_channel:"Kanal",xls_unit_price:"Birim Fiyat",xls_prod_fte:"Gerçekleşen FTE",xls_fore_fte:"Öngörülen FTE",xls_fte_diff:"FTE Farkı",xls_total_fee:"Toplam Ücret",xls_fee_diff:"Ücret Farkı",
@@ -461,22 +478,26 @@
                 historical_banner: "Historical Period", period_loading: "Loading..."
             }
         };
+
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentView = 'ops';
         let currentLang = 'tr';
         let rawData = [];
         let hierarchyData = [];
         let advisorData = [];
+
         // ---- DÖNEM STATE ----
         let allPeriods = [];          // billing_periods tablosundan gelen tüm dönemler
         let activePeriodStart = null; // is_active=true dönemin start_date'i
         let selectedPeriodStart = null; // Şu an seçili dönem (null = aktif)
+
         // =============================================
         // INIT
         // =============================================
         document.addEventListener('DOMContentLoaded', async () => {
             const savedLang = localStorage.getItem('appLang');
             changeLanguage(savedLang || 'tr');
+
             const savedTheme = localStorage.getItem('appTheme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -485,10 +506,12 @@
                 document.documentElement.classList.remove('dark');
                 updateThemeIcon(false);
             }
+
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) showDashboard(session.user);
             else showLogin();
         });
+
         // =============================================
         // TEMA & DİL
         // =============================================
@@ -500,16 +523,19 @@
             // Re-render charts for new theme
             applyFilters();
         }
+
         function updateThemeIcon(isDark) {
             const icon = document.getElementById('themeIcon');
             if (icon) icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
+
         function t(key) { return translations[currentLang][key] || key; }
         
         const monthTranslations = {
             tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
             en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         };
+
         function translatePeriodName(name, lang) {
             if (lang === 'tr' || !name) return name;
             let translatedName = name;
@@ -519,6 +545,7 @@
             }
             return translatedName;
         }
+
         function updatePeriodDisplayLanguage() {
             // Translate period selector options
             const periodSelector = document.getElementById('periodSelector');
@@ -541,10 +568,12 @@
                 }
             }
         }
+
         function changeLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
             localStorage.setItem('appLang', lang);
+
             const upd = (id, active, dark=false) => {
                 const btn = document.getElementById(id);
                 if (!btn) return;
@@ -557,6 +586,7 @@
                 const k = el.getAttribute('data-i18n');
                 if (translations[lang][k]) el.innerText = translations[lang][k];
             });
+
             const si = document.getElementById('searchInput');
             if (si) si.placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[currentView]);
             
@@ -569,6 +599,7 @@
             }
             updatePeriodDisplayLanguage();
         }
+
         // =============================================
         // AUTH
         // =============================================
@@ -591,23 +622,28 @@
                 showDashboard(data.user);
             }
         }
+
         async function handleLogout() {
             await _supabase.auth.signOut();
             showLogin();
         }
+
         async function showDashboard(user) {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('tr-TR');
+
             if (user?.email) {
                 const name = user.email.split('@')[0].split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
                 document.getElementById('userName').innerText = name;
                 document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${name}&background=random&color=fff&size=128`;
             }
+
             await loadPeriods();
             await fetchHierarchyData();
             switchView('ops');
         }
+
         function showLogin() {
             document.getElementById('mainDashboard').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
@@ -616,6 +652,7 @@
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
         }
+
         // =============================================
         // DÖNEM YÖNETİMİ
         // =============================================
@@ -626,22 +663,29 @@
                 .from('billing_periods')
                 .select('name, start_date, end_date, is_active')
                 .order('start_date', { ascending: false });
+
             if (error || !data) return;
+
             allPeriods = data;
             activePeriodStart = data.find(p => p.is_active)?.start_date || null;
             selectedPeriodStart = null; // aktif dönem
+
             sel.innerHTML = data.map(p => `
                 <option value="${p.start_date}" data-original-name="${p.name}" ${p.is_active ? 'data-active="true"' : ''}>
                     ${translatePeriodName(p.name, currentLang)}${p.is_active ? ' ●' : ''}
                 </option>
             `).join('');
+
             if (activePeriodStart) sel.value = activePeriodStart;
         }
+
         async function handlePeriodChange() {
             const sel = document.getElementById('periodSelector');
             const chosen = sel.value;
             const isActive = allPeriods.find(p => p.start_date === chosen)?.is_active;
+
             selectedPeriodStart = isActive ? null : chosen;
+
             const banner = document.getElementById('historicalBanner');
             if (selectedPeriodStart) {
                 const period = allPeriods.find(p => p.start_date === chosen);
@@ -650,22 +694,28 @@
             } else {
                 banner.style.display = 'none';
             }
+
             await fetchHierarchyData();
+
             document.getElementById('filterSenior').value = 'all';
             document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
             const subFilter = document.getElementById('filterSub');
             subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
             subFilter.disabled = true;
+
             fetchData();
         }
+
         function isHistoricalPeriod() {
             return selectedPeriodStart !== null;
         }
+
         // =============================================
         // VERİ ÇEKME
         // =============================================
         async function fetchHierarchyData() {
             let data, error;
+
             if (isHistoricalPeriod()) {
                 ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
             } else {
@@ -673,28 +723,36 @@
                     .from('view_advisor_performance')
                     .select('senior_manager, operation_manager, team_leader, channel_name'));
             }
+
             if (error) { console.error('Hierarchy fetch error:', error); hierarchyData = []; }
             else hierarchyData = data || [];
         }
+
         function switchView(view) {
             currentView = view;
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-${view}`).classList.add('active');
             document.getElementById('pageTitle').innerText = t({'ops':'title_ops','leader':'title_leader','channel':'title_channel'}[view]);
             document.getElementById('searchInput').placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[view]);
+
             document.getElementById('filterSenior').value = 'all';
             document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
             const subFilter = document.getElementById('filterSub');
             subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
             subFilter.disabled = true;
+
             fetchData();
         }
+
         async function fetchData() {
             document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400 dark:text-slate-500"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
+
             let data, error;
+
             if (isHistoricalPeriod()) {
                 const rpcMap = { 'ops': 'get_period_operations', 'leader': 'get_period_leaders', 'channel': 'get_period_channels' };
                 ({ data, error } = await _supabase.rpc(rpcMap[currentView], { p_start: selectedPeriodStart }));
+
                 if (data) {
                     data = data.map(row => {
                         if (currentView === 'ops') return { ...row, manager_name: row.manager_name };
@@ -707,22 +765,26 @@
                 const viewMap = { 'ops': 'view_operations_performance', 'leader': 'view_leader_performance', 'channel': 'view_channel_performance' };
                 ({ data, error } = await _supabase.from(viewMap[currentView]).select('*'));
             }
+
             if (error) {
                 if (error.code === 'PGRST301' || error.message?.includes('JWT')) { handleLogout(); return; }
                 console.error('fetchData error:', error);
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-8 text-center text-rose-500">Veri çekme hatası: ${error.message}</td></tr>`;
                 return;
             }
+
             rawData = data || [];
             populateFilters();
             applyFilters();
         }
+
         // =============================================
         // FİLTRELER
         // =============================================
         function getUniqueValues(data, key) {
             return [...new Set(data.map(item => item[key]))].filter(x => x);
         }
+
         function populateFilters() {
             const seniorSelect = document.getElementById('filterSenior');
             const seniors = getUniqueValues(hierarchyData, 'senior_manager').sort();
@@ -731,6 +793,7 @@
             if (seniors.includes(currentVal)) seniorSelect.value = currentVal;
             handleSeniorChange();
         }
+
         function handleSeniorChange() {
             const smVal = document.getElementById('filterSenior').value;
             const managerSelect = document.getElementById('filterManager');
@@ -740,33 +803,41 @@
             managerSelect.value = 'all';
             handleManagerChange();
         }
+
         function handleManagerChange() {
             const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subFilter = document.getElementById('filterSub');
+
             if (currentView === 'ops') {
                 subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
                 subFilter.disabled = true;
                 applyFilters();
                 return;
             }
+
             subFilter.disabled = false;
             let filtered = hierarchyData;
             if (smVal !== 'all') filtered = filtered.filter(i => i.senior_manager === smVal);
             if (managerVal !== 'all') filtered = filtered.filter(i => i.operation_manager === managerVal);
+
             const subItems = (currentView === 'leader'
                 ? getUniqueValues(filtered, 'team_leader')
                 : getUniqueValues(filtered, 'channel_name')).sort();
+
             subFilter.innerHTML = `<option value="all">${t('all')}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
             applyFilters();
         }
+
         function applyFilters() {
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
             const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subVal = document.getElementById('filterSub').value;
+
             let filteredData = rawData;
             let validTargets = null;
+
             if (smVal !== 'all' || managerVal !== 'all') {
                 let hData = hierarchyData;
                 if (smVal !== 'all') hData = hData.filter(i => i.senior_manager === smVal);
@@ -775,16 +846,19 @@
                 else if (currentView === 'channel') validTargets = new Set(hData.map(i => i.channel_name));
                 else if (currentView === 'ops') validTargets = new Set(hData.map(i => i.operation_manager));
             }
+
             if (validTargets) {
                 filteredData = filteredData.filter(row => {
                     const name = row.manager_name || row.leader_name || row.channel_name;
                     return validTargets.has(name);
                 });
             }
+
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
                 if (currentView === 'leader') filteredData = filteredData.filter(i => i.leader_name === subVal);
                 else if (currentView === 'channel') filteredData = filteredData.filter(i => i.channel_name === subVal);
             }
+
             if (searchVal) {
                 filteredData = filteredData.filter(item => {
                     const name = (item.manager_name || item.leader_name || item.channel_name || '').toLowerCase();
@@ -792,8 +866,10 @@
                     return name.includes(searchVal) || manager.includes(searchVal);
                 });
             }
+
             renderData(filteredData);
         }
+
         // =============================================
         // RENDER
         // =============================================
@@ -801,13 +877,17 @@
             const thead = document.getElementById('tableHeader');
             const tbody = document.getElementById('tableBody');
             const tfoot = document.getElementById('tableFooter');
+
             let headers = [];
             if (currentView === 'ops') headers = [t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
             else if (currentView === 'leader') headers = [t('th_tl'), t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
             else headers = [t('th_channel'), t('th_unit_price'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
+
             thead.innerHTML = headers.map(h => `<th class="px-6 py-4">${h}</th>`).join('');
+
             let html = '';
             let totals = { hours: 0, prodFte: 0, foreFte: 0, fee: 0, feeDiff: 0 };
+
             if (data.length === 0) {
                 html = `<tr><td colspan="8" class="p-8 text-center text-slate-400 dark:text-slate-500">${t('no_data')}</td></tr>`;
             } else {
@@ -821,13 +901,16 @@
                     const fee = parseFloat(row.total_fee || 0);
                     const feeDiff = parseFloat(row.fee_diff || 0);
                     const unitPrice = row.unit_price || 0;
+
                     totals.hours += hours;
                     totals.prodFte += prodFte;
                     totals.foreFte += foreFte;
                     totals.fee += fee;
                     totals.feeDiff += feeDiff;
+
                     const fteClass = fteDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20' : 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20';
                     const feeClass = feeDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+
                     html += `<tr class="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-150">
                         <td class="px-6 py-4 font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-3">
                             <div class="w-2.5 h-2.5 rounded-full ${fteDiff >= 0 ? 'bg-emerald-500' : 'bg-rose-500'} shadow-sm"></div>${name}
@@ -843,7 +926,9 @@
                     </tr>`;
                 });
             }
+
             tbody.innerHTML = html;
+
             let footerHtml = `<td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${t('total')}</td>`;
             if (currentView === 'leader') footerHtml += `<td></td>`;
             if (currentView === 'channel') footerHtml += `<td></td>`;
@@ -859,6 +944,7 @@
             updateKPIs(totals);
             update3DChart(totals);
         }
+
         function updateKPIs(totals) {
             document.getElementById('kpi-total-fee').innerText = formatMoney(totals.fee);
             document.getElementById('kpi-produced-fte').innerText = totals.prodFte.toFixed(2);
@@ -872,6 +958,7 @@
             document.getElementById('kpi-target-percent').innerText = `%${percent.toFixed(1)}`;
             document.getElementById('kpi-target-percent').className = `text-3xl font-extrabold mt-1 ${percent >= 100 ? 'text-emerald-600 dark:text-emerald-400' : (percent >= 90 ? 'text-amber-500 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400')}`;
         }
+
         function update3DChart(totals) {
             const isDark = document.documentElement.classList.contains('dark');
             const remaining = Math.max(0, totals.foreFte - totals.prodFte);
@@ -884,9 +971,11 @@
                 series: [{ name: 'FTE', data: [{ name: t('chart_achieved'), y: achieved, color: '#10b981' }, { name: t('chart_remaining'), y: remaining, color: isDark ? '#334155' : '#e2e8f0' }] }]
             });
         }
+
         function formatMoney(amount) {
             return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(amount);
         }
+
         // =============================================
         // EXCEL EXPORT
         // =============================================
@@ -895,47 +984,59 @@
             const btn = document.getElementById('btnGenerate');
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('downloading')}`;
+
             let data, error;
             if (isHistoricalPeriod()) {
                 ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
             } else {
                 ({ data, error } = await _supabase.from('view_advisor_performance').select('*'));
             }
+
             if (error) { alert('Veri çekme hatası'); return; }
             advisorData = data || [];
+
             const sms = [...new Set(advisorData.map(i => i.senior_manager))].filter(Boolean).sort();
             document.getElementById('expSenior').innerHTML = `<option value="all">${t('all')}</option>` + sms.map(m => `<option value="${m}">${m}</option>`).join('');
             updateExportFilters('sm');
+
             btn.disabled = false;
             btn.innerHTML = `<span>${t('download_excel')}</span><i class="fa-solid fa-download"></i>`;
         }
+
         function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
+
         function updateExportFilters(changedLevel) {
             const sm = document.getElementById('expSenior').value;
             const omSelect = document.getElementById('expManager');
             let filtered = advisorData;
+
             if (changedLevel === 'sm') {
                 if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
                 const oms = [...new Set(filtered.map(i => i.operation_manager))].filter(Boolean).sort();
                 omSelect.innerHTML = `<option value="all">${t('all')}</option>` + oms.map(m => `<option value="${m}">${m}</option>`).join('');
                 omSelect.value = 'all';
             }
+
             const currentOM = omSelect.value;
             if (currentOM !== 'all') filtered = filtered.filter(i => i.operation_manager === currentOM);
             else if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
+
             const tls = [...new Set(filtered.map(i => i.team_leader))].filter(Boolean).sort();
             const chs = [...new Set(filtered.map(i => i.channel_name))].filter(Boolean).sort();
             document.getElementById('expLeader').innerHTML = `<option value="all">${t('all')}</option>` + tls.map(m => `<option value="${m}">${m}</option>`).join('');
             document.getElementById('expChannel').innerHTML = `<option value="all">${t('all')}</option>` + chs.map(m => `<option value="${m}">${m}</option>`).join('');
         }
+
         async function generateExcel() {
             const reportLevel = document.getElementById('expLevel').value;
             const sm = document.getElementById('expSenior').value;
             const om = document.getElementById('expManager').value;
             const tl = document.getElementById('expLeader').value;
             const ch = document.getElementById('expChannel').value;
+
             let exportData = [];
             let sheetName = "Rapor";
+
             if (reportLevel === 'advisor') {
                 sheetName = "Temsilci Detay";
                 let filtered = advisorData;
@@ -959,6 +1060,7 @@
             } else {
                 // Özet rapor: dönem seçimine göre view veya RPC
                 let summaryData, error;
+
                 if (isHistoricalPeriod()) {
                     const rpcMap = { 'leader': 'get_period_leaders', 'channel': 'get_period_channels', 'manager': 'get_period_operations' };
                     ({ data: summaryData, error } = await _supabase.rpc(rpcMap[reportLevel], { p_start: selectedPeriodStart }));
@@ -966,8 +1068,10 @@
                     const viewMap = { 'leader': 'view_leader_performance', 'channel': 'view_channel_performance', 'manager': 'view_operations_performance' };
                     ({ data: summaryData, error } = await _supabase.from(viewMap[reportLevel]).select('*'));
                 }
+
                 if (error) { alert('Rapor verisi çekilemedi.'); return; }
                 let filtered = summaryData || [];
+
                 // Hiyerarşi filtresi
                 if (reportLevel !== 'manager' && (sm !== 'all' || om !== 'all')) {
                     let src = advisorData;
@@ -976,6 +1080,7 @@
                     const validTargets = new Set(reportLevel === 'leader' ? src.map(i => i.team_leader) : src.map(i => i.channel_name));
                     filtered = filtered.filter(i => validTargets.has(reportLevel === 'leader' ? i.leader_name : i.channel_name));
                 }
+
                 if (reportLevel === 'leader') {
                     sheetName = "Takim Lideri Ozeti";
                     exportData = filtered.map(row => {
@@ -1019,12 +1124,15 @@
                     });
                 }
             }
+
             if (exportData.length === 0) { alert(t('no_data')); return; }
+
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
             const numberColumns = [t('xls_clean_hours'), t('xls_prod_fte'), t('xls_fore_fte'), t('xls_fte_diff'), t('xls_raw_fte'), t('xls_fte')];
             const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
             const range = XLSX.utils.decode_range(ws['!ref']);
+
             for (let C = range.s.c; C <= range.e.c; ++C) {
                 const address = XLSX.utils.encode_cell({ r: 0, c: C });
                 if (!ws[address]) continue;
@@ -1037,6 +1145,7 @@
                     }
                 }
             }
+
             ws['!cols'] = Object.keys(exportData[0]).map(() => ({ wch: 20 }));
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
             XLSX.writeFile(wb, `Trendyol_${sheetName.replace(/ /g, '_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
@@ -1055,7 +1164,9 @@
             const chatWindow = document.getElementById('chatWindow');
             const toggleButton = document.getElementById('chatToggleButton');
             const isOpen = chatWindow.classList.contains('open');
+
             const shouldOpen = forceState === undefined ? !isOpen : forceState;
+
             if (shouldOpen) {
                 chatWindow.classList.add('open');
                 toggleButton.style.transform = 'scale(0)';
@@ -1066,6 +1177,8 @@
                 toggleButton.style.pointerEvents = 'auto';
             }
         }
+
+
         /**
          * Appends a message to the chat history.
          * @param {string} text - The message content.
@@ -1106,6 +1219,7 @@
                 if (existing) existing.remove();
             }
         }
+
         /**
          * Handles the submission of the chat form.
          * @param {Event} e - The form submission event.
@@ -1116,14 +1230,18 @@
             const input = document.getElementById('chatInput');
             const button = form.querySelector('button');
             const userMessage = input.value.trim();
+
             if (!userMessage) return;
+
             // 1. Display user's message and disable form
             appendMessage(userMessage, 'user');
             input.value = '';
             input.disabled = true;
             button.disabled = true;
+
             // 2. Show typing indicator
             showTypingIndicator(true);
+
             try {
                 // 3. Send message to the backend
                 const response = await fetch('/ask', {
@@ -1135,15 +1253,18 @@
                         period: isHistoricalPeriod() ? selectedPeriodStart : 'active'
                     })
                 });
+
                 if (!response.ok) {
                     const err = await response.json();
                     throw new Error(err.error || 'Bir hata oluştu.');
                 }
+
                 const data = await response.json();
                 
                 // 4. Display bot's response
                 showTypingIndicator(false);
                 appendMessage(data.answer, 'bot');
+
             } catch (error) {
                 // 5. Handle errors
                 showTypingIndicator(false);

@@ -21,7 +21,6 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
         body { font-family: 'Inter', sans-serif; }
         body, .card, input, select, th, td { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
@@ -47,21 +46,24 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .modal-enter { animation: modalIn 0.3s ease-out forwards; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
         /* Dönem seçici stil */
         .period-selector {
             display: flex;
             align-items: center;
             gap: 8px;
             background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 6px 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s;
         }
         .dark .period-selector {
-            background: #334155;
-            border-color: #475569;
+            background: #374151; /* Darker bg */
+            border-color: #4b5563;
+        }
+        .period-selector:hover {
+            border-color: #3b82f6;
         }
         .period-selector select {
             background: transparent;
@@ -71,11 +73,11 @@
             font-weight: 600;
             color: #1e293b;
             cursor: pointer;
+            width: 100%;
         }
         .dark .period-selector select { color: #f1f5f9; }
         .period-selector select option { background: white; color: #1e293b; }
         .dark .period-selector select option { background: #334155; color: #f1f5f9; }
-
         /* Geçmiş dönem banner */
         #historicalBanner {
             display: none;
@@ -90,213 +92,131 @@
             gap: 8px;
         }
         .dark #historicalBanner { color: #a78bfa; border-color: #7c3aed40; }
-
-        /* ===== AI BOT ===== */
-        #aiChatPanel {
+        
+        /* ========= AI CHATBOT STYLES ========= */
+        #aiChatContainer {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 380px;
-            max-height: 560px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px -10px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 100;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
         }
-        .dark #aiChatPanel {
-            background: #1e293b;
-            box-shadow: 0 20px 60px -10px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
-        }
-        #aiChatPanel.collapsed {
-            max-height: 60px;
-        }
-        #aiChatToggleBtn {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            color: white;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 8px 24px rgba(37,99,235,0.4);
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99;
-            transition: all 0.2s;
-        }
-        #aiChatToggleBtn:hover { transform: scale(1.08); box-shadow: 0 12px 32px rgba(37,99,235,0.5); }
-        #aiChatToggleBtn .notif-dot {
-            position: absolute;
-            top: 2px; right: 2px;
-            width: 10px; height: 10px;
-            background: #10b981;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-
-        .ai-chat-header {
-            padding: 14px 18px;
+        #chatToggleButton {
+            width: 60px;
+            height: 60px;
+            border-radius: 9999px;
             background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
             color: white;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4), 0 8px 10px -6px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(1);
             cursor: pointer;
-            flex-shrink: 0;
         }
-        .ai-chat-header-left { display: flex; align-items: center; gap: 10px; }
-        .ai-avatar-dot {
-            width: 36px; height: 36px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem;
+        #chatToggleButton:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 20px 35px -10px rgba(37, 99, 235, 0.5);
         }
-        .ai-chat-title { font-size: 0.9rem; font-weight: 700; }
-        .ai-chat-subtitle { font-size: 0.68rem; opacity: 0.8; margin-top: 1px; }
-        .ai-status-dot {
-            width: 7px; height: 7px;
-            background: #86efac;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 4px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-        #aiMessages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
+        #chatWindow {
+            position: absolute;
+            bottom: calc(100% + 1rem);
+            right: 0;
+            width: 400px;
+            max-width: 90vw;
+            height: 500px;
+            max-height: 70vh;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            min-height: 0;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform-origin: bottom right;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: scale(0.95) translateY(10px);
+            pointer-events: none;
         }
-        .ai-msg {
+        .dark #chatWindow {
+            background-color: #1e293b; /* slate-850 */
+            border-color: #334155;
+        }
+        #chatWindow.open {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+        #chatHistory {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .chat-message {
+            margin-bottom: 1rem;
             display: flex;
-            gap: 8px;
-            animation: msgIn 0.3s ease-out;
+            flex-direction: column;
+            max-width: 85%;
+            animation: messageIn 0.3s ease-out forwards;
         }
-        @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-        .ai-msg.user { flex-direction: row-reverse; }
-        .ai-msg-avatar {
-            width: 28px; height: 28px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            color: white;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.65rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        .ai-msg.user .ai-msg-avatar {
-            background: linear-gradient(135deg, #0f172a, #334155);
-        }
-        .ai-msg-bubble {
-            max-width: 82%;
-            padding: 10px 13px;
-            border-radius: 14px;
-            font-size: 0.82rem;
-            line-height: 1.5;
-            color: #1e293b;
-            background: #f1f5f9;
-            border-bottom-left-radius: 4px;
-        }
-        .dark .ai-msg-bubble { background: #334155; color: #e2e8f0; }
-        .ai-msg.user .ai-msg-bubble {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: white;
-            border-bottom-left-radius: 14px;
-            border-bottom-right-radius: 4px;
-        }
-        .ai-msg-bubble strong { font-weight: 700; }
-        .ai-msg-bubble .highlight-green { color: #059669; font-weight: 700; }
-        .ai-msg-bubble .highlight-red { color: #dc2626; font-weight: 700; }
-        .ai-msg-bubble .highlight-blue { color: #2563eb; font-weight: 700; }
-        .ai-msg.user .ai-msg-bubble .highlight-green,
-        .ai-msg.user .ai-msg-bubble .highlight-red,
-        .ai-msg.user .ai-msg-bubble .highlight-blue { color: rgba(255,255,255,0.9); }
-
-        .ai-typing {
-            display: flex; gap: 4px; align-items: center;
-            padding: 10px 14px;
-        }
-        .ai-typing span {
-            width: 6px; height: 6px;
-            background: #94a3b8;
-            border-radius: 50%;
-            animation: typing 1.2s infinite;
-        }
-        .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
-        .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
-
-        .ai-quick-btns {
-            display: flex; flex-wrap: wrap; gap: 6px;
-            padding: 0 16px 10px;
-        }
-        .ai-quick-btn {
-            font-size: 0.7rem; font-weight: 600;
-            padding: 5px 10px;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            color: #475569;
-            cursor: pointer;
-            transition: all 0.15s;
-            white-space: nowrap;
-        }
-        .dark .ai-quick-btn { background: #334155; border-color: #475569; color: #94a3b8; }
-        .ai-quick-btn:hover { background: #2563eb; color: white; border-color: #2563eb; }
-
-        .ai-input-area {
-            padding: 12px 14px;
-            border-top: 1px solid #e2e8f0;
-            display: flex; gap: 8px; align-items: center;
-            flex-shrink: 0;
-        }
-        .dark .ai-input-area { border-color: #334155; }
-        #aiInput {
-            flex: 1;
-            border: 1px solid #e2e8f0;
+        @keyframes messageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .chat-message.user { align-self: flex-end; }
+        .chat-message.bot { align-self: flex-start; }
+        
+        .message-content {
+            padding: 0.75rem 1rem;
             border-radius: 12px;
-            padding: 9px 13px;
-            font-size: 0.82rem;
-            outline: none;
-            background: #f8fafc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .user .message-content {
+            background-color: #2563eb;
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+        .bot .message-content {
+            background-color: #e2e8f0;
             color: #1e293b;
-            font-family: 'Inter', sans-serif;
-            resize: none;
-            transition: border-color 0.2s;
+            border-bottom-left-radius: 2px;
         }
-        .dark #aiInput { background: #0f172a; border-color: #334155; color: #e2e8f0; }
-        #aiInput:focus { border-color: #2563eb; }
-        #aiSendBtn {
-            width: 36px; height: 36px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            border: none; border-radius: 10px;
-            color: white; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            transition: all 0.15s;
+        .dark .bot .message-content {
+            background-color: #334155;
+            color: #f1f5f9;
         }
-        #aiSendBtn:hover { transform: scale(1.05); }
-        #aiSendBtn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .bot.typing .message-content {
+            display: flex; gap: 4px; align-items: center;
+        }
+        .bot.typing span {
+            width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; animation: typing-bounce 1s infinite;
+        }
+        .bot.typing span:nth-child(2) { animation-delay: 0.15s; }
+        .bot.typing span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        #chatForm {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .dark #chatForm { border-color: #334155; }
+        #chatInput {
+            flex-grow: 1;
+            background-color: #f1f5f9;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .dark #chatInput { background-color: #334155; color: #f1f5f9; }
+        #chatInput:focus { border-color: #2563eb; background-color: white; }
+        .dark #chatInput:focus { background-color: #1e293b; }
     </style>
 </head>
 <body class="h-screen overflow-hidden text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900">
-
     <!-- LOGIN PAGE -->
     <div id="loginPage" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 relative overflow-hidden">
         <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px]"></div>
@@ -335,10 +255,8 @@
             <div class="mt-8 text-center"><p class="text-xs text-slate-500">&copy; 2026 Concentrix. Secure Access Only.</p></div>
         </div>
     </div>
-
     <!-- MAIN DASHBOARD -->
     <div id="mainDashboard" class="flex h-screen overflow-hidden hidden">
-
         <!-- EXPORT MODAL -->
         <div id="exportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg p-6 modal-enter border border-slate-200 dark:border-slate-700">
@@ -382,7 +300,6 @@
                 </div>
             </div>
         </div>
-
         <!-- SIDEBAR -->
         <aside class="w-72 bg-[#0f172a] flex flex-col hidden md:flex shadow-2xl z-30 relative">
             <div class="p-8 border-b border-slate-800 flex flex-col gap-4">
@@ -412,11 +329,10 @@
                 </div>
             </div>
         </aside>
-
         <!-- CONTENT -->
         <main class="flex-1 flex flex-col overflow-hidden bg-[#f8fafc] dark:bg-slate-900 relative transition-colors duration-300">
-            <header class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-gray-200 dark:border-slate-700 px-8 py-5 sticky top-0 z-20 transition-colors duration-300">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <header class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-gray-200 dark:border-slate-700 px-8 py-4 sticky top-0 z-20 transition-colors duration-300">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
                     <div class="flex items-center gap-3">
                         <h1 id="pageTitle" class="text-2xl font-bold text-slate-800 dark:text-white" data-i18n="title_ops">OM & OY Genel Bakış</h1>
                         <!-- GEÇMİŞ DÖNEM BANNER -->
@@ -426,16 +342,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3 flex-wrap">
-
-                        <!-- DÖNEM SEÇİCİ -->
-                        <div class="period-selector">
-                            <i class="fa-regular fa-calendar text-blue-500 text-xs"></i>
-                            <select id="periodSelector" onchange="handlePeriodChange()" class="text-sm">
-                                <option value="">Yükleniyor...</option>
-                            </select>
-                        </div>
-
-                        <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center shadow-sm border border-gray-200 dark:border-slate-600">
+                         <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center shadow-sm border border-gray-200 dark:border-slate-600">
                             <i id="themeIcon" class="fa-solid fa-moon"></i>
                         </button>
                         <div class="flex bg-white dark:bg-slate-700 rounded-full border border-gray-200 dark:border-slate-600 p-1 shadow-sm">
@@ -446,17 +353,24 @@
                         <div class="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-700 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-600 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span><span data-i18n="last_update">Son Güncelleme</span>: <span id="lastUpdate" class="text-slate-700 dark:text-slate-300">-</span></span></div>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="relative group">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
-                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="OM & OY Ara..." class="pl-10 w-full bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm transition-all">
+                <!-- UPDATED FILTER BAR -->
+                <div class="flex flex-col md:flex-row items-center gap-3 bg-slate-100 dark:bg-slate-850 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <!-- DÖNEM SEÇİCİ -->
+                    <div class="period-selector w-full md:w-auto">
+                        <i class="fa-regular fa-calendar text-blue-500 dark:text-blue-400 text-xs"></i>
+                        <select id="periodSelector" onchange="handlePeriodChange()" class="text-sm">
+                            <option value="">Yükleniyor...</option>
+                        </select>
                     </div>
-                    <select id="filterSenior" onchange="handleSeniorChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option></select>
-                    <select id="filterManager" onchange="handleManagerChange()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm"><option value="all">Tümü</option></select>
-                    <select id="filterSub" onchange="applyFilters()" class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-sm disabled:bg-gray-50 dark:disabled:bg-slate-800 disabled:text-gray-400 dark:disabled:text-slate-600" disabled><option value="all">-</option></select>
+                    <div class="relative group flex-grow w-full">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
+                        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Ara..." class="pl-10 w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5 transition-all">
+                    </div>
+                    <select id="filterSenior" onchange="handleSeniorChange()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5"><option value="all">Tümü</option></select>
+                    <select id="filterManager" onchange="handleManagerChange()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5"><option value="all">Tümü</option></select>
+                    <select id="filterSub" onchange="applyFilters()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500" disabled><option value="all">-</option></select>
                 </div>
             </header>
-
             <div class="flex-1 overflow-auto p-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <div class="card bg-white dark:bg-slate-800 p-6 relative overflow-hidden group border-l-4 border-blue-500">
@@ -488,7 +402,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card bg-white dark:bg-slate-800 overflow-hidden border-0 shadow-lg">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -502,68 +415,68 @@
             </div>
         </main>
     </div>
-
-    <!-- ===== AI BOT TOGGLE BUTTON ===== -->
-    <button id="aiChatToggleBtn" onclick="toggleAiChat()" title="AI Asistan">
-        <i class="fa-solid fa-robot"></i>
-        <div class="notif-dot"></div>
-    </button>
-
-    <!-- ===== AI CHAT PANEL ===== -->
-    <div id="aiChatPanel" style="display:none;">
-        <div class="ai-chat-header" onclick="toggleAiChatHeader()">
-            <div class="ai-chat-header-left">
-                <div class="ai-avatar-dot"><i class="fa-solid fa-robot"></i></div>
-                <div>
-                    <div class="ai-chat-title">AI Finansal Asistan</div>
-                    <div class="ai-chat-subtitle"><span class="ai-status-dot"></span>Çevrimiçi · Veri analizi yapıyor</div>
+    <!-- ================= AI CHATBOT MARKUP ================= -->
+    <div id="aiChatContainer">
+        <!-- The Chat Window -->
+        <div id="chatWindow">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-blue-500"></i>
+                    AI Asistan
+                </h3>
+                <button onclick="toggleChatWindow(false)" class="text-slate-400 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-xmark fa-lg"></i>
+                </button>
+            </div>
+            <!-- Message History -->
+            <div id="chatHistory">
+                <div class="chat-message bot">
+                    <div class="message-content">Merhaba! Finansal veriler hakkında ne öğrenmek istersiniz?</div>
                 </div>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-                <button onclick="clearAiChat(event)" title="Sohbeti Temizle" style="background:rgba(255,255,255,0.15);border:none;border-radius:7px;padding:4px 8px;color:white;cursor:pointer;font-size:0.7rem;"><i class="fa-solid fa-trash-can"></i></button>
-                <button onclick="toggleAiChat()" style="background:rgba(255,255,255,0.15);border:none;border-radius:7px;padding:4px 8px;color:white;cursor:pointer;font-size:0.7rem;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+            <!-- Input Form -->
+            <form id="chatForm" onsubmit="handleChatSubmit(event)">
+                <input id="chatInput" type="text" placeholder="Bir soru sorun..." autocomplete="off">
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
-        <div id="aiMessages"></div>
-        <div class="ai-quick-btns" id="aiQuickBtns"></div>
-        <div class="ai-input-area">
-            <input type="text" id="aiInput" placeholder="Bir soru sorun..." onkeydown="if(event.key==='Enter'&&!event.shiftKey)sendAiMessage()">
-            <button id="aiSendBtn" onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
+        <!-- The Toggle Button -->
+        <button id="chatToggleButton" onclick="toggleChatWindow()" title="AI Asistanı Aç">
+            <i class="fa-solid fa-brain fa-xl"></i>
+        </button>
     </div>
-
     <script>
         const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8';
-
         const translations = {
             tr: {
-                welcome:"Hoşgeldiniz",email_label:"E-POSTA ADRESİ",password_label:"ŞİFRE",login_error:"Geçersiz e-posta veya şifre",login_btn:"Giriş",login_loading:"Giriş Yapılıyor...",email_placeholder:"isim.soyisim@concentrix.com",logout_title:"Çıkış",export_title:"Excel'i Dışa Aktar",report_type:"RAPOR TİPİ",opt_advisor:"Temsilci Bazlı",opt_leader:"Takım Lideri Özeti",opt_channel:"Kanal Özeti",opt_manager:"Operasyon Yöneticisi Özeti",senior_manager:"OPERASYON MÜDÜRÜ",operation_manager:"OPERASYON YÖNETİCİSİ",team_leader:"TAKIM LİDERİ",channel:"KANAL",all:"Tümü",cancel:"İptal",download_excel:"Excel'i İndir",downloading:"Veriler Yükleniyor...",nav_ops:"OM & OY",nav_leaders:"Takım Liderleri",nav_channels:"Kanallar",admin_panel:"Yönetici Paneli",title_ops:"OM & OY Genel Bakış",title_leader:"Takım Lideri Performansı",title_channel:"Kanal Performansı",export_btn:"Excel'i Dışa Aktar",last_update:"Son Güncelleme",search_ops:"OM & OY Ara...",search_leader:"TL Ara...",search_channel:"Kanal Ara...",kpi_total_fee:"TOPLAM ÜCRET",kpi_produced_fte:"GERÇEKLEŞEN FTE",kpi_target_rate:"HEDEF GERÇEKLEŞME ORANI",kpi_target_desc:"Öngörülen vs Gerçekleşen",kpi_hours:"NET ÇALIŞMA SAATİ",kpi_hours_desc:"Toplam Net Çalışma Saati",loading_data:"Veriler Yükleniyor...",no_data:"Eşleşen veri bulunamadı.",total:"GENEL TOPLAM",chart_achieved:"Gerçekleşen",chart_remaining:"Geriye Kalan",th_om:"Operasyon Yöneticisi",th_hours:"Net Çalışma Saati",th_prod_fte:"Gerçekleşen FTE",th_fore_fte:"Öngörülen FTE",th_fte_diff:"FTE Farkı",th_fee:"Toplam Ücret",th_fee_diff:"Ücret Farkı",th_tl:"Takım Lideri",th_channel:"Kanal",th_unit_price:"Birim Fiyatı",xls_reg:"Sicil No",xls_name:"İsim Soyisim",xls_clean_hours:"Net Çalışma Saati",xls_raw_fte:"Ham FTE",xls_fte:"FTE",xls_tl:"Takım Lideri",xls_om:"Operasyon Yöneticisi",xls_sm:"Operasyon Müdürü",xls_channel:"Kanal",xls_unit_price:"Birim Fiyat",xls_prod_fte:"Gerçekleşen FTE",xls_fore_fte:"Öngörülen FTE",xls_fte_diff:"FTE Farkı",xls_total_fee:"Toplam Ücret",xls_fee_diff:"Ücret Farkı"
+                welcome:"Hoşgeldiniz",email_label:"E-POSTA ADRESİ",password_label:"ŞİFRE",login_error:"Geçersiz e-posta veya şifre",login_btn:"Giriş",login_loading:"Giriş Yapılıyor...",email_placeholder:"isim.soyisim@concentrix.com",logout_title:"Çıkış",export_title:"Excel'i Dışa Aktar",report_type:"RAPOR TİPİ",opt_advisor:"Temsilci Bazlı",opt_leader:"Takım Lideri Özeti",opt_channel:"Kanal Özeti",opt_manager:"Operasyon Yöneticisi Özeti",senior_manager:"OPERASYON MÜDÜRÜ",operation_manager:"OPERASYON YÖNETİCİSİ",team_leader:"TAKIM LİDERİ",channel:"KANAL",all:"Tümü",cancel:"İptal",download_excel:"Excel'i İndir",downloading:"Veriler Yükleniyor...",nav_ops:"OM & OY",nav_leaders:"Takım Liderleri",nav_channels:"Kanallar",admin_panel:"Yönetici Paneli",title_ops:"OM & OY Genel Bakış",title_leader:"Takım Lideri Performansı",title_channel:"Kanal Performansı",export_btn:"Excel'i Dışa Aktar",last_update:"Son Güncelleme",search_ops:"OM, OY, TL veya Kanal ara...",search_leader:"TL veya OM ara...",search_channel:"Kanal ara...",kpi_total_fee:"TOPLAM ÜCRET",kpi_produced_fte:"GERÇEKLEŞEN FTE",kpi_target_rate:"HEDEF GERÇEKLEŞME ORANI",kpi_target_desc:"Öngörülen vs Gerçekleşen",kpi_hours:"NET ÇALIŞMA SAATİ",kpi_hours_desc:"Toplam Net Çalışma Saati",loading_data:"Veriler Yükleniyor...",no_data:"Eşleşen veri bulunamadı.",total:"GENEL TOPLAM",chart_achieved:"Gerçekleşen",chart_remaining:"Geriye Kalan",th_om:"Operasyon Yöneticisi",th_hours:"Net Çalışma Saati",th_prod_fte:"Gerçekleşen FTE",th_fore_fte:"Öngörülen FTE",th_fte_diff:"FTE Farkı",th_fee:"Toplam Ücret",th_fee_diff:"Ücret Farkı",th_tl:"Takım Lideri",th_channel:"Kanal",th_unit_price:"Birim Fiyatı",xls_reg:"Sicil No",xls_name:"İsim Soyisim",xls_clean_hours:"Net Çalışma Saati",xls_raw_fte:"Ham FTE",xls_fte:"FTE",xls_tl:"Takım Lideri",xls_om:"Operasyon Yöneticisi",xls_sm:"Operasyon Müdürü",xls_channel:"Kanal",xls_unit_price:"Birim Fiyat",xls_prod_fte:"Gerçekleşen FTE",xls_fore_fte:"Öngörülen FTE",xls_fte_diff:"FTE Farkı",xls_total_fee:"Toplam Ücret",xls_fee_diff:"Ücret Farkı",
+                historical_banner: "Geçmiş Dönem", period_loading: "Yükleniyor..."
             },
             en: {
-                welcome:"Welcome",email_label:"EMAIL ADDRESS",password_label:"PASSWORD",login_error:"Invalid email or password",login_btn:"Login",login_loading:"Logging in...",email_placeholder:"name.surname@concentrix.com",logout_title:"Logout",export_title:"Export Excel",report_type:"REPORT TYPE",opt_advisor:"Advisor Details",opt_leader:"Team Leader Summary",opt_channel:"Channel Summary",opt_manager:"Operation Manager Summary",senior_manager:"SENIOR MANAGER",operation_manager:"OPERATION MANAGER",team_leader:"TEAM LEADER",channel:"CHANNEL",all:"All",cancel:"Cancel",download_excel:"Download Excel",downloading:"Loading Data...",nav_ops:"SM & OM Overview",nav_leaders:"Team Leaders",nav_channels:"Channels",admin_panel:"Admin Panel",title_ops:"SM & OM Overview",title_leader:"Team Leader Performance",title_channel:"Channel Performance",export_btn:"Export Excel",last_update:"Last Update",search_ops:"Search SM & OM...",search_leader:"Search TL...",search_channel:"Search Channel...",kpi_total_fee:"Total Fee",kpi_produced_fte:"Produced FTE",kpi_target_rate:"Target Realization",kpi_target_desc:"Forecast vs Actual",kpi_hours:"Net Working Hours",kpi_hours_desc:"Total clean hours",loading_data:"Loading Data...",no_data:"No matching data found.",total:"GRAND TOTAL",chart_achieved:"Achieved",chart_remaining:"Remaining",th_om:"Operation Manager",th_hours:"Net Hours",th_prod_fte:"Produced FTE",th_fore_fte:"Forecast FTE",th_fte_diff:"FTE Diff",th_fee:"Total Fee",th_fee_diff:"Fee Diff",th_tl:"Team Leader",th_channel:"Channel",th_unit_price:"Unit Price",xls_reg:"Register No",xls_name:"Full Name",xls_clean_hours:"Net Working Hours",xls_raw_fte:"Raw FTE",xls_fte:"FTE",xls_tl:"Team Leader",xls_om:"Operation Manager",xls_sm:"Senior Manager",xls_channel:"Channel",xls_unit_price:"Unit Price",xls_prod_fte:"Produced FTE",xls_fore_fte:"Forecast FTE",xls_fte_diff:"FTE Diff",xls_total_fee:"Total Fee",xls_fee_diff:"Fee Diff"
+                welcome:"Welcome",email_label:"EMAIL ADDRESS",password_label:"PASSWORD",login_error:"Invalid email or password",login_btn:"Login",login_loading:"Logging in...",email_placeholder:"name.surname@concentrix.com",logout_title:"Logout",export_title:"Export Excel",report_type:"REPORT TYPE",opt_advisor:"Advisor Details",opt_leader:"Team Leader Summary",opt_channel:"Channel Summary",opt_manager:"Operation Manager Summary",senior_manager:"SENIOR MANAGER",operation_manager:"OPERATION MANAGER",team_leader:"TEAM LEADER",channel:"CHANNEL",all:"All",cancel:"Cancel",download_excel:"Download Excel",downloading:"Loading Data...",nav_ops:"SM & OM Overview",nav_leaders:"Team Leaders",nav_channels:"Channels",admin_panel:"Admin Panel",title_ops:"SM & OM Overview",title_leader:"Team Leader Performance",title_channel:"Channel Performance",export_btn:"Export Excel",last_update:"Last Update",search_ops:"Search SM, OM, TL or Channel...",search_leader:"Search TL or OM...",search_channel:"Search Channel...",kpi_total_fee:"Total Fee",kpi_produced_fte:"Produced FTE",kpi_target_rate:"Target Realization",kpi_target_desc:"Forecast vs Actual",kpi_hours:"Net Working Hours",kpi_hours_desc:"Total clean hours",loading_data:"Loading Data...",no_data:"No matching data found.",total:"GRAND TOTAL",chart_achieved:"Achieved",chart_remaining:"Remaining",th_om:"Operation Manager",th_hours:"Net Hours",th_prod_fte:"Produced FTE",th_fore_fte:"Forecast FTE",th_fte_diff:"FTE Diff",th_fee:"Total Fee",th_fee_diff:"Fee Diff",th_tl:"Team Leader",th_channel:"Channel",th_unit_price:"Unit Price",xls_reg:"Register No",xls_name:"Full Name",xls_clean_hours:"Net Working Hours",xls_raw_fte:"Raw FTE",xls_fte:"FTE",xls_tl:"Team Leader",xls_om:"Operation Manager",xls_sm:"Senior Manager",xls_channel:"Channel",xls_unit_price:"Unit Price",xls_prod_fte:"Produced FTE",xls_fore_fte:"Forecast FTE",xls_fte_diff:"FTE Diff",xls_total_fee:"Total Fee",xls_fee_diff:"Fee Diff",
+                historical_banner: "Historical Period", period_loading: "Loading..."
             }
         };
-
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentView = 'ops';
         let currentLang = 'tr';
         let rawData = [];
         let hierarchyData = [];
         let advisorData = [];
-
         // ---- DÖNEM STATE ----
         let allPeriods = [];          // billing_periods tablosundan gelen tüm dönemler
         let activePeriodStart = null; // is_active=true dönemin start_date'i
         let selectedPeriodStart = null; // Şu an seçili dönem (null = aktif)
-
         // =============================================
         // INIT
         // =============================================
         document.addEventListener('DOMContentLoaded', async () => {
             const savedLang = localStorage.getItem('appLang');
             changeLanguage(savedLang || 'tr');
-
             const savedTheme = localStorage.getItem('appTheme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -572,12 +485,10 @@
                 document.documentElement.classList.remove('dark');
                 updateThemeIcon(false);
             }
-
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) showDashboard(session.user);
             else showLogin();
         });
-
         // =============================================
         // TEMA & DİL
         // =============================================
@@ -586,17 +497,53 @@
             const isDark = html.classList.toggle('dark');
             localStorage.setItem('appTheme', isDark ? 'dark' : 'light');
             updateThemeIcon(isDark);
+            // Re-render charts for new theme
+            applyFilters();
         }
-
         function updateThemeIcon(isDark) {
             const icon = document.getElementById('themeIcon');
             if (icon) icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
-
         function t(key) { return translations[currentLang][key] || key; }
-
+        
+        const monthTranslations = {
+            tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+            en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        };
+        function translatePeriodName(name, lang) {
+            if (lang === 'tr' || !name) return name;
+            let translatedName = name;
+            for (let i = 0; i < 12; i++) {
+                // Use a case-insensitive regex to replace all occurrences
+                translatedName = translatedName.replace(new RegExp(monthTranslations.tr[i], 'gi'), monthTranslations.en[i]);
+            }
+            return translatedName;
+        }
+        function updatePeriodDisplayLanguage() {
+            // Translate period selector options
+            const periodSelector = document.getElementById('periodSelector');
+            if (periodSelector && periodSelector.options.length > 1) { // Check if periods are loaded
+                for (const option of periodSelector.options) {
+                    if (!option.dataset.originalName) {
+                        option.dataset.originalName = option.text.replace(' ●', '');
+                    }
+                    const originalName = option.dataset.originalName;
+                    const isActive = option.text.includes(' ●');
+                    option.text = translatePeriodName(originalName, currentLang) + (isActive ? ' ●' : '');
+                }
+            }
+             // Translate historical banner if visible
+            const banner = document.getElementById('historicalBanner');
+            if (banner.style.display === 'flex') {
+                const period = allPeriods.find(p => p.start_date === selectedPeriodStart);
+                if (period) {
+                    document.getElementById('historicalBannerText').textContent = `${t('historical_banner')}: ${translatePeriodName(period.name, currentLang)}`;
+                }
+            }
+        }
         function changeLanguage(lang) {
             currentLang = lang;
+            document.documentElement.lang = lang;
             localStorage.setItem('appLang', lang);
             const upd = (id, active, dark=false) => {
                 const btn = document.getElementById(id);
@@ -605,17 +552,23 @@
             };
             upd('lang-tr', lang==='tr'); upd('lang-en', lang==='en');
             upd('login-lang-tr', lang==='tr', true); upd('login-lang-en', lang==='en', true);
+            
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const k = el.getAttribute('data-i18n');
                 if (translations[lang][k]) el.innerText = translations[lang][k];
             });
             const si = document.getElementById('searchInput');
             if (si) si.placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[currentView]);
+            
             const ei = document.getElementById('email');
             if (ei) ei.placeholder = t('email_placeholder');
-            if (rawData.length > 0) { populateFilters(); applyFilters(); }
+            
+            if (rawData.length > 0) { 
+                populateFilters(); 
+                applyFilters(); 
+            }
+            updatePeriodDisplayLanguage();
         }
-
         // =============================================
         // AUTH
         // =============================================
@@ -638,28 +591,23 @@
                 showDashboard(data.user);
             }
         }
-
         async function handleLogout() {
             await _supabase.auth.signOut();
             showLogin();
         }
-
         async function showDashboard(user) {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('tr-TR');
-
             if (user?.email) {
                 const name = user.email.split('@')[0].split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
                 document.getElementById('userName').innerText = name;
                 document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${name}&background=random&color=fff&size=128`;
             }
-
             await loadPeriods();
             await fetchHierarchyData();
             switchView('ops');
         }
-
         function showLogin() {
             document.getElementById('mainDashboard').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
@@ -668,114 +616,85 @@
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
         }
-
         // =============================================
         // DÖNEM YÖNETİMİ
         // =============================================
         async function loadPeriods() {
+            const sel = document.getElementById('periodSelector');
+            sel.innerHTML = `<option>${t('period_loading')}</option>`;
             const { data, error } = await _supabase
                 .from('billing_periods')
                 .select('name, start_date, end_date, is_active')
                 .order('start_date', { ascending: false });
-
             if (error || !data) return;
-
             allPeriods = data;
             activePeriodStart = data.find(p => p.is_active)?.start_date || null;
             selectedPeriodStart = null; // aktif dönem
-
-            const sel = document.getElementById('periodSelector');
             sel.innerHTML = data.map(p => `
-                <option value="${p.start_date}" ${p.is_active ? 'data-active="true"' : ''}>
-                    ${p.name}${p.is_active ? ' ●' : ''}
+                <option value="${p.start_date}" data-original-name="${p.name}" ${p.is_active ? 'data-active="true"' : ''}>
+                    ${translatePeriodName(p.name, currentLang)}${p.is_active ? ' ●' : ''}
                 </option>
             `).join('');
-
-            // Aktif dönemi seç
             if (activePeriodStart) sel.value = activePeriodStart;
         }
-
         async function handlePeriodChange() {
             const sel = document.getElementById('periodSelector');
             const chosen = sel.value;
             const isActive = allPeriods.find(p => p.start_date === chosen)?.is_active;
-
             selectedPeriodStart = isActive ? null : chosen;
-
-            // Banner göster/gizle
             const banner = document.getElementById('historicalBanner');
             if (selectedPeriodStart) {
                 const period = allPeriods.find(p => p.start_date === chosen);
-                document.getElementById('historicalBannerText').textContent = `Geçmiş Dönem: ${period?.name || chosen}`;
+                document.getElementById('historicalBannerText').textContent = `${t('historical_banner')}: ${translatePeriodName(period?.name, currentLang)}`;
                 banner.style.display = 'flex';
             } else {
                 banner.style.display = 'none';
             }
-
-            // Hiyerarşiyi yenile (geçmiş dönem için farklı fonksiyon)
             await fetchHierarchyData();
-
-            // Filtreleri sıfırla ve veriyi yenile
             document.getElementById('filterSenior').value = 'all';
             document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
             const subFilter = document.getElementById('filterSub');
             subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
             subFilter.disabled = true;
-
             fetchData();
         }
-
         function isHistoricalPeriod() {
             return selectedPeriodStart !== null;
         }
-
         // =============================================
         // VERİ ÇEKME
         // =============================================
         async function fetchHierarchyData() {
             let data, error;
-
             if (isHistoricalPeriod()) {
-                // Geçmiş dönem: RPC fonksiyonu
                 ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
             } else {
-                // Aktif dönem: view
                 ({ data, error } = await _supabase
                     .from('view_advisor_performance')
                     .select('senior_manager, operation_manager, team_leader, channel_name'));
             }
-
             if (error) { console.error('Hierarchy fetch error:', error); hierarchyData = []; }
             else hierarchyData = data || [];
         }
-
         function switchView(view) {
             currentView = view;
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-${view}`).classList.add('active');
             document.getElementById('pageTitle').innerText = t({'ops':'title_ops','leader':'title_leader','channel':'title_channel'}[view]);
             document.getElementById('searchInput').placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[view]);
-
             document.getElementById('filterSenior').value = 'all';
             document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
             const subFilter = document.getElementById('filterSub');
             subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
             subFilter.disabled = true;
-
             fetchData();
         }
-
         async function fetchData() {
             document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400 dark:text-slate-500"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
-
             let data, error;
-
             if (isHistoricalPeriod()) {
-                // Geçmiş dönem: RPC fonksiyonları
                 const rpcMap = { 'ops': 'get_period_operations', 'leader': 'get_period_leaders', 'channel': 'get_period_channels' };
                 ({ data, error } = await _supabase.rpc(rpcMap[currentView], { p_start: selectedPeriodStart }));
-
-                // RPC dönüş alanlarını view alanlarıyla eşleştir
                 if (data) {
                     data = data.map(row => {
                         if (currentView === 'ops') return { ...row, manager_name: row.manager_name };
@@ -785,30 +704,25 @@
                     });
                 }
             } else {
-                // Aktif dönem: view'lar
                 const viewMap = { 'ops': 'view_operations_performance', 'leader': 'view_leader_performance', 'channel': 'view_channel_performance' };
                 ({ data, error } = await _supabase.from(viewMap[currentView]).select('*'));
             }
-
             if (error) {
                 if (error.code === 'PGRST301' || error.message?.includes('JWT')) { handleLogout(); return; }
                 console.error('fetchData error:', error);
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-8 text-center text-rose-500">Veri çekme hatası: ${error.message}</td></tr>`;
                 return;
             }
-
             rawData = data || [];
             populateFilters();
             applyFilters();
         }
-
         // =============================================
         // FİLTRELER
         // =============================================
         function getUniqueValues(data, key) {
             return [...new Set(data.map(item => item[key]))].filter(x => x);
         }
-
         function populateFilters() {
             const seniorSelect = document.getElementById('filterSenior');
             const seniors = getUniqueValues(hierarchyData, 'senior_manager').sort();
@@ -817,7 +731,6 @@
             if (seniors.includes(currentVal)) seniorSelect.value = currentVal;
             handleSeniorChange();
         }
-
         function handleSeniorChange() {
             const smVal = document.getElementById('filterSenior').value;
             const managerSelect = document.getElementById('filterManager');
@@ -827,41 +740,33 @@
             managerSelect.value = 'all';
             handleManagerChange();
         }
-
         function handleManagerChange() {
             const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subFilter = document.getElementById('filterSub');
-
             if (currentView === 'ops') {
                 subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
                 subFilter.disabled = true;
                 applyFilters();
                 return;
             }
-
             subFilter.disabled = false;
             let filtered = hierarchyData;
             if (smVal !== 'all') filtered = filtered.filter(i => i.senior_manager === smVal);
             if (managerVal !== 'all') filtered = filtered.filter(i => i.operation_manager === managerVal);
-
             const subItems = (currentView === 'leader'
                 ? getUniqueValues(filtered, 'team_leader')
                 : getUniqueValues(filtered, 'channel_name')).sort();
-
             subFilter.innerHTML = `<option value="all">${t('all')}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
             applyFilters();
         }
-
         function applyFilters() {
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
             const smVal = document.getElementById('filterSenior').value;
             const managerVal = document.getElementById('filterManager').value;
             const subVal = document.getElementById('filterSub').value;
-
             let filteredData = rawData;
             let validTargets = null;
-
             if (smVal !== 'all' || managerVal !== 'all') {
                 let hData = hierarchyData;
                 if (smVal !== 'all') hData = hData.filter(i => i.senior_manager === smVal);
@@ -870,29 +775,25 @@
                 else if (currentView === 'channel') validTargets = new Set(hData.map(i => i.channel_name));
                 else if (currentView === 'ops') validTargets = new Set(hData.map(i => i.operation_manager));
             }
-
             if (validTargets) {
                 filteredData = filteredData.filter(row => {
                     const name = row.manager_name || row.leader_name || row.channel_name;
                     return validTargets.has(name);
                 });
             }
-
             if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
                 if (currentView === 'leader') filteredData = filteredData.filter(i => i.leader_name === subVal);
                 else if (currentView === 'channel') filteredData = filteredData.filter(i => i.channel_name === subVal);
             }
-
             if (searchVal) {
                 filteredData = filteredData.filter(item => {
                     const name = (item.manager_name || item.leader_name || item.channel_name || '').toLowerCase();
-                    return name.includes(searchVal);
+                    const manager = (item.operation_manager || '').toLowerCase();
+                    return name.includes(searchVal) || manager.includes(searchVal);
                 });
             }
-
             renderData(filteredData);
         }
-
         // =============================================
         // RENDER
         // =============================================
@@ -900,17 +801,13 @@
             const thead = document.getElementById('tableHeader');
             const tbody = document.getElementById('tableBody');
             const tfoot = document.getElementById('tableFooter');
-
             let headers = [];
             if (currentView === 'ops') headers = [t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
             else if (currentView === 'leader') headers = [t('th_tl'), t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
             else headers = [t('th_channel'), t('th_unit_price'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
-
             thead.innerHTML = headers.map(h => `<th class="px-6 py-4">${h}</th>`).join('');
-
             let html = '';
             let totals = { hours: 0, prodFte: 0, foreFte: 0, fee: 0, feeDiff: 0 };
-
             if (data.length === 0) {
                 html = `<tr><td colspan="8" class="p-8 text-center text-slate-400 dark:text-slate-500">${t('no_data')}</td></tr>`;
             } else {
@@ -924,16 +821,13 @@
                     const fee = parseFloat(row.total_fee || 0);
                     const feeDiff = parseFloat(row.fee_diff || 0);
                     const unitPrice = row.unit_price || 0;
-
                     totals.hours += hours;
                     totals.prodFte += prodFte;
                     totals.foreFte += foreFte;
                     totals.fee += fee;
                     totals.feeDiff += feeDiff;
-
                     const fteClass = fteDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20' : 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20';
                     const feeClass = feeDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
-
                     html += `<tr class="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-150">
                         <td class="px-6 py-4 font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-3">
                             <div class="w-2.5 h-2.5 rounded-full ${fteDiff >= 0 ? 'bg-emerald-500' : 'bg-rose-500'} shadow-sm"></div>${name}
@@ -949,9 +843,7 @@
                     </tr>`;
                 });
             }
-
             tbody.innerHTML = html;
-
             let footerHtml = `<td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${t('total')}</td>`;
             if (currentView === 'leader') footerHtml += `<td></td>`;
             if (currentView === 'channel') footerHtml += `<td></td>`;
@@ -967,7 +859,6 @@
             updateKPIs(totals);
             update3DChart(totals);
         }
-
         function updateKPIs(totals) {
             document.getElementById('kpi-total-fee').innerText = formatMoney(totals.fee);
             document.getElementById('kpi-produced-fte').innerText = totals.prodFte.toFixed(2);
@@ -981,8 +872,8 @@
             document.getElementById('kpi-target-percent').innerText = `%${percent.toFixed(1)}`;
             document.getElementById('kpi-target-percent').className = `text-3xl font-extrabold mt-1 ${percent >= 100 ? 'text-emerald-600 dark:text-emerald-400' : (percent >= 90 ? 'text-amber-500 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400')}`;
         }
-
         function update3DChart(totals) {
+            const isDark = document.documentElement.classList.contains('dark');
             const remaining = Math.max(0, totals.foreFte - totals.prodFte);
             const achieved = Math.min(totals.prodFte, totals.foreFte);
             Highcharts.chart('targetDonutChart', {
@@ -990,14 +881,12 @@
                 title: { text: null },
                 plotOptions: { pie: { innerSize: '50%', depth: 35, dataLabels: { enabled: false }, states: { hover: { enabled: false } } } },
                 credits: { enabled: false },
-                series: [{ name: 'FTE', data: [{ name: t('chart_achieved'), y: achieved, color: '#10b981' }, { name: t('chart_remaining'), y: remaining, color: '#e2e8f0' }] }]
+                series: [{ name: 'FTE', data: [{ name: t('chart_achieved'), y: achieved, color: '#10b981' }, { name: t('chart_remaining'), y: remaining, color: isDark ? '#334155' : '#e2e8f0' }] }]
             });
         }
-
         function formatMoney(amount) {
             return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(amount);
         }
-
         // =============================================
         // EXCEL EXPORT
         // =============================================
@@ -1006,59 +895,47 @@
             const btn = document.getElementById('btnGenerate');
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('downloading')}`;
-
             let data, error;
             if (isHistoricalPeriod()) {
                 ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
             } else {
                 ({ data, error } = await _supabase.from('view_advisor_performance').select('*'));
             }
-
             if (error) { alert('Veri çekme hatası'); return; }
             advisorData = data || [];
-
             const sms = [...new Set(advisorData.map(i => i.senior_manager))].filter(Boolean).sort();
             document.getElementById('expSenior').innerHTML = `<option value="all">${t('all')}</option>` + sms.map(m => `<option value="${m}">${m}</option>`).join('');
             updateExportFilters('sm');
-
             btn.disabled = false;
             btn.innerHTML = `<span>${t('download_excel')}</span><i class="fa-solid fa-download"></i>`;
         }
-
         function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
-
         function updateExportFilters(changedLevel) {
             const sm = document.getElementById('expSenior').value;
             const omSelect = document.getElementById('expManager');
             let filtered = advisorData;
-
             if (changedLevel === 'sm') {
                 if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
                 const oms = [...new Set(filtered.map(i => i.operation_manager))].filter(Boolean).sort();
                 omSelect.innerHTML = `<option value="all">${t('all')}</option>` + oms.map(m => `<option value="${m}">${m}</option>`).join('');
                 omSelect.value = 'all';
             }
-
             const currentOM = omSelect.value;
             if (currentOM !== 'all') filtered = filtered.filter(i => i.operation_manager === currentOM);
             else if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
-
             const tls = [...new Set(filtered.map(i => i.team_leader))].filter(Boolean).sort();
             const chs = [...new Set(filtered.map(i => i.channel_name))].filter(Boolean).sort();
             document.getElementById('expLeader').innerHTML = `<option value="all">${t('all')}</option>` + tls.map(m => `<option value="${m}">${m}</option>`).join('');
             document.getElementById('expChannel').innerHTML = `<option value="all">${t('all')}</option>` + chs.map(m => `<option value="${m}">${m}</option>`).join('');
         }
-
         async function generateExcel() {
             const reportLevel = document.getElementById('expLevel').value;
             const sm = document.getElementById('expSenior').value;
             const om = document.getElementById('expManager').value;
             const tl = document.getElementById('expLeader').value;
             const ch = document.getElementById('expChannel').value;
-
             let exportData = [];
             let sheetName = "Rapor";
-
             if (reportLevel === 'advisor') {
                 sheetName = "Temsilci Detay";
                 let filtered = advisorData;
@@ -1082,7 +959,6 @@
             } else {
                 // Özet rapor: dönem seçimine göre view veya RPC
                 let summaryData, error;
-
                 if (isHistoricalPeriod()) {
                     const rpcMap = { 'leader': 'get_period_leaders', 'channel': 'get_period_channels', 'manager': 'get_period_operations' };
                     ({ data: summaryData, error } = await _supabase.rpc(rpcMap[reportLevel], { p_start: selectedPeriodStart }));
@@ -1090,10 +966,8 @@
                     const viewMap = { 'leader': 'view_leader_performance', 'channel': 'view_channel_performance', 'manager': 'view_operations_performance' };
                     ({ data: summaryData, error } = await _supabase.from(viewMap[reportLevel]).select('*'));
                 }
-
                 if (error) { alert('Rapor verisi çekilemedi.'); return; }
                 let filtered = summaryData || [];
-
                 // Hiyerarşi filtresi
                 if (reportLevel !== 'manager' && (sm !== 'all' || om !== 'all')) {
                     let src = advisorData;
@@ -1102,7 +976,6 @@
                     const validTargets = new Set(reportLevel === 'leader' ? src.map(i => i.team_leader) : src.map(i => i.channel_name));
                     filtered = filtered.filter(i => validTargets.has(reportLevel === 'leader' ? i.leader_name : i.channel_name));
                 }
-
                 if (reportLevel === 'leader') {
                     sheetName = "Takim Lideri Ozeti";
                     exportData = filtered.map(row => {
@@ -1146,15 +1019,12 @@
                     });
                 }
             }
-
             if (exportData.length === 0) { alert(t('no_data')); return; }
-
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
             const numberColumns = [t('xls_clean_hours'), t('xls_prod_fte'), t('xls_fore_fte'), t('xls_fte_diff'), t('xls_raw_fte'), t('xls_fte')];
             const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
             const range = XLSX.utils.decode_range(ws['!ref']);
-
             for (let C = range.s.c; C <= range.e.c; ++C) {
                 const address = XLSX.utils.encode_cell({ r: 0, c: C });
                 if (!ws[address]) continue;
@@ -1167,186 +1037,124 @@
                     }
                 }
             }
-
             ws['!cols'] = Object.keys(exportData[0]).map(() => ({ wch: 20 }));
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
             XLSX.writeFile(wb, `Trendyol_${sheetName.replace(/ /g, '_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
             closeExportModal();
         }
-
+        
         // =============================================
-        // AI BOT
+        // AI CHATBOT LOGIC
         // =============================================
-        let aiChatOpen = false;
-        let aiChatHistory = []; // {role, content}
-        let aiIsTyping = false;
-
-        const QUICK_QUESTIONS = [
-            "Genel durumu özetle",
-            "En iyi performanslı OY kim?",
-            "Hedef gerçekleşme oranı nedir?",
-            "Şubat vs Mart karşılaştır",
-            "En düşük FTE hangi kanalda?",
-            "Toplam ücret ne kadar?"
-        ];
-
-        function toggleAiChat() {
-            aiChatOpen = !aiChatOpen;
-            const panel = document.getElementById('aiChatPanel');
-            const btn = document.getElementById('aiChatToggleBtn');
-            if (aiChatOpen) {
-                panel.style.display = 'flex';
-                panel.style.flexDirection = 'column';
-                btn.style.display = 'none';
-                if (aiChatHistory.length === 0) initAiChat();
-                setTimeout(() => document.getElementById('aiInput').focus(), 200);
+        
+        /**
+         * Toggles the visibility of the AI chat window.
+         * @param {boolean|undefined} forceState - Optional. True to force open, false to force close.
+         */
+        function toggleChatWindow(forceState) {
+            const chatWindow = document.getElementById('chatWindow');
+            const toggleButton = document.getElementById('chatToggleButton');
+            const isOpen = chatWindow.classList.contains('open');
+            const shouldOpen = forceState === undefined ? !isOpen : forceState;
+            if (shouldOpen) {
+                chatWindow.classList.add('open');
+                toggleButton.style.transform = 'scale(0)';
+                toggleButton.style.pointerEvents = 'none';
             } else {
-                panel.style.display = 'none';
-                btn.style.display = 'flex';
+                chatWindow.classList.remove('open');
+                toggleButton.style.transform = 'scale(1)';
+                toggleButton.style.pointerEvents = 'auto';
             }
         }
-
-        function toggleAiChatHeader() {
-            // Header click does nothing extra — close is via X button
+        /**
+         * Appends a message to the chat history.
+         * @param {string} text - The message content.
+         * @param {string} sender - 'user' or 'bot'.
+         * @returns {HTMLElement} - The created message element.
+         */
+        function appendMessage(text, sender) {
+            const chatHistory = document.getElementById('chatHistory');
+            const messageEl = document.createElement('div');
+            messageEl.className = `chat-message ${sender}`;
+            
+            const contentEl = document.createElement('div');
+            contentEl.className = 'message-content';
+            contentEl.innerText = text;
+            
+            messageEl.appendChild(contentEl);
+            chatHistory.appendChild(messageEl);
+            chatHistory.scrollTop = chatHistory.scrollHeight; // Auto-scroll
+            return messageEl;
         }
-
-        function initAiChat() {
-            const welcome = `Merhaba! 👋 Ben **AI Finansal Asistanınız**.\n\nDashboard'daki tüm dönem verilerinizi analiz edebilirim — KPI yorumu, lider/kanal karşılaştırması, Şubat vs Mart dönem analizi ve daha fazlası için sorularınızı bekliyorum.`;
-            appendAiMessage('bot', welcome);
-            renderQuickBtns();
-        }
-
-        function renderQuickBtns() {
-            const container = document.getElementById('aiQuickBtns');
-            container.innerHTML = QUICK_QUESTIONS.map(q =>
-                `<button class="ai-quick-btn" onclick="askQuick('${q.replace(/'/g,"\\\'")}')">${q}</button>`
-            ).join('');
-        }
-
-        function askQuick(q) {
-            document.getElementById('aiInput').value = q;
-            sendAiMessage();
-        }
-
-        function clearAiChat(e) {
-            e.stopPropagation();
-            aiChatHistory = [];
-            document.getElementById('aiMessages').innerHTML = '';
-            document.getElementById('aiQuickBtns').innerHTML = '';
-            initAiChat();
-        }
-
-        function appendAiMessage(role, text) {
-            const container = document.getElementById('aiMessages');
-            const isUser = role === 'user';
-            const initials = isUser ? (document.getElementById('userName')?.innerText?.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase() || 'SN') : 'AI';
-
-            const div = document.createElement('div');
-            div.className = `ai-msg ${isUser ? 'user' : ''}`;
-
-            const formatted = formatAiBotText(text, isUser);
-            div.innerHTML = `
-                <div class="ai-msg-avatar">${initials}</div>
-                <div class="ai-msg-bubble">${formatted}</div>
-            `;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function formatAiBotText(text, isUser) {
-            // Markdown-lite: bold, line breaks, highlight numbers
-            let html = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-
-            if (!isUser) {
-                // Highlight TRY amounts
-                html = html.replace(/(₺[\d.,]+)/g, '<span class="highlight-blue">$1</span>');
-                // Highlight positive percentages
-                html = html.replace(/(\+[\d.]+%)/g, '<span class="highlight-green">$1</span>');
-                // Highlight negative percentages
-                html = html.replace(/([\-−][\d.]+%)/g, '<span class="highlight-red">$1</span>');
-                // Highlight FTE values like "357.09 FTE"
-                html = html.replace(/([\d.]+\s*FTE)/g, '<strong>$1</strong>');
+        
+        /**
+         * Shows or hides the "bot is typing" indicator.
+         * @param {boolean} show - True to show, false to hide.
+         */
+        function showTypingIndicator(show) {
+            const existing = document.getElementById('typing-indicator');
+            if (show) {
+                if (existing) return; // Already showing
+                const chatHistory = document.getElementById('chatHistory');
+                const indicatorEl = document.createElement('div');
+                indicatorEl.id = 'typing-indicator';
+                indicatorEl.className = 'chat-message bot typing';
+                indicatorEl.innerHTML = `<div class="message-content"><span></span><span></span><span></span></div>`;
+                chatHistory.appendChild(indicatorEl);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            } else {
+                if (existing) existing.remove();
             }
-            return html;
         }
-
-        function showTypingIndicator() {
-            const container = document.getElementById('aiMessages');
-            const div = document.createElement('div');
-            div.className = 'ai-msg';
-            div.id = 'aiTypingIndicator';
-            div.innerHTML = `
-                <div class="ai-msg-avatar">AI</div>
-                <div class="ai-msg-bubble ai-typing">
-                    <span></span><span></span><span></span>
-                </div>
-            `;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function removeTypingIndicator() {
-            const el = document.getElementById('aiTypingIndicator');
-            if (el) el.remove();
-        }
-
-        async function sendAiMessage() {
-            if (aiIsTyping) return;
-            const input = document.getElementById('aiInput');
-            const userMsg = input.value.trim();
-            if (!userMsg) return;
-
+        /**
+         * Handles the submission of the chat form.
+         * @param {Event} e - The form submission event.
+         */
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const input = document.getElementById('chatInput');
+            const button = form.querySelector('button');
+            const userMessage = input.value.trim();
+            if (!userMessage) return;
+            // 1. Display user's message and disable form
+            appendMessage(userMessage, 'user');
             input.value = '';
-            document.getElementById('aiSendBtn').disabled = true;
-            document.getElementById('aiQuickBtns').innerHTML = '';
-            aiIsTyping = true;
-
-            appendAiMessage('user', userMsg);
-            aiChatHistory.push({ role: 'user', content: userMsg });
-            showTypingIndicator();
-
+            input.disabled = true;
+            button.disabled = true;
+            // 2. Show typing indicator
+            showTypingIndicator(true);
             try {
-                const historyToSend = aiChatHistory.slice(-10);
-                const { data: { session } } = await _supabase.auth.getSession();
-                const token = session?.access_token || '';
-
-                const response = await fetch(
-                    `${SUPABASE_URL}/functions/v1/ai-assistant`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                            'apikey': SUPABASE_ANON_KEY,
-                        },
-                        body: JSON.stringify({ messages: historyToSend })
-                    }
-                );
-
-                const result = await response.json();
-
-                if (!response.ok || result.error) {
-                    throw new Error(result.error || `HTTP ${response.status}`);
+                // 3. Send message to the backend
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question: userMessage,
+                        // Pass current period context to the AI
+                        period: isHistoricalPeriod() ? selectedPeriodStart : 'active'
+                    })
+                });
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Bir hata oluştu.');
                 }
-
-                const botReply = result.reply || 'Yanıt alınamadı.';
-                removeTypingIndicator();
-                appendAiMessage('bot', botReply);
-                aiChatHistory.push({ role: 'assistant', content: botReply });
-
-                if (aiChatHistory.length > 20) aiChatHistory = aiChatHistory.slice(-20);
-
-            } catch(err) {
-                removeTypingIndicator();
-                appendAiMessage('bot', `Hata: ${err.message}`);
-                console.error('AI çağrı hatası:', err);
+                const data = await response.json();
+                
+                // 4. Display bot's response
+                showTypingIndicator(false);
+                appendMessage(data.answer, 'bot');
+            } catch (error) {
+                // 5. Handle errors
+                showTypingIndicator(false);
+                appendMessage(`Hata: ${error.message}`, 'bot');
+            } finally {
+                // 6. Re-enable form
+                input.disabled = false;
+                button.disabled = false;
+                input.focus();
             }
-
-            aiIsTyping = false;
-            document.getElementById('aiSendBtn').disabled = false;
-            renderQuickBtns();
         }
+    </script>
 </body>
 </html>

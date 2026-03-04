@@ -48,176 +48,111 @@
         .modal-enter { animation: modalIn 0.3s ease-out forwards; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* Dönem seçici stil */
         .period-selector {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 8px 12px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px; background: white;
+            border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s;
         }
-        .dark .period-selector {
-            background: #374151; /* Darker bg */
-            border-color: #4b5563;
-        }
-        .period-selector:hover {
-            border-color: #3b82f6;
-        }
-        .period-selector select {
-            background: transparent;
-            border: none;
-            outline: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #1e293b;
-            cursor: pointer;
-            width: 100%;
-        }
+        .dark .period-selector { background: #374151; border-color: #4b5563; }
+        .period-selector:hover { border-color: #3b82f6; }
+        .period-selector select { background: transparent; border: none; outline: none; font-size: 0.8rem; font-weight: 600; color: #1e293b; cursor: pointer; width: 100%; }
         .dark .period-selector select { color: #f1f5f9; }
         .period-selector select option { background: white; color: #1e293b; }
         .dark .period-selector select option { background: #334155; color: #f1f5f9; }
 
-        /* Geçmiş dönem banner */
         #historicalBanner {
-            display: none;
-            background: linear-gradient(90deg, #7c3aed10, #2563eb10);
-            border: 1px solid #7c3aed30;
-            border-radius: 10px;
-            padding: 8px 16px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #7c3aed;
-            align-items: center;
-            gap: 8px;
+            display: none; background: linear-gradient(90deg, #7c3aed10, #2563eb10);
+            border: 1px solid #7c3aed30; border-radius: 10px; padding: 8px 16px;
+            font-size: 0.75rem; font-weight: 600; color: #7c3aed; align-items: center; gap: 8px;
         }
         .dark #historicalBanner { color: #a78bfa; border-color: #7c3aed40; }
-        
+
         /* ========= AI CHATBOT STYLES ========= */
-        #aiChatContainer {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 1000;
-        }
+        #aiChatContainer { position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; }
+
         #chatToggleButton {
-            width: 60px;
-            height: 60px;
-            border-radius: 9999px;
+            width: 60px; height: 60px; border-radius: 9999px;
             background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4), 0 8px 10px -6px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: scale(1);
-            cursor: pointer;
+            color: white; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 25px -5px rgba(37,99,235,0.4);
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1); cursor: pointer;
         }
-        #chatToggleButton:hover {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 20px 35px -10px rgba(37, 99, 235, 0.5);
-        }
+        #chatToggleButton:hover { transform: scale(1.1) rotate(10deg); }
+
         #chatWindow {
-            position: absolute;
-            bottom: calc(100% + 1rem);
-            right: 0;
-            width: 400px;
-            max-width: 90vw;
-            height: 500px;
-            max-height: 70vh;
-            display: flex;
-            flex-direction: column;
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: absolute; bottom: calc(100% + 1rem); right: 0;
+            width: 400px; max-width: 90vw; height: 540px; max-height: 75vh;
+            display: flex; flex-direction: column;
+            background-color: white; border: 1px solid #e2e8f0; border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
             transform-origin: bottom right;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-            transform: scale(0.95) translateY(10px);
-            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            opacity: 0; transform: scale(0.95) translateY(10px); pointer-events: none;
         }
-        .dark #chatWindow {
-            background-color: #1e293b; /* slate-850 */
-            border-color: #334155;
+        .dark #chatWindow { background-color: #1e293b; border-color: #334155; }
+        #chatWindow.open { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+
+        .chat-header {
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            border-radius: 20px 20px 0 0;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0;
         }
-        #chatWindow.open {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: auto;
-        }
+
         #chatHistory {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 1rem;
+            flex-grow: 1; overflow-y: auto; padding: 1rem;
+            display: flex; flex-direction: column; gap: 0.75rem;
         }
-        .chat-message {
-            margin-bottom: 1rem;
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-            animation: messageIn 0.3s ease-out forwards;
-        }
-        @keyframes messageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+
+        .chat-message { display: flex; flex-direction: column; max-width: 85%; animation: messageIn 0.3s ease-out; }
+        @keyframes messageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .chat-message.user { align-self: flex-end; }
-        .chat-message.bot { align-self: flex-start; }
-        
+        .chat-message.bot  { align-self: flex-start; }
+
         .message-content {
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            padding: 0.65rem 1rem; border-radius: 14px;
+            font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap;
         }
-        .user .message-content {
-            background-color: #2563eb;
-            color: white;
-            border-bottom-right-radius: 2px;
-        }
-        .bot .message-content {
-            background-color: #e2e8f0;
-            color: #1e293b;
-            border-bottom-left-radius: 2px;
-        }
-        .dark .bot .message-content {
-            background-color: #334155;
-            color: #f1f5f9;
-        }
-        .bot.typing .message-content {
-            display: flex; gap: 4px; align-items: center;
-        }
-        .bot.typing span {
-            width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; animation: typing-bounce 1s infinite;
-        }
+        .user .message-content { background: #2563eb; color: white; border-bottom-right-radius: 3px; }
+        .bot  .message-content { background: #f1f5f9; color: #1e293b; border-bottom-left-radius: 3px; }
+        .dark .bot .message-content { background: #334155; color: #f1f5f9; }
+
+        .bot.typing .message-content { display: flex; gap: 4px; align-items: center; padding: 0.75rem 1rem; }
+        .bot.typing span { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; animation: typingBounce 1s infinite; }
         .bot.typing span:nth-child(2) { animation-delay: 0.15s; }
         .bot.typing span:nth-child(3) { animation-delay: 0.3s; }
-        @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        @keyframes typingBounce { 0%,80%,100%{transform:scale(0)}40%{transform:scale(1)} }
+
+        #quickBtnContainer { padding: 0 0.75rem 0.5rem; display: flex; flex-wrap: wrap; gap: 5px; flex-shrink: 0; }
+        .quick-btn {
+            font-size: 0.68rem; font-weight: 600; padding: 4px 10px;
+            border-radius: 20px; border: 1px solid #cbd5e1; background: white;
+            color: #475569; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+        }
+        .dark .quick-btn { background: #334155; border-color: #475569; color: #94a3b8; }
+        .quick-btn:hover { background: #2563eb; color: white; border-color: #2563eb; }
 
         #chatForm {
-            padding: 1rem;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            gap: 0.5rem;
+            padding: 0.75rem 1rem; border-top: 1px solid #e2e8f0;
+            display: flex; gap: 0.5rem; flex-shrink: 0;
         }
         .dark #chatForm { border-color: #334155; }
         #chatInput {
-            flex-grow: 1;
-            background-color: #f1f5f9;
-            border: 1px solid transparent;
-            border-radius: 8px;
-            padding: 0.75rem;
-            font-size: 0.9rem;
-            color: #1e293b;
-            outline: none;
-            transition: all 0.2s;
+            flex-grow: 1; background: #f1f5f9; border: 1px solid transparent;
+            border-radius: 10px; padding: 0.6rem 0.85rem; font-size: 0.85rem;
+            color: #1e293b; outline: none; transition: all 0.2s; font-family: 'Inter', sans-serif;
         }
-        .dark #chatInput { background-color: #334155; color: #f1f5f9; }
-        #chatInput:focus { border-color: #2563eb; background-color: white; }
-        .dark #chatInput:focus { background-color: #1e293b; }
+        .dark #chatInput { background: #334155; color: #f1f5f9; }
+        #chatInput:focus { border-color: #2563eb; background: white; }
+        .dark #chatInput:focus { background: #1e293b; }
+        #chatSubmitBtn {
+            padding: 0.6rem 1rem; background: #2563eb; color: white;
+            border-radius: 10px; border: none; cursor: pointer; transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+        #chatSubmitBtn:hover { background: #1d4ed8; }
+        #chatSubmitBtn:disabled { background: #93c5fd; cursor: not-allowed; }
     </style>
 </head>
 <body class="h-screen overflow-hidden text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900">
@@ -254,7 +189,9 @@
                         <input type="password" id="password" required class="w-full pl-11 pr-4 py-3.5 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="••••••••">
                     </div>
                 </div>
-                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"><i class="fa-solid fa-circle-exclamation mr-1"></i> <span data-i18n="login_error">Geçersiz e-posta veya şifre</span></div>
+                <div id="loginError" class="text-rose-400 text-sm text-center font-medium hidden bg-rose-500/10 py-2 rounded-lg border border-rose-500/20">
+                    <i class="fa-solid fa-circle-exclamation mr-1"></i> <span data-i18n="login_error">Geçersiz e-posta veya şifre</span>
+                </div>
                 <button type="submit" id="loginBtn" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]" data-i18n="login_btn">Giriş</button>
             </form>
             <div class="mt-8 text-center"><p class="text-xs text-slate-500">&copy; 2026 Concentrix. Secure Access Only.</p></div>
@@ -344,14 +281,13 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
                     <div class="flex items-center gap-3">
                         <h1 id="pageTitle" class="text-2xl font-bold text-slate-800 dark:text-white" data-i18n="title_ops">OM & OY Genel Bakış</h1>
-                        <!-- GEÇMİŞ DÖNEM BANNER -->
                         <div id="historicalBanner">
                             <i class="fa-solid fa-clock-rotate-left"></i>
                             <span id="historicalBannerText">Geçmiş Dönem</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-3 flex-wrap">
-                         <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center shadow-sm border border-gray-200 dark:border-slate-600">
+                        <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center shadow-sm border border-gray-200 dark:border-slate-600">
                             <i id="themeIcon" class="fa-solid fa-moon"></i>
                         </button>
                         <div class="flex bg-white dark:bg-slate-700 rounded-full border border-gray-200 dark:border-slate-600 p-1 shadow-sm">
@@ -362,21 +298,17 @@
                         <div class="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-700 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-600 shadow-sm"><i class="fa-regular fa-clock text-blue-500"></i> <span><span data-i18n="last_update">Son Güncelleme</span>: <span id="lastUpdate" class="text-slate-700 dark:text-slate-300">-</span></span></div>
                     </div>
                 </div>
-                <!-- UPDATED FILTER BAR -->
                 <div class="flex flex-col md:flex-row items-center gap-3 bg-slate-100 dark:bg-slate-850 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <!-- DÖNEM SEÇİCİ -->
                     <div class="period-selector w-full md:w-auto">
                         <i class="fa-regular fa-calendar text-blue-500 dark:text-blue-400 text-xs"></i>
                         <select id="periodSelector" onchange="handlePeriodChange()" class="text-sm">
                             <option value="">Yükleniyor...</option>
                         </select>
                     </div>
-
                     <div class="relative group flex-grow w-full">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-blue-500 transition-colors"></i></div>
                         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Ara..." class="pl-10 w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5 transition-all">
                     </div>
-
                     <select id="filterSenior" onchange="handleSeniorChange()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5"><option value="all">Tümü</option></select>
                     <select id="filterManager" onchange="handleManagerChange()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5"><option value="all">Tümü</option></select>
                     <select id="filterSub" onchange="applyFilters()" class="w-full md:w-auto flex-grow bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-2.5 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500" disabled><option value="all">-</option></select>
@@ -414,7 +346,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card bg-white dark:bg-slate-800 overflow-hidden border-0 shadow-lg">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -429,38 +360,43 @@
         </main>
     </div>
 
-    <!-- ================= AI CHATBOT MARKUP ================= -->
+    <!-- ================= AI CHATBOT ================= -->
     <div id="aiChatContainer">
-        <!-- The Chat Window -->
         <div id="chatWindow">
             <!-- Header -->
-            <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
-                <h3 class="font-bold text-lg flex items-center gap-2">
-                    <i class="fa-solid fa-robot text-blue-500"></i>
-                    AI Asistan
-                </h3>
-                <button onclick="toggleChatWindow(false)" class="text-slate-400 hover:text-red-500 transition-colors">
-                    <i class="fa-solid fa-xmark fa-lg"></i>
-                </button>
-            </div>
-            <!-- Message History -->
-            <div id="chatHistory">
-                <div class="chat-message bot">
-                    <div class="message-content">Merhaba! Finansal veriler hakkında ne öğrenmek istersiniz?</div>
+            <div class="chat-header">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-sm">AI Finansal Asistan</div>
+                        <div class="text-white/60 text-xs">Groq · Llama 3.3</div>
+                    </div>
+                </div>
+                <div class="flex gap-2 items-center">
+                    <button onclick="clearChat()" title="Sohbeti Temizle" class="text-white/60 hover:text-white transition-colors text-sm px-2">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <button onclick="toggleChatWindow(false)" class="text-white/60 hover:text-white transition-colors">
+                        <i class="fa-solid fa-xmark fa-lg"></i>
+                    </button>
                 </div>
             </div>
-            <!-- Input Form -->
+            <!-- Messages -->
+            <div id="chatHistory"></div>
+            <!-- Quick Buttons -->
+            <div id="quickBtnContainer"></div>
+            <!-- Input -->
             <form id="chatForm" onsubmit="handleChatSubmit(event)">
                 <input id="chatInput" type="text" placeholder="Bir soru sorun..." autocomplete="off">
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed">
+                <button type="submit" id="chatSubmitBtn">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </form>
         </div>
-
-        <!-- The Toggle Button -->
         <button id="chatToggleButton" onclick="toggleChatWindow()" title="AI Asistanı Aç">
-            <i class="fa-solid fa-brain fa-xl"></i>
+            <i class="fa-solid fa-robot fa-xl"></i>
         </button>
     </div>
 
@@ -469,812 +405,442 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmtoaGhwYWN4bmVtemp3ZWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NjgzMTEsImV4cCI6MjA4NzQ0NDMxMX0.Spj1pTduez2rOWiUBOoId3hD7J8A6kFdXQhN5pI6yj8';
 
         const translations = {
-            tr: {
-                welcome:"Hoşgeldiniz",email_label:"E-POSTA ADRESİ",password_label:"ŞİFRE",login_error:"Geçersiz e-posta veya şifre",login_btn:"Giriş",login_loading:"Giriş Yapılıyor...",email_placeholder:"isim.soyisim@concentrix.com",logout_title:"Çıkış",export_title:"Excel'i Dışa Aktar",report_type:"RAPOR TİPİ",opt_advisor:"Temsilci Bazlı",opt_leader:"Takım Lideri Özeti",opt_channel:"Kanal Özeti",opt_manager:"Operasyon Yöneticisi Özeti",senior_manager:"OPERASYON MÜDÜRÜ",operation_manager:"OPERASYON YÖNETİCİSİ",team_leader:"TAKIM LİDERİ",channel:"KANAL",all:"Tümü",cancel:"İptal",download_excel:"Excel'i İndir",downloading:"Veriler Yükleniyor...",nav_ops:"OM & OY",nav_leaders:"Takım Liderleri",nav_channels:"Kanallar",admin_panel:"Yönetici Paneli",title_ops:"OM & OY Genel Bakış",title_leader:"Takım Lideri Performansı",title_channel:"Kanal Performansı",export_btn:"Excel'i Dışa Aktar",last_update:"Son Güncelleme",search_ops:"OM, OY, TL veya Kanal ara...",search_leader:"TL veya OM ara...",search_channel:"Kanal ara...",kpi_total_fee:"TOPLAM ÜCRET",kpi_produced_fte:"GERÇEKLEŞEN FTE",kpi_target_rate:"HEDEF GERÇEKLEŞME ORANI",kpi_target_desc:"Öngörülen vs Gerçekleşen",kpi_hours:"NET ÇALIŞMA SAATİ",kpi_hours_desc:"Toplam Net Çalışma Saati",loading_data:"Veriler Yükleniyor...",no_data:"Eşleşen veri bulunamadı.",total:"GENEL TOPLAM",chart_achieved:"Gerçekleşen",chart_remaining:"Geriye Kalan",th_om:"Operasyon Yöneticisi",th_hours:"Net Çalışma Saati",th_prod_fte:"Gerçekleşen FTE",th_fore_fte:"Öngörülen FTE",th_fte_diff:"FTE Farkı",th_fee:"Toplam Ücret",th_fee_diff:"Ücret Farkı",th_tl:"Takım Lideri",th_channel:"Kanal",th_unit_price:"Birim Fiyatı",xls_reg:"Sicil No",xls_name:"İsim Soyisim",xls_clean_hours:"Net Çalışma Saati",xls_raw_fte:"Ham FTE",xls_fte:"FTE",xls_tl:"Takım Lideri",xls_om:"Operasyon Yöneticisi",xls_sm:"Operasyon Müdürü",xls_channel:"Kanal",xls_unit_price:"Birim Fiyat",xls_prod_fte:"Gerçekleşen FTE",xls_fore_fte:"Öngörülen FTE",xls_fte_diff:"FTE Farkı",xls_total_fee:"Toplam Ücret",xls_fee_diff:"Ücret Farkı",
-                historical_banner: "Geçmiş Dönem", period_loading: "Yükleniyor..."
-            },
-            en: {
-                welcome:"Welcome",email_label:"EMAIL ADDRESS",password_label:"PASSWORD",login_error:"Invalid email or password",login_btn:"Login",login_loading:"Logging in...",email_placeholder:"name.surname@concentrix.com",logout_title:"Logout",export_title:"Export Excel",report_type:"REPORT TYPE",opt_advisor:"Advisor Details",opt_leader:"Team Leader Summary",opt_channel:"Channel Summary",opt_manager:"Operation Manager Summary",senior_manager:"SENIOR MANAGER",operation_manager:"OPERATION MANAGER",team_leader:"TEAM LEADER",channel:"CHANNEL",all:"All",cancel:"Cancel",download_excel:"Download Excel",downloading:"Loading Data...",nav_ops:"SM & OM Overview",nav_leaders:"Team Leaders",nav_channels:"Channels",admin_panel:"Admin Panel",title_ops:"SM & OM Overview",title_leader:"Team Leader Performance",title_channel:"Channel Performance",export_btn:"Export Excel",last_update:"Last Update",search_ops:"Search SM, OM, TL or Channel...",search_leader:"Search TL or OM...",search_channel:"Search Channel...",kpi_total_fee:"Total Fee",kpi_produced_fte:"Produced FTE",kpi_target_rate:"Target Realization",kpi_target_desc:"Forecast vs Actual",kpi_hours:"Net Working Hours",kpi_hours_desc:"Total clean hours",loading_data:"Loading Data...",no_data:"No matching data found.",total:"GRAND TOTAL",chart_achieved:"Achieved",chart_remaining:"Remaining",th_om:"Operation Manager",th_hours:"Net Hours",th_prod_fte:"Produced FTE",th_fore_fte:"Forecast FTE",th_fte_diff:"FTE Diff",th_fee:"Total Fee",th_fee_diff:"Fee Diff",th_tl:"Team Leader",th_channel:"Channel",th_unit_price:"Unit Price",xls_reg:"Register No",xls_name:"Full Name",xls_clean_hours:"Net Working Hours",xls_raw_fte:"Raw FTE",xls_fte:"FTE",xls_tl:"Team Leader",xls_om:"Operation Manager",xls_sm:"Senior Manager",xls_channel:"Channel",xls_unit_price:"Unit Price",xls_prod_fte:"Produced FTE",xls_fore_fte:"Forecast FTE",xls_fte_diff:"FTE Diff",xls_total_fee:"Total Fee",xls_fee_diff:"Fee Diff",
-                historical_banner: "Historical Period", period_loading: "Loading..."
-            }
+            tr: { welcome:"Hoşgeldiniz",email_label:"E-POSTA ADRESİ",password_label:"ŞİFRE",login_error:"Geçersiz e-posta veya şifre",login_btn:"Giriş",login_loading:"Giriş Yapılıyor...",email_placeholder:"isim.soyisim@concentrix.com",logout_title:"Çıkış",export_title:"Excel'i Dışa Aktar",report_type:"RAPOR TİPİ",opt_advisor:"Temsilci Bazlı",opt_leader:"Takım Lideri Özeti",opt_channel:"Kanal Özeti",opt_manager:"Operasyon Yöneticisi Özeti",senior_manager:"OPERASYON MÜDÜRÜ",operation_manager:"OPERASYON YÖNETİCİSİ",team_leader:"TAKIM LİDERİ",channel:"KANAL",all:"Tümü",cancel:"İptal",download_excel:"Excel'i İndir",downloading:"Veriler Yükleniyor...",nav_ops:"OM & OY",nav_leaders:"Takım Liderleri",nav_channels:"Kanallar",admin_panel:"Yönetici Paneli",title_ops:"OM & OY Genel Bakış",title_leader:"Takım Lideri Performansı",title_channel:"Kanal Performansı",export_btn:"Excel'i Dışa Aktar",last_update:"Son Güncelleme",search_ops:"OM, OY, TL veya Kanal ara...",search_leader:"TL veya OM ara...",search_channel:"Kanal ara...",kpi_total_fee:"TOPLAM ÜCRET",kpi_produced_fte:"GERÇEKLEŞEN FTE",kpi_target_rate:"HEDEF GERÇEKLEŞME ORANI",kpi_target_desc:"Öngörülen vs Gerçekleşen",kpi_hours:"NET ÇALIŞMA SAATİ",kpi_hours_desc:"Toplam Net Çalışma Saati",loading_data:"Veriler Yükleniyor...",no_data:"Eşleşen veri bulunamadı.",total:"GENEL TOPLAM",chart_achieved:"Gerçekleşen",chart_remaining:"Geriye Kalan",th_om:"Operasyon Yöneticisi",th_hours:"Net Çalışma Saati",th_prod_fte:"Gerçekleşen FTE",th_fore_fte:"Öngörülen FTE",th_fte_diff:"FTE Farkı",th_fee:"Toplam Ücret",th_fee_diff:"Ücret Farkı",th_tl:"Takım Lideri",th_channel:"Kanal",th_unit_price:"Birim Fiyatı",xls_reg:"Sicil No",xls_name:"İsim Soyisim",xls_clean_hours:"Net Çalışma Saati",xls_raw_fte:"Ham FTE",xls_fte:"FTE",xls_tl:"Takım Lideri",xls_om:"Operasyon Yöneticisi",xls_sm:"Operasyon Müdürü",xls_channel:"Kanal",xls_unit_price:"Birim Fiyat",xls_prod_fte:"Gerçekleşen FTE",xls_fore_fte:"Öngörülen FTE",xls_fte_diff:"FTE Farkı",xls_total_fee:"Toplam Ücret",xls_fee_diff:"Ücret Farkı",historical_banner:"Geçmiş Dönem",period_loading:"Yükleniyor..." },
+            en: { welcome:"Welcome",email_label:"EMAIL ADDRESS",password_label:"PASSWORD",login_error:"Invalid email or password",login_btn:"Login",login_loading:"Logging in...",email_placeholder:"name.surname@concentrix.com",logout_title:"Logout",export_title:"Export Excel",report_type:"REPORT TYPE",opt_advisor:"Advisor Details",opt_leader:"Team Leader Summary",opt_channel:"Channel Summary",opt_manager:"Operation Manager Summary",senior_manager:"SENIOR MANAGER",operation_manager:"OPERATION MANAGER",team_leader:"TEAM LEADER",channel:"CHANNEL",all:"All",cancel:"Cancel",download_excel:"Download Excel",downloading:"Loading Data...",nav_ops:"SM & OM Overview",nav_leaders:"Team Leaders",nav_channels:"Channels",admin_panel:"Admin Panel",title_ops:"SM & OM Overview",title_leader:"Team Leader Performance",title_channel:"Channel Performance",export_btn:"Export Excel",last_update:"Last Update",search_ops:"Search SM, OM, TL or Channel...",search_leader:"Search TL or OM...",search_channel:"Search Channel...",kpi_total_fee:"Total Fee",kpi_produced_fte:"Produced FTE",kpi_target_rate:"Target Realization",kpi_target_desc:"Forecast vs Actual",kpi_hours:"Net Working Hours",kpi_hours_desc:"Total clean hours",loading_data:"Loading Data...",no_data:"No matching data found.",total:"GRAND TOTAL",chart_achieved:"Achieved",chart_remaining:"Remaining",th_om:"Operation Manager",th_hours:"Net Hours",th_prod_fte:"Produced FTE",th_fore_fte:"Forecast FTE",th_fte_diff:"FTE Diff",th_fee:"Total Fee",th_fee_diff:"Fee Diff",th_tl:"Team Leader",th_channel:"Channel",th_unit_price:"Unit Price",xls_reg:"Register No",xls_name:"Full Name",xls_clean_hours:"Net Working Hours",xls_raw_fte:"Raw FTE",xls_fte:"FTE",xls_tl:"Team Leader",xls_om:"Operation Manager",xls_sm:"Senior Manager",xls_channel:"Channel",xls_unit_price:"Unit Price",xls_prod_fte:"Produced FTE",xls_fore_fte:"Forecast FTE",xls_fte_diff:"FTE Diff",xls_total_fee:"Total Fee",xls_fee_diff:"Fee Diff",historical_banner:"Historical Period",period_loading:"Loading..." }
         };
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        let currentView = 'ops';
-        let currentLang = 'tr';
-        let rawData = [];
-        let hierarchyData = [];
-        let advisorData = [];
+        let currentView = 'ops', currentLang = 'tr', rawData = [], hierarchyData = [], advisorData = [];
+        let allPeriods = [], activePeriodStart = null, selectedPeriodStart = null;
 
-        // ---- DÖNEM STATE ----
-        let allPeriods = [];          // billing_periods tablosundan gelen tüm dönemler
-        let activePeriodStart = null; // is_active=true dönemin start_date'i
-        let selectedPeriodStart = null; // Şu an seçili dönem (null = aktif)
-
-        // =============================================
-        // INIT
-        // =============================================
+        // ── INIT ──────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', async () => {
-            const savedLang = localStorage.getItem('appLang');
-            changeLanguage(savedLang || 'tr');
-
+            changeLanguage(localStorage.getItem('appLang') || 'tr');
             const savedTheme = localStorage.getItem('appTheme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                updateThemeIcon(true);
-            } else {
-                document.documentElement.classList.remove('dark');
-                updateThemeIcon(false);
-            }
-
+                document.documentElement.classList.add('dark'); updateThemeIcon(true);
+            } else { updateThemeIcon(false); }
             const { data: { session } } = await _supabase.auth.getSession();
-            if (session) showDashboard(session.user);
-            else showLogin();
+            if (session) showDashboard(session.user); else showLogin();
         });
 
-        // =============================================
-        // TEMA & DİL
-        // =============================================
+        // ── TEMA & DİL ────────────────────────────────────────────────
         function toggleTheme() {
-            const html = document.documentElement;
-            const isDark = html.classList.toggle('dark');
+            const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('appTheme', isDark ? 'dark' : 'light');
-            updateThemeIcon(isDark);
-            // Re-render charts for new theme
-            applyFilters();
+            updateThemeIcon(isDark); applyFilters();
         }
-
-        function updateThemeIcon(isDark) {
-            const icon = document.getElementById('themeIcon');
-            if (icon) icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-        }
-
+        function updateThemeIcon(isDark) { const i = document.getElementById('themeIcon'); if(i) i.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; }
         function t(key) { return translations[currentLang][key] || key; }
-        
-        const monthTranslations = {
-            tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
-            en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        };
 
+        const monthTR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+        const monthEN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         function translatePeriodName(name, lang) {
             if (lang === 'tr' || !name) return name;
-            let translatedName = name;
-            for (let i = 0; i < 12; i++) {
-                // Use a case-insensitive regex to replace all occurrences
-                translatedName = translatedName.replace(new RegExp(monthTranslations.tr[i], 'gi'), monthTranslations.en[i]);
-            }
-            return translatedName;
-        }
-
-        function updatePeriodDisplayLanguage() {
-            // Translate period selector options
-            const periodSelector = document.getElementById('periodSelector');
-            if (periodSelector && periodSelector.options.length > 1) { // Check if periods are loaded
-                for (const option of periodSelector.options) {
-                    if (!option.dataset.originalName) {
-                        option.dataset.originalName = option.text.replace(' ●', '');
-                    }
-                    const originalName = option.dataset.originalName;
-                    const isActive = option.text.includes(' ●');
-                    option.text = translatePeriodName(originalName, currentLang) + (isActive ? ' ●' : '');
-                }
-            }
-             // Translate historical banner if visible
-            const banner = document.getElementById('historicalBanner');
-            if (banner.style.display === 'flex') {
-                const period = allPeriods.find(p => p.start_date === selectedPeriodStart);
-                if (period) {
-                    document.getElementById('historicalBannerText').textContent = `${t('historical_banner')}: ${translatePeriodName(period.name, currentLang)}`;
-                }
-            }
+            let n = name;
+            monthTR.forEach((m,i) => { n = n.replace(new RegExp(m,'gi'), monthEN[i]); });
+            return n;
         }
 
         function changeLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            localStorage.setItem('appLang', lang);
-
+            currentLang = lang; document.documentElement.lang = lang; localStorage.setItem('appLang', lang);
             const upd = (id, active, dark=false) => {
-                const btn = document.getElementById(id);
-                if (!btn) return;
+                const btn = document.getElementById(id); if (!btn) return;
                 btn.className = `px-3 py-1 rounded-full text-xs font-bold transition-all ${active ? 'bg-blue-600 text-white shadow-md' : (dark ? 'text-slate-400 hover:text-white' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300')}`;
             };
             upd('lang-tr', lang==='tr'); upd('lang-en', lang==='en');
             upd('login-lang-tr', lang==='tr', true); upd('login-lang-en', lang==='en', true);
-            
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const k = el.getAttribute('data-i18n');
-                if (translations[lang][k]) el.innerText = translations[lang][k];
-            });
-
-            const si = document.getElementById('searchInput');
-            if (si) si.placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[currentView]);
-            
-            const ei = document.getElementById('email');
-            if (ei) ei.placeholder = t('email_placeholder');
-            
-            if (rawData.length > 0) { 
-                populateFilters(); 
-                applyFilters(); 
+            document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(translations[lang][k]) el.innerText = translations[lang][k]; });
+            const si = document.getElementById('searchInput'); if(si) si.placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[currentView]);
+            const ei = document.getElementById('email'); if(ei) ei.placeholder = t('email_placeholder');
+            if (rawData.length > 0) { populateFilters(); applyFilters(); }
+            const sel = document.getElementById('periodSelector');
+            if (sel) for (const opt of sel.options) {
+                const orig = opt.dataset.originalName; if (!orig) continue;
+                const isActive = opt.dataset.active === 'true';
+                opt.text = translatePeriodName(orig, lang) + (isActive ? ' ●' : '');
             }
-            updatePeriodDisplayLanguage();
+            const banner = document.getElementById('historicalBanner');
+            if (banner && banner.style.display === 'flex') {
+                const period = allPeriods.find(p => p.start_date === selectedPeriodStart);
+                if (period) document.getElementById('historicalBannerText').textContent = `${t('historical_banner')}: ${translatePeriodName(period.name, lang)}`;
+            }
         }
 
-        // =============================================
-        // AUTH
-        // =============================================
+        // ── AUTH ──────────────────────────────────────────────────────
         async function handleLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-            const btn = document.getElementById('loginBtn');
-            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('login_loading')}`;
-            btn.disabled = true;
+            const email = document.getElementById('email').value, password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError'), btn = document.getElementById('loginBtn');
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('login_loading')}`; btn.disabled = true;
             errorDiv.classList.add('hidden');
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${t('login_error')}`;
-                errorDiv.classList.remove('hidden');
-                btn.innerText = t('login_btn');
-                btn.disabled = false;
-            } else {
-                showDashboard(data.user);
-            }
+            if (error) { errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${t('login_error')}`; errorDiv.classList.remove('hidden'); btn.innerText = t('login_btn'); btn.disabled = false; }
+            else showDashboard(data.user);
         }
-
-        async function handleLogout() {
-            await _supabase.auth.signOut();
-            showLogin();
-        }
-
+        async function handleLogout() { await _supabase.auth.signOut(); showLogin(); }
         async function showDashboard(user) {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('tr-TR');
-
             if (user?.email) {
-                const name = user.email.split('@')[0].split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
+                const name = user.email.split('@')[0].split('.').map(n => n.charAt(0).toUpperCase()+n.slice(1)).join(' ');
                 document.getElementById('userName').innerText = name;
                 document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${name}&background=random&color=fff&size=128`;
             }
-
-            await loadPeriods();
-            await fetchHierarchyData();
-            switchView('ops');
+            await loadPeriods(); await fetchHierarchyData(); switchView('ops');
         }
-
         function showLogin() {
             document.getElementById('mainDashboard').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('loginBtn').innerText = t('login_btn');
             document.getElementById('loginBtn').disabled = false;
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
+            document.getElementById('email').value = ''; document.getElementById('password').value = '';
         }
 
-        // =============================================
-        // DÖNEM YÖNETİMİ
-        // =============================================
+        // ── DÖNEM ─────────────────────────────────────────────────────
         async function loadPeriods() {
             const sel = document.getElementById('periodSelector');
             sel.innerHTML = `<option>${t('period_loading')}</option>`;
-            const { data, error } = await _supabase
-                .from('billing_periods')
-                .select('name, start_date, end_date, is_active')
-                .order('start_date', { ascending: false });
-
+            const { data, error } = await _supabase.from('billing_periods').select('name, start_date, end_date, is_active').order('start_date', { ascending: false });
             if (error || !data) return;
-
-            allPeriods = data;
-            activePeriodStart = data.find(p => p.is_active)?.start_date || null;
-            selectedPeriodStart = null; // aktif dönem
-
-            sel.innerHTML = data.map(p => `
-                <option value="${p.start_date}" data-original-name="${p.name}" ${p.is_active ? 'data-active="true"' : ''}>
-                    ${translatePeriodName(p.name, currentLang)}${p.is_active ? ' ●' : ''}
-                </option>
-            `).join('');
-
+            allPeriods = data; activePeriodStart = data.find(p => p.is_active)?.start_date || null; selectedPeriodStart = null;
+            sel.innerHTML = data.map(p => `<option value="${p.start_date}" data-original-name="${p.name}" ${p.is_active ? 'data-active="true"' : ''}>${translatePeriodName(p.name, currentLang)}${p.is_active ? ' ●' : ''}</option>`).join('');
             if (activePeriodStart) sel.value = activePeriodStart;
         }
-
         async function handlePeriodChange() {
-            const sel = document.getElementById('periodSelector');
-            const chosen = sel.value;
+            const sel = document.getElementById('periodSelector'), chosen = sel.value;
             const isActive = allPeriods.find(p => p.start_date === chosen)?.is_active;
-
             selectedPeriodStart = isActive ? null : chosen;
-
             const banner = document.getElementById('historicalBanner');
             if (selectedPeriodStart) {
                 const period = allPeriods.find(p => p.start_date === chosen);
                 document.getElementById('historicalBannerText').textContent = `${t('historical_banner')}: ${translatePeriodName(period?.name, currentLang)}`;
                 banner.style.display = 'flex';
-            } else {
-                banner.style.display = 'none';
-            }
-
+            } else { banner.style.display = 'none'; }
             await fetchHierarchyData();
-
             document.getElementById('filterSenior').value = 'all';
             document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
-            const subFilter = document.getElementById('filterSub');
-            subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
-            subFilter.disabled = true;
-
+            const sf = document.getElementById('filterSub'); sf.innerHTML = `<option value="all">${t('all')}</option>`; sf.disabled = true;
             fetchData();
         }
+        function isHistoricalPeriod() { return selectedPeriodStart !== null; }
 
-        function isHistoricalPeriod() {
-            return selectedPeriodStart !== null;
-        }
-
-        // =============================================
-        // VERİ ÇEKME
-        // =============================================
+        // ── VERİ ÇEKME ────────────────────────────────────────────────
         async function fetchHierarchyData() {
             let data, error;
-
-            if (isHistoricalPeriod()) {
-                ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
-            } else {
-                ({ data, error } = await _supabase
-                    .from('view_advisor_performance')
-                    .select('senior_manager, operation_manager, team_leader, channel_name'));
-            }
-
-            if (error) { console.error('Hierarchy fetch error:', error); hierarchyData = []; }
-            else hierarchyData = data || [];
+            if (isHistoricalPeriod()) ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
+            else ({ data, error } = await _supabase.from('view_advisor_performance').select('senior_manager, operation_manager, team_leader, channel_name'));
+            if (error) { console.error('Hierarchy error:', error); hierarchyData = []; } else hierarchyData = data || [];
         }
-
         function switchView(view) {
             currentView = view;
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-${view}`).classList.add('active');
             document.getElementById('pageTitle').innerText = t({'ops':'title_ops','leader':'title_leader','channel':'title_channel'}[view]);
             document.getElementById('searchInput').placeholder = t({'ops':'search_ops','leader':'search_leader','channel':'search_channel'}[view]);
-
             document.getElementById('filterSenior').value = 'all';
             document.getElementById('filterManager').innerHTML = `<option value="all">${t('all')}</option>`;
-            const subFilter = document.getElementById('filterSub');
-            subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
-            subFilter.disabled = true;
-
+            const sf = document.getElementById('filterSub'); sf.innerHTML = `<option value="all">${t('all')}</option>`; sf.disabled = true;
             fetchData();
         }
-
         async function fetchData() {
-            document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400 dark:text-slate-500"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
-
+            document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-12 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-3"></i><br>${t('loading_data')}</td></tr>`;
             let data, error;
-
             if (isHistoricalPeriod()) {
-                const rpcMap = { 'ops': 'get_period_operations', 'leader': 'get_period_leaders', 'channel': 'get_period_channels' };
+                const rpcMap = { 'ops':'get_period_operations','leader':'get_period_leaders','channel':'get_period_channels' };
                 ({ data, error } = await _supabase.rpc(rpcMap[currentView], { p_start: selectedPeriodStart }));
-
-                if (data) {
-                    data = data.map(row => {
-                        if (currentView === 'ops') return { ...row, manager_name: row.manager_name };
-                        if (currentView === 'leader') return { ...row, leader_name: row.leader_name, operation_manager: row.operation_manager };
-                        if (currentView === 'channel') return { ...row, channel_name: row.channel_name };
-                        return row;
-                    });
-                }
             } else {
-                const viewMap = { 'ops': 'view_operations_performance', 'leader': 'view_leader_performance', 'channel': 'view_channel_performance' };
+                const viewMap = { 'ops':'view_operations_performance','leader':'view_leader_performance','channel':'view_channel_performance' };
                 ({ data, error } = await _supabase.from(viewMap[currentView]).select('*'));
             }
-
-            if (error) {
-                if (error.code === 'PGRST301' || error.message?.includes('JWT')) { handleLogout(); return; }
-                console.error('fetchData error:', error);
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-8 text-center text-rose-500">Veri çekme hatası: ${error.message}</td></tr>`;
-                return;
-            }
-
-            rawData = data || [];
-            populateFilters();
-            applyFilters();
+            if (error) { if (error.code==='PGRST301'||error.message?.includes('JWT')) { handleLogout(); return; } console.error(error); return; }
+            rawData = data || []; populateFilters(); applyFilters();
         }
 
-        // =============================================
-        // FİLTRELER
-        // =============================================
-        function getUniqueValues(data, key) {
-            return [...new Set(data.map(item => item[key]))].filter(x => x);
-        }
-
+        // ── FİLTRELER ─────────────────────────────────────────────────
+        function getUniqueValues(data, key) { return [...new Set(data.map(i => i[key]))].filter(x=>x); }
         function populateFilters() {
-            const seniorSelect = document.getElementById('filterSenior');
-            const seniors = getUniqueValues(hierarchyData, 'senior_manager').sort();
-            const currentVal = seniorSelect.value;
-            seniorSelect.innerHTML = `<option value="all">${t('all')}</option>` + seniors.map(s => `<option value="${s}">${s}</option>`).join('');
-            if (seniors.includes(currentVal)) seniorSelect.value = currentVal;
+            const sel = document.getElementById('filterSenior'), seniors = getUniqueValues(hierarchyData,'senior_manager').sort(), cur = sel.value;
+            sel.innerHTML = `<option value="all">${t('all')}</option>` + seniors.map(s=>`<option value="${s}">${s}</option>`).join('');
+            if (seniors.includes(cur)) sel.value = cur;
             handleSeniorChange();
         }
-
         function handleSeniorChange() {
-            const smVal = document.getElementById('filterSenior').value;
-            const managerSelect = document.getElementById('filterManager');
-            let filtered = smVal === 'all' ? hierarchyData : hierarchyData.filter(i => i.senior_manager === smVal);
-            const managers = getUniqueValues(filtered, 'operation_manager').sort();
-            managerSelect.innerHTML = `<option value="all">${t('all')}</option>` + managers.map(m => `<option value="${m}">${m}</option>`).join('');
-            managerSelect.value = 'all';
-            handleManagerChange();
+            const sm = document.getElementById('filterSenior').value, ms = document.getElementById('filterManager');
+            let f = sm==='all' ? hierarchyData : hierarchyData.filter(i=>i.senior_manager===sm);
+            const mgrs = getUniqueValues(f,'operation_manager').sort();
+            ms.innerHTML = `<option value="all">${t('all')}</option>` + mgrs.map(m=>`<option value="${m}">${m}</option>`).join('');
+            ms.value = 'all'; handleManagerChange();
         }
-
         function handleManagerChange() {
-            const smVal = document.getElementById('filterSenior').value;
-            const managerVal = document.getElementById('filterManager').value;
-            const subFilter = document.getElementById('filterSub');
-
-            if (currentView === 'ops') {
-                subFilter.innerHTML = `<option value="all">${t('all')}</option>`;
-                subFilter.disabled = true;
-                applyFilters();
-                return;
-            }
-
-            subFilter.disabled = false;
-            let filtered = hierarchyData;
-            if (smVal !== 'all') filtered = filtered.filter(i => i.senior_manager === smVal);
-            if (managerVal !== 'all') filtered = filtered.filter(i => i.operation_manager === managerVal);
-
-            const subItems = (currentView === 'leader'
-                ? getUniqueValues(filtered, 'team_leader')
-                : getUniqueValues(filtered, 'channel_name')).sort();
-
-            subFilter.innerHTML = `<option value="all">${t('all')}</option>` + subItems.map(i => `<option value="${i}">${i}</option>`).join('');
+            const sm=document.getElementById('filterSenior').value, mv=document.getElementById('filterManager').value, sf=document.getElementById('filterSub');
+            if (currentView==='ops') { sf.innerHTML=`<option value="all">${t('all')}</option>`; sf.disabled=true; applyFilters(); return; }
+            sf.disabled=false;
+            let f=hierarchyData; if(sm!=='all') f=f.filter(i=>i.senior_manager===sm); if(mv!=='all') f=f.filter(i=>i.operation_manager===mv);
+            const items=(currentView==='leader'?getUniqueValues(f,'team_leader'):getUniqueValues(f,'channel_name')).sort();
+            sf.innerHTML=`<option value="all">${t('all')}</option>`+items.map(i=>`<option value="${i}">${i}</option>`).join('');
             applyFilters();
         }
-
         function applyFilters() {
-            const searchVal = document.getElementById('searchInput').value.toLowerCase();
-            const smVal = document.getElementById('filterSenior').value;
-            const managerVal = document.getElementById('filterManager').value;
-            const subVal = document.getElementById('filterSub').value;
-
-            let filteredData = rawData;
-            let validTargets = null;
-
-            if (smVal !== 'all' || managerVal !== 'all') {
-                let hData = hierarchyData;
-                if (smVal !== 'all') hData = hData.filter(i => i.senior_manager === smVal);
-                if (managerVal !== 'all') hData = hData.filter(i => i.operation_manager === managerVal);
-                if (currentView === 'leader') validTargets = new Set(hData.map(i => i.team_leader));
-                else if (currentView === 'channel') validTargets = new Set(hData.map(i => i.channel_name));
-                else if (currentView === 'ops') validTargets = new Set(hData.map(i => i.operation_manager));
+            const sv=document.getElementById('searchInput').value.toLowerCase(), sm=document.getElementById('filterSenior').value, mv=document.getElementById('filterManager').value, subv=document.getElementById('filterSub').value;
+            let fd=rawData, vt=null;
+            if (sm!=='all'||mv!=='all') {
+                let hd=hierarchyData; if(sm!=='all') hd=hd.filter(i=>i.senior_manager===sm); if(mv!=='all') hd=hd.filter(i=>i.operation_manager===mv);
+                if(currentView==='leader') vt=new Set(hd.map(i=>i.team_leader));
+                else if(currentView==='channel') vt=new Set(hd.map(i=>i.channel_name));
+                else vt=new Set(hd.map(i=>i.operation_manager));
             }
-
-            if (validTargets) {
-                filteredData = filteredData.filter(row => {
-                    const name = row.manager_name || row.leader_name || row.channel_name;
-                    return validTargets.has(name);
-                });
+            if (vt) fd=fd.filter(r=>vt.has(r.manager_name||r.leader_name||r.channel_name));
+            if (subv!=='all'&&!document.getElementById('filterSub').disabled) {
+                if(currentView==='leader') fd=fd.filter(i=>i.leader_name===subv);
+                else if(currentView==='channel') fd=fd.filter(i=>i.channel_name===subv);
             }
-
-            if (subVal !== 'all' && !document.getElementById('filterSub').disabled) {
-                if (currentView === 'leader') filteredData = filteredData.filter(i => i.leader_name === subVal);
-                else if (currentView === 'channel') filteredData = filteredData.filter(i => i.channel_name === subVal);
-            }
-
-            if (searchVal) {
-                filteredData = filteredData.filter(item => {
-                    const name = (item.manager_name || item.leader_name || item.channel_name || '').toLowerCase();
-                    const manager = (item.operation_manager || '').toLowerCase();
-                    return name.includes(searchVal) || manager.includes(searchVal);
-                });
-            }
-
-            renderData(filteredData);
+            if (sv) fd=fd.filter(i=>(i.manager_name||i.leader_name||i.channel_name||'').toLowerCase().includes(sv)||(i.operation_manager||'').toLowerCase().includes(sv));
+            renderData(fd);
         }
 
-        // =============================================
-        // RENDER
-        // =============================================
+        // ── RENDER ────────────────────────────────────────────────────
         function renderData(data) {
-            const thead = document.getElementById('tableHeader');
-            const tbody = document.getElementById('tableBody');
-            const tfoot = document.getElementById('tableFooter');
-
-            let headers = [];
-            if (currentView === 'ops') headers = [t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
-            else if (currentView === 'leader') headers = [t('th_tl'), t('th_om'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
-            else headers = [t('th_channel'), t('th_unit_price'), t('th_hours'), t('th_prod_fte'), t('th_fore_fte'), t('th_fte_diff'), t('th_fee'), t('th_fee_diff')];
-
-            thead.innerHTML = headers.map(h => `<th class="px-6 py-4">${h}</th>`).join('');
-
-            let html = '';
-            let totals = { hours: 0, prodFte: 0, foreFte: 0, fee: 0, feeDiff: 0 };
-
-            if (data.length === 0) {
-                html = `<tr><td colspan="8" class="p-8 text-center text-slate-400 dark:text-slate-500">${t('no_data')}</td></tr>`;
-            } else {
-                data.forEach(row => {
-                    const name = row.manager_name || row.leader_name || row.channel_name;
-                    const manager = row.operation_manager || '-';
-                    const hours = parseFloat(row.total_clean_hours || 0);
-                    const prodFte = parseFloat(row.produced_fte || 0);
-                    const foreFte = parseFloat(row.forecast_fte || 0);
-                    const fteDiff = prodFte - foreFte;
-                    const fee = parseFloat(row.total_fee || 0);
-                    const feeDiff = parseFloat(row.fee_diff || 0);
-                    const unitPrice = row.unit_price || 0;
-
-                    totals.hours += hours;
-                    totals.prodFte += prodFte;
-                    totals.foreFte += foreFte;
-                    totals.fee += fee;
-                    totals.feeDiff += feeDiff;
-
-                    const fteClass = fteDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20' : 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20';
-                    const feeClass = feeDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
-
-                    html += `<tr class="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-150">
-                        <td class="px-6 py-4 font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-3">
-                            <div class="w-2.5 h-2.5 rounded-full ${fteDiff >= 0 ? 'bg-emerald-500' : 'bg-rose-500'} shadow-sm"></div>${name}
-                        </td>
-                        ${currentView === 'leader' ? `<td class="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs">${manager}</td>` : ''}
-                        ${currentView === 'channel' ? `<td class="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs">${formatMoney(unitPrice)}</td>` : ''}
-                        <td class="px-6 py-4 text-slate-600 dark:text-slate-400">${hours.toFixed(1)}</td>
-                        <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">${prodFte.toFixed(2)}</td>
-                        <td class="px-6 py-4 text-slate-400 dark:text-slate-500">${foreFte.toFixed(2)}</td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-md text-xs font-bold ${fteClass}">${fteDiff.toFixed(2)}</span></td>
-                        <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">${formatMoney(fee)}</td>
-                        <td class="px-6 py-4 font-bold text-xs ${feeClass}">${formatMoney(feeDiff)}</td>
-                    </tr>`;
-                });
-            }
-
-            tbody.innerHTML = html;
-
-            let footerHtml = `<td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${t('total')}</td>`;
-            if (currentView === 'leader') footerHtml += `<td></td>`;
-            if (currentView === 'channel') footerHtml += `<td></td>`;
-            footerHtml += `
-                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${totals.hours.toFixed(1)}</td>
-                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${totals.prodFte.toFixed(2)}</td>
-                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${totals.foreFte.toFixed(2)}</td>
-                <td class="px-6 py-5 font-bold ${totals.prodFte - totals.foreFte >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${(totals.prodFte - totals.foreFte).toFixed(2)}</td>
-                <td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${formatMoney(totals.fee)}</td>
-                <td class="px-6 py-5 font-bold ${totals.feeDiff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${formatMoney(totals.feeDiff)}</td>
-            `;
-            tfoot.innerHTML = footerHtml;
-            updateKPIs(totals);
-            update3DChart(totals);
-        }
-
-        function updateKPIs(totals) {
-            document.getElementById('kpi-total-fee').innerText = formatMoney(totals.fee);
-            document.getElementById('kpi-produced-fte').innerText = totals.prodFte.toFixed(2);
-            document.getElementById('kpi-hours').innerText = totals.hours.toFixed(1);
-            const diff = totals.feeDiff;
-            const icon = diff >= 0 ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
-            const feeDiffEl = document.getElementById('kpi-fee-diff');
-            feeDiffEl.innerHTML = `${icon} ${formatMoney(Math.abs(diff))}`;
-            feeDiffEl.className = `mt-2 text-xs font-bold ${diff >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
-            const percent = totals.foreFte > 0 ? (totals.prodFte / totals.foreFte) * 100 : 0;
-            document.getElementById('kpi-target-percent').innerText = `%${percent.toFixed(1)}`;
-            document.getElementById('kpi-target-percent').className = `text-3xl font-extrabold mt-1 ${percent >= 100 ? 'text-emerald-600 dark:text-emerald-400' : (percent >= 90 ? 'text-amber-500 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400')}`;
-        }
-
-        function update3DChart(totals) {
-            const isDark = document.documentElement.classList.contains('dark');
-            const remaining = Math.max(0, totals.foreFte - totals.prodFte);
-            const achieved = Math.min(totals.prodFte, totals.foreFte);
-            Highcharts.chart('targetDonutChart', {
-                chart: { type: 'pie', options3d: { enabled: true, alpha: 45 }, backgroundColor: 'transparent', margin: [0,0,0,0], spacing: [0,0,0,0] },
-                title: { text: null },
-                plotOptions: { pie: { innerSize: '50%', depth: 35, dataLabels: { enabled: false }, states: { hover: { enabled: false } } } },
-                credits: { enabled: false },
-                series: [{ name: 'FTE', data: [{ name: t('chart_achieved'), y: achieved, color: '#10b981' }, { name: t('chart_remaining'), y: remaining, color: isDark ? '#334155' : '#e2e8f0' }] }]
+            const thead=document.getElementById('tableHeader'), tbody=document.getElementById('tableBody'), tfoot=document.getElementById('tableFooter');
+            let headers=[];
+            if(currentView==='ops') headers=[t('th_om'),t('th_hours'),t('th_prod_fte'),t('th_fore_fte'),t('th_fte_diff'),t('th_fee'),t('th_fee_diff')];
+            else if(currentView==='leader') headers=[t('th_tl'),t('th_om'),t('th_hours'),t('th_prod_fte'),t('th_fore_fte'),t('th_fte_diff'),t('th_fee'),t('th_fee_diff')];
+            else headers=[t('th_channel'),t('th_unit_price'),t('th_hours'),t('th_prod_fte'),t('th_fore_fte'),t('th_fte_diff'),t('th_fee'),t('th_fee_diff')];
+            thead.innerHTML=headers.map(h=>`<th class="px-6 py-4">${h}</th>`).join('');
+            let html='', totals={hours:0,prodFte:0,foreFte:0,fee:0,feeDiff:0};
+            if(data.length===0) { html=`<tr><td colspan="8" class="p-8 text-center text-slate-400">${t('no_data')}</td></tr>`; }
+            else data.forEach(row=>{
+                const name=row.manager_name||row.leader_name||row.channel_name, manager=row.operation_manager||'-';
+                const hours=parseFloat(row.total_clean_hours||0), prodFte=parseFloat(row.produced_fte||0), foreFte=parseFloat(row.forecast_fte||0);
+                const fteDiff=prodFte-foreFte, fee=parseFloat(row.total_fee||0), feeDiff=parseFloat(row.fee_diff||0), unitPrice=row.unit_price||0;
+                totals.hours+=hours; totals.prodFte+=prodFte; totals.foreFte+=foreFte; totals.fee+=fee; totals.feeDiff+=feeDiff;
+                const fc=fteDiff>=0?'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20':'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20';
+                const fec=feeDiff>=0?'text-emerald-600 dark:text-emerald-400':'text-rose-600 dark:text-rose-400';
+                html+=`<tr class="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-150">
+                    <td class="px-6 py-4 font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-3"><div class="w-2.5 h-2.5 rounded-full ${fteDiff>=0?'bg-emerald-500':'bg-rose-500'} shadow-sm"></div>${name}</td>
+                    ${currentView==='leader'?`<td class="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs">${manager}</td>`:''}
+                    ${currentView==='channel'?`<td class="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs">${formatMoney(unitPrice)}</td>`:''}
+                    <td class="px-6 py-4 text-slate-600 dark:text-slate-400">${hours.toFixed(1)}</td>
+                    <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">${prodFte.toFixed(2)}</td>
+                    <td class="px-6 py-4 text-slate-400 dark:text-slate-500">${foreFte.toFixed(2)}</td>
+                    <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-md text-xs font-bold ${fc}">${fteDiff.toFixed(2)}</span></td>
+                    <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">${formatMoney(fee)}</td>
+                    <td class="px-6 py-4 font-bold text-xs ${fec}">${formatMoney(feeDiff)}</td>
+                </tr>`;
             });
+            tbody.innerHTML=html;
+            let fh=`<td class="px-6 py-5 font-bold text-slate-800 dark:text-white">${t('total')}</td>`;
+            if(currentView==='leader') fh+=`<td></td>`; if(currentView==='channel') fh+=`<td></td>`;
+            fh+=`<td class="px-6 py-5 font-bold">${totals.hours.toFixed(1)}</td><td class="px-6 py-5 font-bold">${totals.prodFte.toFixed(2)}</td><td class="px-6 py-5 font-bold">${totals.foreFte.toFixed(2)}</td>
+            <td class="px-6 py-5 font-bold ${totals.prodFte-totals.foreFte>=0?'text-emerald-600 dark:text-emerald-400':'text-rose-600 dark:text-rose-400'}">${(totals.prodFte-totals.foreFte).toFixed(2)}</td>
+            <td class="px-6 py-5 font-bold">${formatMoney(totals.fee)}</td><td class="px-6 py-5 font-bold ${totals.feeDiff>=0?'text-emerald-600 dark:text-emerald-400':'text-rose-600 dark:text-rose-400'}">${formatMoney(totals.feeDiff)}</td>`;
+            tfoot.innerHTML=fh; updateKPIs(totals); update3DChart(totals);
         }
-
-        function formatMoney(amount) {
-            return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(amount);
+        function updateKPIs(t2) {
+            document.getElementById('kpi-total-fee').innerText=formatMoney(t2.fee);
+            document.getElementById('kpi-produced-fte').innerText=t2.prodFte.toFixed(2);
+            document.getElementById('kpi-hours').innerText=t2.hours.toFixed(1);
+            const diff=t2.feeDiff, icon=diff>=0?'<i class="fa-solid fa-arrow-trend-up"></i>':'<i class="fa-solid fa-arrow-trend-down"></i>';
+            const el=document.getElementById('kpi-fee-diff');
+            el.innerHTML=`${icon} ${formatMoney(Math.abs(diff))}`; el.className=`mt-2 text-xs font-bold ${diff>=0?'text-emerald-600 dark:text-emerald-400':'text-rose-600 dark:text-rose-400'}`;
+            const pct=t2.foreFte>0?(t2.prodFte/t2.foreFte)*100:0;
+            const pe=document.getElementById('kpi-target-percent'); pe.innerText=`%${pct.toFixed(1)}`;
+            pe.className=`text-3xl font-extrabold mt-1 ${pct>=100?'text-emerald-600 dark:text-emerald-400':pct>=90?'text-amber-500 dark:text-amber-400':'text-rose-600 dark:text-rose-400'}`;
         }
+        function update3DChart(t2) {
+            const isDark=document.documentElement.classList.contains('dark'), rem=Math.max(0,t2.foreFte-t2.prodFte), ach=Math.min(t2.prodFte,t2.foreFte);
+            Highcharts.chart('targetDonutChart',{chart:{type:'pie',options3d:{enabled:true,alpha:45},backgroundColor:'transparent',margin:[0,0,0,0],spacing:[0,0,0,0]},title:{text:null},plotOptions:{pie:{innerSize:'50%',depth:35,dataLabels:{enabled:false},states:{hover:{enabled:false}}}},credits:{enabled:false},series:[{name:'FTE',data:[{name:t('chart_achieved'),y:ach,color:'#10b981'},{name:t('chart_remaining'),y:rem,color:isDark?'#334155':'#e2e8f0'}]}]});
+        }
+        function formatMoney(amount) { return new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(amount); }
 
-        // =============================================
-        // EXCEL EXPORT
-        // =============================================
+        // ── EXCEL ─────────────────────────────────────────────────────
         async function openExportModal() {
             document.getElementById('exportModal').classList.remove('hidden');
-            const btn = document.getElementById('btnGenerate');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('downloading')}`;
-
+            const btn=document.getElementById('btnGenerate'); btn.disabled=true; btn.innerHTML=`<i class="fa-solid fa-circle-notch fa-spin"></i> ${t('downloading')}`;
             let data, error;
-            if (isHistoricalPeriod()) {
-                ({ data, error } = await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart }));
-            } else {
-                ({ data, error } = await _supabase.from('view_advisor_performance').select('*'));
-            }
-
-            if (error) { alert('Veri çekme hatası'); return; }
-            advisorData = data || [];
-
-            const sms = [...new Set(advisorData.map(i => i.senior_manager))].filter(Boolean).sort();
-            document.getElementById('expSenior').innerHTML = `<option value="all">${t('all')}</option>` + sms.map(m => `<option value="${m}">${m}</option>`).join('');
-            updateExportFilters('sm');
-
-            btn.disabled = false;
-            btn.innerHTML = `<span>${t('download_excel')}</span><i class="fa-solid fa-download"></i>`;
+            if(isHistoricalPeriod()) ({data,error}=await _supabase.rpc('get_period_advisors',{p_start:selectedPeriodStart}));
+            else ({data,error}=await _supabase.from('view_advisor_performance').select('*'));
+            if(error){alert('Veri çekme hatası');return;} advisorData=data||[];
+            const sms=[...new Set(advisorData.map(i=>i.senior_manager))].filter(Boolean).sort();
+            document.getElementById('expSenior').innerHTML=`<option value="all">${t('all')}</option>`+sms.map(m=>`<option value="${m}">${m}</option>`).join('');
+            updateExportFilters('sm'); btn.disabled=false; btn.innerHTML=`<span>${t('download_excel')}</span><i class="fa-solid fa-download"></i>`;
         }
-
-        function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
-
-        function updateExportFilters(changedLevel) {
-            const sm = document.getElementById('expSenior').value;
-            const omSelect = document.getElementById('expManager');
-            let filtered = advisorData;
-
-            if (changedLevel === 'sm') {
-                if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
-                const oms = [...new Set(filtered.map(i => i.operation_manager))].filter(Boolean).sort();
-                omSelect.innerHTML = `<option value="all">${t('all')}</option>` + oms.map(m => `<option value="${m}">${m}</option>`).join('');
-                omSelect.value = 'all';
-            }
-
-            const currentOM = omSelect.value;
-            if (currentOM !== 'all') filtered = filtered.filter(i => i.operation_manager === currentOM);
-            else if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
-
-            const tls = [...new Set(filtered.map(i => i.team_leader))].filter(Boolean).sort();
-            const chs = [...new Set(filtered.map(i => i.channel_name))].filter(Boolean).sort();
-            document.getElementById('expLeader').innerHTML = `<option value="all">${t('all')}</option>` + tls.map(m => `<option value="${m}">${m}</option>`).join('');
-            document.getElementById('expChannel').innerHTML = `<option value="all">${t('all')}</option>` + chs.map(m => `<option value="${m}">${m}</option>`).join('');
+        function closeExportModal(){document.getElementById('exportModal').classList.add('hidden');}
+        function updateExportFilters(cl) {
+            const sm=document.getElementById('expSenior').value, oms=document.getElementById('expManager'); let f=advisorData;
+            if(cl==='sm'){if(sm!=='all')f=f.filter(i=>i.senior_manager===sm);const o=[...new Set(f.map(i=>i.operation_manager))].filter(Boolean).sort();oms.innerHTML=`<option value="all">${t('all')}</option>`+o.map(m=>`<option value="${m}">${m}</option>`).join('');oms.value='all';}
+            const com=oms.value; if(com!=='all')f=f.filter(i=>i.operation_manager===com);else if(sm!=='all')f=f.filter(i=>i.senior_manager===sm);
+            const tls=[...new Set(f.map(i=>i.team_leader))].filter(Boolean).sort(), chs=[...new Set(f.map(i=>i.channel_name))].filter(Boolean).sort();
+            document.getElementById('expLeader').innerHTML=`<option value="all">${t('all')}</option>`+tls.map(m=>`<option value="${m}">${m}</option>`).join('');
+            document.getElementById('expChannel').innerHTML=`<option value="all">${t('all')}</option>`+chs.map(m=>`<option value="${m}">${m}</option>`).join('');
         }
-
         async function generateExcel() {
-            const reportLevel = document.getElementById('expLevel').value;
-            const sm = document.getElementById('expSenior').value;
-            const om = document.getElementById('expManager').value;
-            const tl = document.getElementById('expLeader').value;
-            const ch = document.getElementById('expChannel').value;
-
-            let exportData = [];
-            let sheetName = "Rapor";
-
-            if (reportLevel === 'advisor') {
-                sheetName = "Temsilci Detay";
-                let filtered = advisorData;
-                if (sm !== 'all') filtered = filtered.filter(i => i.senior_manager === sm);
-                if (om !== 'all') filtered = filtered.filter(i => i.operation_manager === om);
-                if (tl !== 'all') filtered = filtered.filter(i => i.team_leader === tl);
-                if (ch !== 'all') filtered = filtered.filter(i => i.channel_name === ch);
-                exportData = filtered.map(row => {
-                    let obj = {};
-                    obj[t('xls_reg')] = row.cnx_register_number;
-                    obj[t('xls_name')] = row.user_name;
-                    obj[t('xls_clean_hours')] = parseFloat(row.clean_working_time || 0);
-                    obj[t('xls_raw_fte')] = parseFloat(row.raw_fte || 0);
-                    obj[t('xls_fte')] = parseFloat(row.capped_fte || 0);
-                    obj[t('xls_tl')] = row.team_leader;
-                    obj[t('xls_om')] = row.operation_manager;
-                    obj[t('xls_sm')] = row.senior_manager;
-                    obj[t('xls_channel')] = row.channel_name;
-                    return obj;
-                });
+            const rl=document.getElementById('expLevel').value, sm=document.getElementById('expSenior').value, om=document.getElementById('expManager').value, tl=document.getElementById('expLeader').value, ch=document.getElementById('expChannel').value;
+            let exportData=[], sheetName="Rapor";
+            if(rl==='advisor'){
+                sheetName="Temsilci Detay"; let f=advisorData;
+                if(sm!=='all')f=f.filter(i=>i.senior_manager===sm); if(om!=='all')f=f.filter(i=>i.operation_manager===om);
+                if(tl!=='all')f=f.filter(i=>i.team_leader===tl); if(ch!=='all')f=f.filter(i=>i.channel_name===ch);
+                exportData=f.map(r=>{let o={};o[t('xls_reg')]=r.cnx_register_number;o[t('xls_name')]=r.user_name;o[t('xls_clean_hours')]=parseFloat(r.clean_working_time||0);o[t('xls_raw_fte')]=parseFloat(r.raw_fte||0);o[t('xls_fte')]=parseFloat(r.capped_fte||0);o[t('xls_tl')]=r.team_leader;o[t('xls_om')]=r.operation_manager;o[t('xls_sm')]=r.senior_manager;o[t('xls_channel')]=r.channel_name;return o;});
             } else {
-                // Özet rapor: dönem seçimine göre view veya RPC
-                let summaryData, error;
-
-                if (isHistoricalPeriod()) {
-                    const rpcMap = { 'leader': 'get_period_leaders', 'channel': 'get_period_channels', 'manager': 'get_period_operations' };
-                    ({ data: summaryData, error } = await _supabase.rpc(rpcMap[reportLevel], { p_start: selectedPeriodStart }));
-                } else {
-                    const viewMap = { 'leader': 'view_leader_performance', 'channel': 'view_channel_performance', 'manager': 'view_operations_performance' };
-                    ({ data: summaryData, error } = await _supabase.from(viewMap[reportLevel]).select('*'));
-                }
-
-                if (error) { alert('Rapor verisi çekilemedi.'); return; }
-                let filtered = summaryData || [];
-
-                // Hiyerarşi filtresi
-                if (reportLevel !== 'manager' && (sm !== 'all' || om !== 'all')) {
-                    let src = advisorData;
-                    if (sm !== 'all') src = src.filter(i => i.senior_manager === sm);
-                    if (om !== 'all') src = src.filter(i => i.operation_manager === om);
-                    const validTargets = new Set(reportLevel === 'leader' ? src.map(i => i.team_leader) : src.map(i => i.channel_name));
-                    filtered = filtered.filter(i => validTargets.has(reportLevel === 'leader' ? i.leader_name : i.channel_name));
-                }
-
-                if (reportLevel === 'leader') {
-                    sheetName = "Takim Lideri Ozeti";
-                    exportData = filtered.map(row => {
-                        let obj = {};
-                        obj[t('xls_tl')] = row.leader_name;
-                        obj[t('xls_om')] = row.operation_manager;
-                        obj[t('xls_clean_hours')] = parseFloat(row.total_clean_hours || 0);
-                        obj[t('xls_prod_fte')] = parseFloat(row.produced_fte || 0);
-                        obj[t('xls_fore_fte')] = parseFloat(row.forecast_fte || 0);
-                        obj[t('xls_fte_diff')] = parseFloat(row.produced_fte - row.forecast_fte);
-                        obj[t('xls_total_fee')] = parseFloat(row.total_fee || 0);
-                        obj[t('xls_fee_diff')] = parseFloat(row.fee_diff || 0);
-                        return obj;
-                    });
-                } else if (reportLevel === 'channel') {
-                    sheetName = "Kanal Ozeti";
-                    exportData = filtered.map(row => {
-                        let obj = {};
-                        obj[t('xls_channel')] = row.channel_name;
-                        obj[t('xls_unit_price')] = row.unit_price;
-                        obj[t('xls_clean_hours')] = parseFloat(row.total_clean_hours || 0);
-                        obj[t('xls_prod_fte')] = parseFloat(row.produced_fte || 0);
-                        obj[t('xls_fore_fte')] = parseFloat(row.forecast_fte || 0);
-                        obj[t('xls_fte_diff')] = parseFloat(row.produced_fte - row.forecast_fte);
-                        obj[t('xls_total_fee')] = parseFloat(row.total_fee || 0);
-                        obj[t('xls_fee_diff')] = parseFloat(row.fee_diff || 0);
-                        return obj;
-                    });
-                } else if (reportLevel === 'manager') {
-                    sheetName = "Operasyon Yoneticisi Ozeti";
-                    exportData = filtered.map(row => {
-                        let obj = {};
-                        obj[t('xls_om')] = row.manager_name;
-                        obj[t('xls_clean_hours')] = parseFloat(row.total_clean_hours || 0);
-                        obj[t('xls_prod_fte')] = parseFloat(row.produced_fte || 0);
-                        obj[t('xls_fore_fte')] = parseFloat(row.forecast_fte || 0);
-                        obj[t('xls_fte_diff')] = parseFloat(row.produced_fte - row.forecast_fte);
-                        obj[t('xls_total_fee')] = parseFloat(row.total_fee || 0);
-                        obj[t('xls_fee_diff')] = parseFloat(row.fee_diff || 0);
-                        return obj;
-                    });
-                }
+                let sd, err;
+                if(isHistoricalPeriod()){const rm={'leader':'get_period_leaders','channel':'get_period_channels','manager':'get_period_operations'};({data:sd,error:err}=await _supabase.rpc(rm[rl],{p_start:selectedPeriodStart}));}
+                else{const vm={'leader':'view_leader_performance','channel':'view_channel_performance','manager':'view_operations_performance'};({data:sd,error:err}=await _supabase.from(vm[rl]).select('*'));}
+                if(err){alert('Rapor verisi çekilemedi.');return;} let f=sd||[];
+                if(rl!=='manager'&&(sm!=='all'||om!=='all')){let src=advisorData;if(sm!=='all')src=src.filter(i=>i.senior_manager===sm);if(om!=='all')src=src.filter(i=>i.operation_manager===om);const vt=new Set(rl==='leader'?src.map(i=>i.team_leader):src.map(i=>i.channel_name));f=f.filter(i=>vt.has(rl==='leader'?i.leader_name:i.channel_name));}
+                if(rl==='leader'){sheetName="Takim Lideri Ozeti";exportData=f.map(r=>{let o={};o[t('xls_tl')]=r.leader_name;o[t('xls_om')]=r.operation_manager;o[t('xls_clean_hours')]=parseFloat(r.total_clean_hours||0);o[t('xls_prod_fte')]=parseFloat(r.produced_fte||0);o[t('xls_fore_fte')]=parseFloat(r.forecast_fte||0);o[t('xls_fte_diff')]=parseFloat(r.produced_fte-r.forecast_fte);o[t('xls_total_fee')]=parseFloat(r.total_fee||0);o[t('xls_fee_diff')]=parseFloat(r.fee_diff||0);return o;});}
+                else if(rl==='channel'){sheetName="Kanal Ozeti";exportData=f.map(r=>{let o={};o[t('xls_channel')]=r.channel_name;o[t('xls_unit_price')]=r.unit_price;o[t('xls_clean_hours')]=parseFloat(r.total_clean_hours||0);o[t('xls_prod_fte')]=parseFloat(r.produced_fte||0);o[t('xls_fore_fte')]=parseFloat(r.forecast_fte||0);o[t('xls_fte_diff')]=parseFloat(r.produced_fte-r.forecast_fte);o[t('xls_total_fee')]=parseFloat(r.total_fee||0);o[t('xls_fee_diff')]=parseFloat(r.fee_diff||0);return o;});}
+                else if(rl==='manager'){sheetName="Operasyon Yoneticisi Ozeti";exportData=f.map(r=>{let o={};o[t('xls_om')]=r.manager_name;o[t('xls_clean_hours')]=parseFloat(r.total_clean_hours||0);o[t('xls_prod_fte')]=parseFloat(r.produced_fte||0);o[t('xls_fore_fte')]=parseFloat(r.forecast_fte||0);o[t('xls_fte_diff')]=parseFloat(r.produced_fte-r.forecast_fte);o[t('xls_total_fee')]=parseFloat(r.total_fee||0);o[t('xls_fee_diff')]=parseFloat(r.fee_diff||0);return o;});}
             }
-
-            if (exportData.length === 0) { alert(t('no_data')); return; }
-
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const numberColumns = [t('xls_clean_hours'), t('xls_prod_fte'), t('xls_fore_fte'), t('xls_fte_diff'), t('xls_raw_fte'), t('xls_fte')];
-            const currencyColumns = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
-            const range = XLSX.utils.decode_range(ws['!ref']);
-
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-                const address = XLSX.utils.encode_cell({ r: 0, c: C });
-                if (!ws[address]) continue;
-                const colName = ws[address].v;
-                const fmt = currencyColumns.includes(colName) ? '"₺" #,##0' : (numberColumns.includes(colName) ? '0.00' : null);
-                if (fmt) {
-                    for (let R = 1; R <= range.e.r; ++R) {
-                        const ca = XLSX.utils.encode_cell({ r: R, c: C });
-                        if (ws[ca] && ws[ca].t === 'n') ws[ca].z = fmt;
-                    }
-                }
-            }
-
-            ws['!cols'] = Object.keys(exportData[0]).map(() => ({ wch: 20 }));
-            XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            XLSX.writeFile(wb, `Trendyol_${sheetName.replace(/ /g, '_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
+            if(exportData.length===0){alert(t('no_data'));return;}
+            const wb=XLSX.utils.book_new(), ws=XLSX.utils.json_to_sheet(exportData);
+            const nc=[t('xls_clean_hours'),t('xls_prod_fte'),t('xls_fore_fte'),t('xls_fte_diff'),t('xls_raw_fte'),t('xls_fte')], cc=[t('xls_total_fee'),t('xls_fee_diff'),t('xls_unit_price')];
+            const range=XLSX.utils.decode_range(ws['!ref']);
+            for(let C=range.s.c;C<=range.e.c;++C){const a=XLSX.utils.encode_cell({r:0,c:C});if(!ws[a])continue;const cn=ws[a].v;const fmt=cc.includes(cn)?'"₺" #,##0':(nc.includes(cn)?'0.00':null);if(fmt)for(let R=1;R<=range.e.r;++R){const ca=XLSX.utils.encode_cell({r:R,c:C});if(ws[ca]&&ws[ca].t==='n')ws[ca].z=fmt;}}
+            ws['!cols']=Object.keys(exportData[0]).map(()=>({wch:20}));
+            XLSX.utils.book_append_sheet(wb,ws,sheetName);
+            XLSX.writeFile(wb,`Trendyol_${sheetName.replace(/ /g,'_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
             closeExportModal();
         }
-        
+
         // =============================================
-        // AI CHATBOT LOGIC
+        // AI CHATBOT
         // =============================================
-        
-        /**
-         * Toggles the visibility of the AI chat window.
-         * @param {boolean|undefined} forceState - Optional. True to force open, false to force close.
-         */
+        let chatHistory = [];
+        let isChatTyping = false;
+
+        const QUICK_QUESTIONS = [
+            "Genel durumu özetle",
+            "En iyi performanslı OY kim?",
+            "Şubat vs Mart karşılaştır",
+            "En çok zarar eden kanal?",
+            "Hedef gerçekleşme oranı?"
+        ];
+
         function toggleChatWindow(forceState) {
-            const chatWindow = document.getElementById('chatWindow');
-            const toggleButton = document.getElementById('chatToggleButton');
-            const isOpen = chatWindow.classList.contains('open');
-
+            const win = document.getElementById('chatWindow');
+            const btn = document.getElementById('chatToggleButton');
+            const isOpen = win.classList.contains('open');
             const shouldOpen = forceState === undefined ? !isOpen : forceState;
-
             if (shouldOpen) {
-                chatWindow.classList.add('open');
-                toggleButton.style.transform = 'scale(0)';
-                toggleButton.style.pointerEvents = 'none';
+                win.classList.add('open');
+                btn.style.transform = 'scale(0)';
+                btn.style.pointerEvents = 'none';
+                if (chatHistory.length === 0) initChat();
+                setTimeout(() => document.getElementById('chatInput').focus(), 300);
             } else {
-                chatWindow.classList.remove('open');
-                toggleButton.style.transform = 'scale(1)';
-                toggleButton.style.pointerEvents = 'auto';
+                win.classList.remove('open');
+                btn.style.transform = 'scale(1)';
+                btn.style.pointerEvents = 'auto';
             }
         }
 
-
-        /**
-         * Appends a message to the chat history.
-         * @param {string} text - The message content.
-         * @param {string} sender - 'user' or 'bot'.
-         * @returns {HTMLElement} - The created message element.
-         */
-        function appendMessage(text, sender) {
-            const chatHistory = document.getElementById('chatHistory');
-            const messageEl = document.createElement('div');
-            messageEl.className = `chat-message ${sender}`;
-            
-            const contentEl = document.createElement('div');
-            contentEl.className = 'message-content';
-            contentEl.innerText = text;
-            
-            messageEl.appendChild(contentEl);
-            chatHistory.appendChild(messageEl);
-            chatHistory.scrollTop = chatHistory.scrollHeight; // Auto-scroll
-            return messageEl;
+        function initChat() {
+            appendMessage('Merhaba! 👋 Ben AI Finansal Asistanınızım.\n\nŞubat/Mart dönem karşılaştırması, kanal ve lider analizi için sorularınızı bekliyorum.', 'bot');
+            renderQuickBtns();
         }
-        
-        /**
-         * Shows or hides the "bot is typing" indicator.
-         * @param {boolean} show - True to show, false to hide.
-         */
+
+        function renderQuickBtns() {
+            const c = document.getElementById('quickBtnContainer');
+            c.innerHTML = QUICK_QUESTIONS.map(q =>
+                `<button class="quick-btn" onclick="askQuick('${q.replace(/'/g, "\\'")}')">${q}</button>`
+            ).join('');
+        }
+
+        function askQuick(q) {
+            document.getElementById('chatInput').value = q;
+            handleChatSubmit(new Event('submit'));
+        }
+
+        function clearChat() {
+            chatHistory = [];
+            document.getElementById('chatHistory').innerHTML = '';
+            document.getElementById('quickBtnContainer').innerHTML = '';
+            initChat();
+        }
+
+        function appendMessage(text, sender) {
+            const ch = document.getElementById('chatHistory');
+            const el = document.createElement('div');
+            el.className = `chat-message ${sender}`;
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            el.appendChild(content);
+            ch.appendChild(el);
+            ch.scrollTop = ch.scrollHeight;
+            return el;
+        }
+
         function showTypingIndicator(show) {
             const existing = document.getElementById('typing-indicator');
             if (show) {
-                if (existing) return; // Already showing
-                const chatHistory = document.getElementById('chatHistory');
-                const indicatorEl = document.createElement('div');
-                indicatorEl.id = 'typing-indicator';
-                indicatorEl.className = 'chat-message bot typing';
-                indicatorEl.innerHTML = `<div class="message-content"><span></span><span></span><span></span></div>`;
-                chatHistory.appendChild(indicatorEl);
-                chatHistory.scrollTop = chatHistory.scrollHeight;
+                if (existing) return;
+                const ch = document.getElementById('chatHistory');
+                const el = document.createElement('div');
+                el.id = 'typing-indicator';
+                el.className = 'chat-message bot typing';
+                el.innerHTML = `<div class="message-content"><span></span><span></span><span></span></div>`;
+                ch.appendChild(el);
+                ch.scrollTop = ch.scrollHeight;
             } else {
                 if (existing) existing.remove();
             }
         }
 
-        /**
-         * Handles the submission of the chat form.
-         * @param {Event} e - The form submission event.
-         */
         async function handleChatSubmit(e) {
-            e.preventDefault();
-            const form = e.target;
+            if (e && e.preventDefault) e.preventDefault();
+            if (isChatTyping) return;
+
             const input = document.getElementById('chatInput');
-            const button = form.querySelector('button');
-            const userMessage = input.value.trim();
+            const btn = document.getElementById('chatSubmitBtn');
+            const userMsg = input.value.trim();
+            if (!userMsg) return;
 
-            if (!userMessage) return;
-
-            // 1. Display user's message and disable form
-            appendMessage(userMessage, 'user');
             input.value = '';
             input.disabled = true;
-            button.disabled = true;
+            btn.disabled = true;
+            document.getElementById('quickBtnContainer').innerHTML = '';
+            isChatTyping = true;
 
-            // 2. Show typing indicator
+            appendMessage(userMsg, 'user');
+            chatHistory.push({ role: 'user', content: userMsg });
             showTypingIndicator(true);
 
             try {
-                // 3. Send message to the backend
-                const response = await fetch('/ask', {
+                const { data: { session } } = await _supabase.auth.getSession();
+                const token = session?.access_token || '';
+
+                const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-assistant`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        question: userMessage,
-                        // Pass current period context to the AI
-                        period: isHistoricalPeriod() ? selectedPeriodStart : 'active'
-                    })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                        'apikey': SUPABASE_ANON_KEY,
+                    },
+                    body: JSON.stringify({ messages: chatHistory.slice(-10) })
                 });
 
-                if (!response.ok) {
-                    const err = await response.json();
-                    throw new Error(err.error || 'Bir hata oluştu.');
-                }
+                const result = await res.json();
+                if (!res.ok || result.error) throw new Error(result.error || `HTTP ${res.status}`);
 
-                const data = await response.json();
-                
-                // 4. Display bot's response
                 showTypingIndicator(false);
-                appendMessage(data.answer, 'bot');
+                appendMessage(result.reply || 'Yanıt alınamadı.', 'bot');
+                chatHistory.push({ role: 'assistant', content: result.reply });
+                if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
 
-            } catch (error) {
-                // 5. Handle errors
+            } catch (err) {
                 showTypingIndicator(false);
-                appendMessage(`Hata: ${error.message}`, 'bot');
-            } finally {
-                // 6. Re-enable form
-                input.disabled = false;
-                button.disabled = false;
-                input.focus();
+                appendMessage(`Hata: ${err.message}`, 'bot');
+                console.error('AI error:', err);
             }
+
+            isChatTyping = false;
+            input.disabled = false;
+            btn.disabled = false;
+            input.focus();
+            renderQuickBtns();
         }
     </script>
 </body>

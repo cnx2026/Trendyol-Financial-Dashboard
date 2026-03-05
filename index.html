@@ -153,6 +153,32 @@
         }
         #chatSubmitBtn:hover { background: #1d4ed8; }
         #chatSubmitBtn:disabled { background: #93c5fd; cursor: not-allowed; }
+
+        /* Excel & Chart butonları */
+        .excel-btn-wrap { margin-top: 0.6rem; }
+        .excel-dl-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: #16a34a; color: white; border: none;
+            padding: 7px 14px; border-radius: 8px; font-size: 0.78rem;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .excel-dl-btn:hover { background: #15803d; }
+        .excel-manual-tip {
+            margin-top: 5px; font-size: 0.72rem; color: #64748b;
+            background: #f8fafc; border-radius: 6px; padding: 5px 8px;
+            border-left: 3px solid #cbd5e1;
+        }
+        .dark .excel-manual-tip { background: #1e293b; color: #94a3b8; border-color: #475569; }
+        .chart-btn-wrap { margin-top: 0.6rem; }
+        .chart-view-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: #2563eb; color: white; border: none;
+            padding: 7px 14px; border-radius: 8px; font-size: 0.78rem;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-view-btn:hover { background: #1d4ed8; }
     </style>
 </head>
 <body class="h-screen overflow-hidden text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900">
@@ -705,22 +731,56 @@
         }
 
         // =============================================
+        // TÜRKÇE CİNSİYET TESPİTİ
+        // =============================================
+        const MALE_NAMES = new Set(["ahmet","mehmet","mustafa","ali","hüseyin","ibrahim","hasan","ömer","süleyman","ismail","osman","halil","murat","kemal","yusuf","emre","serkan","burak","enes","furkan","kadir","fatih","berk","alp","alper","umut","onur","orhan","selim","tarık","tayfun","taner","volkan","vedat","özgür","cenk","cem","bülent","şükrü","recep","ramazan","nuri","nihat","necati","nail","münir","mithat","metin","mesut","mete","kerem","kazım","kaan","ilhan","haydar","hakan","gökhan","ferruh","erdal","ercan","enver","emin","ekrem","erol","enes","doğan","cüneyt","cemal","celal","cengiz","can","bayram","barış","atilla","aytaç","aykut","ayhan","aydin","ayhan","arif","arhan","arif","anıl","adil","adnan","berkay","batuhan","baran","bahadır","adem","resul","sabri","sait","salih","sami","sedat","sefer","serhan","serhat","sezai","sinan","sunat","şahin","şeref","şevket","taha","talha","tuncay","turan","turgut","uğur","ufuk","ümit","yasin","yavuz","yiğit","zafer","zeki"]);
+        const FEMALE_NAMES = new Set(["ayşe","fatma","emine","hatice","zeynep","elif","sultan","esra","büşra","merve","seda","tuğba","gülşen","gülsüm","hacer","hanife","havva","hilal","hülya","işıl","kader","leyla","melek","meltem","müge","neslihan","nilay","nilüfer","nur","nurcan","nuray","özlem","pınar","reyhan","rukiye","sabiha","şeyma","şule","ümmü","ümmügülsüm","vildan","yasemin","yeliz","yıldız","zeliha","zümrüt","aslı","aynur","aysel","bahar","belgin","berna","binnur","canan","dilan","dilara","dilek","döndü","ebru","elçin","ece","figen","gamze","gizem","gonca","gülay","güler","gülnaz","hande","ilknur","irmak","irem","kübra","lale","mehtap","meral","mine","nergis","nesrin","nisan","rahime","selin","semra","sena","serpil","sevda","sevgi","sevinç","sibel","simge","songül","tülay","tuba","ülkü","ümran","yaprak","yaren"]);
+        const UNISEX_NAMES = new Set(["deniz","tutku","özgür","can","ümit","bülent","onur","doğa","nehir","yağmur","bulut","gün","seher","dost","özlem","evren","umut","barış","aydın","berke","ilayda","derya","pelin","eren","ilhan","güneş","yıldız","arzu","kanat","çağla","gülümser","cengiz","cüneyt","bahar"]);
+
+        function detectGender(firstName) {
+            const name = (firstName || '').toLowerCase().trim();
+            if (UNISEX_NAMES.has(name)) return 'unisex';
+            if (FEMALE_NAMES.has(name)) return 'female';
+            if (MALE_NAMES.has(name)) return 'male';
+            return 'unisex'; // bilinmiyorsa unisex
+        }
+
+        function getTitle(firstName) {
+            const g = detectGender(firstName);
+            if (g === 'male') return 'Bey';
+            if (g === 'female') return 'Hanım';
+            return 'Bey/Hanım';
+        }
+
+        // =============================================
         // AI CHATBOT
         // =============================================
         let chatHistory = [];
         let isChatTyping = false;
+        let chatUserName = '';
+        let chatUserFirstName = '';
 
         const QUICK_QUESTIONS = [
             "Genel durumu özetle",
-            "En iyi performanslı OY kim?",
-            "Şubat vs Mart karşılaştır",
+            "En iyi performanslı lider kim?",
+            "Dönemler arası karşılaştır",
             "En çok zarar eden kanal?",
-            "Hedef gerçekleşme oranı?"
+            "Hedef gerçekleşme oranı?",
+            "Eksik veri günleri var mı?"
         ];
 
         function toggleChatWindow(forceState) {
             const win = document.getElementById('chatWindow');
             const btn = document.getElementById('chatToggleButton');
+
+            // ── LOGIN GUARD ──
+            if (forceState !== false) {
+                const dashboard = document.getElementById('mainDashboard');
+                if (dashboard.classList.contains('hidden')) {
+                    return; // login yoksa aç
+                }
+            }
+
             const isOpen = win.classList.contains('open');
             const shouldOpen = forceState === undefined ? !isOpen : forceState;
             if (shouldOpen) {
@@ -737,7 +797,19 @@
         }
 
         function initChat() {
-            appendMessage('Merhaba! 👋 Ben AI Finansal Asistanınızım.\n\nŞubat/Mart dönem karşılaştırması, kanal ve lider analizi için sorularınızı bekliyorum.', 'bot');
+            // Kullanıcı adını al
+            const userNameEl = document.getElementById('userName');
+            chatUserName = userNameEl ? userNameEl.innerText : '';
+            chatUserFirstName = chatUserName.split(' ')[0] || '';
+            const title = getTitle(chatUserFirstName);
+
+            const greeting = chatUserFirstName
+                ? `Merhaba, **${chatUserFirstName} ${title}** 👋`
+                : `Merhaba 👋`;
+
+            const welcomeText = `${greeting}\n\nConcentrix Trendyol Operasyonu'nun AI Finansal Asistanıyım. Dönem performans analizleri, kanal ve lider kıyaslamaları, hedef sapma değerlendirmeleri ve finansal raporlama konularında size destek olmak için buradayım.\n\nNasıl yardımcı olabilirim?`;
+
+            appendMessage(welcomeText, 'bot');
             renderQuickBtns();
         }
 
@@ -760,17 +832,185 @@
             initChat();
         }
 
+        // ── MESAJ RENDER: [EXCEL] ve [CHART] TAG'LERİNİ YAKALA ──────
         function appendMessage(text, sender) {
             const ch = document.getElementById('chatHistory');
             const el = document.createElement('div');
             el.className = `chat-message ${sender}`;
+
+            // Excel tag tespiti: [EXCEL:tip:filtre]
+            const excelMatch = text.match(/\[EXCEL:(\w+):([^\]]+)\]/);
+            // Chart tag tespiti: [CHART:tip:veri]
+            const chartMatch = text.match(/\[CHART:(bar|pie):([^\]]+)\]/);
+
+            // Tagları metinden temizle
+            let cleanText = text
+                .replace(/\[EXCEL:\w+:[^\]]+\]/g, '')
+                .replace(/\[CHART:(bar|pie):[^\]]+\]/g, '')
+                .trim();
+
             const content = document.createElement('div');
             content.className = 'message-content';
-            content.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            content.innerHTML = cleanText
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
             el.appendChild(content);
+
+            // Excel butonu ekle
+            if (excelMatch && sender === 'bot') {
+                const [, type, filter] = excelMatch;
+                const typeLabels = { advisor: 'Temsilci Detay', leader: 'Takım Lideri Özeti', channel: 'Kanal Özeti', manager: 'Operasyon Yöneticisi Özeti' };
+                const label = typeLabels[type] || type;
+                const btnWrap = document.createElement('div');
+                btnWrap.className = 'excel-btn-wrap';
+                btnWrap.innerHTML = `
+                    <button onclick="downloadExcelFromBot('${type}','${filter}')" class="excel-dl-btn">
+                        <i class="fa-solid fa-file-excel"></i> ${label} Raporu İndir
+                    </button>
+                    <div class="excel-manual-tip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Manuel: Sağ üstteki <strong>Excel'i Dışa Aktar</strong> → <strong>${label}</strong>
+                    </div>`;
+                el.appendChild(btnWrap);
+            }
+
+            // Grafik butonu ekle
+            if (chartMatch && sender === 'bot') {
+                const [, chartType, dataStr] = chartMatch;
+                const btnWrap = document.createElement('div');
+                btnWrap.className = 'chart-btn-wrap';
+                const encodedData = encodeURIComponent(dataStr);
+                btnWrap.innerHTML = `
+                    <button onclick="openChartModal('${chartType}','${encodedData}')" class="chart-view-btn">
+                        <i class="fa-solid fa-chart-bar"></i> Grafiği Görüntüle
+                    </button>`;
+                el.appendChild(btnWrap);
+            }
+
             ch.appendChild(el);
             ch.scrollTop = ch.scrollHeight;
             return el;
+        }
+
+        // ── EXCEL BOT'TAN İNDİR ──────────────────────────────────────
+        async function downloadExcelFromBot(type, filter) {
+            // advisorData'yı yenile (yoksa)
+            if (!advisorData.length) {
+                const { data } = isHistoricalPeriod()
+                    ? await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart })
+                    : await _supabase.from('view_advisor_performance').select('*');
+                advisorData = data || [];
+            }
+            // expLevel'i type olarak set et, tümünü al
+            document.getElementById('expLevel').value = type;
+            document.getElementById('expSenior').value = 'all';
+            document.getElementById('expManager').value = 'all';
+            // Doğrudan generateExcel çağır
+            await generateExcel();
+        }
+
+        // ── GRAFİK MODAL ────────────────────────────────────────────
+        function openChartModal(chartType, encodedData) {
+            const dataStr = decodeURIComponent(encodedData);
+            const pairs = dataStr.split(',').map(p => p.split('='));
+            const labels = pairs.map(p => p[0].trim());
+            const values = pairs.map(p => parseFloat(p[1]) || 0);
+
+            const modal = document.getElementById('chartModal');
+            const canvas = document.getElementById('chartCanvas');
+            const title = document.getElementById('chartModalTitle');
+            title.textContent = chartType === 'bar' ? 'Karşılaştırma Grafiği' : 'Dağılım Grafiği';
+            modal.classList.remove('hidden');
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#cbd5e1' : '#475569';
+            const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+            if (chartType === 'bar') {
+                drawBarChart(ctx, labels, values, textColor, gridColor, canvas.width, canvas.height);
+            } else {
+                drawPieChart(ctx, labels, values, canvas.width, canvas.height);
+            }
+        }
+
+        function closeChartModal() {
+            document.getElementById('chartModal').classList.add('hidden');
+        }
+
+        function drawBarChart(ctx, labels, values, textColor, gridColor, W, H) {
+            const colors = ['#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899'];
+            const maxVal = Math.max(...values);
+            const padL = 65, padR = 20, padT = 30, padB = 55;
+            const chartW = W - padL - padR;
+            const chartH = H - padT - padB;
+            const barW = (chartW / labels.length) * 0.6;
+            const gap = chartW / labels.length;
+
+            // Grid
+            ctx.strokeStyle = gridColor; ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padT + chartH - (chartH / 4) * i;
+                ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + chartW, y); ctx.stroke();
+                ctx.fillStyle = textColor; ctx.font = '10px Inter'; ctx.textAlign = 'right';
+                const val = Math.round(maxVal / 4 * i);
+                ctx.fillText(val >= 1000000 ? (val/1000000).toFixed(1)+'M' : val >= 1000 ? (val/1000).toFixed(0)+'K' : val, padL - 5, y + 3);
+            }
+
+            // Barlar
+            values.forEach((val, i) => {
+                const barH = maxVal > 0 ? (val / maxVal) * chartH : 0;
+                const x = padL + gap * i + (gap - barW) / 2;
+                const y = padT + chartH - barH;
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.beginPath();
+                ctx.roundRect ? ctx.roundRect(x, y, barW, barH, 4) : ctx.rect(x, y, barW, barH);
+                ctx.fill();
+
+                // Label
+                ctx.fillStyle = textColor; ctx.font = '9px Inter'; ctx.textAlign = 'center';
+                const shortLabel = labels[i].length > 10 ? labels[i].slice(0, 10) + '…' : labels[i];
+                ctx.fillText(shortLabel, x + barW / 2, padT + chartH + 14);
+
+                // Değer
+                ctx.font = 'bold 9px Inter';
+                const dispVal = val >= 1000000 ? (val/1000000).toFixed(1)+'M' : val >= 1000 ? (val/1000).toFixed(0)+'K' : val.toFixed(1);
+                ctx.fillText(dispVal, x + barW / 2, y - 4);
+            });
+        }
+
+        function drawPieChart(ctx, labels, values, W, H) {
+            const colors = ['#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899'];
+            const total = values.reduce((a, b) => a + Math.abs(b), 0);
+            const cx = W / 2 - 40, cy = H / 2, r = Math.min(cx, cy) - 20;
+            let startAngle = -Math.PI / 2;
+
+            values.forEach((val, i) => {
+                const slice = (Math.abs(val) / total) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, startAngle, startAngle + slice);
+                ctx.closePath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.strokeStyle = 'white'; ctx.lineWidth = 2; ctx.stroke();
+                startAngle += slice;
+            });
+
+            // Legend
+            const isDark = document.documentElement.classList.contains('dark');
+            labels.forEach((label, i) => {
+                const y = 20 + i * 20;
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fillRect(W - 110, y, 12, 12);
+                ctx.fillStyle = isDark ? '#cbd5e1' : '#475569';
+                ctx.font = '10px Inter'; ctx.textAlign = 'left';
+                const pct = total > 0 ? (Math.abs(values[i]) / total * 100).toFixed(0) : 0;
+                const shortL = label.length > 10 ? label.slice(0, 10) + '…' : label;
+                ctx.fillText(`${shortL} (${pct}%)`, W - 94, y + 10);
+            });
         }
 
         function showTypingIndicator(show) {
@@ -782,25 +1022,24 @@
                 el.id = 'typing-indicator';
                 el.className = 'chat-message bot typing';
                 el.innerHTML = `<div class="message-content"><span></span><span></span><span></span></div>`;
-                ch.appendChild(el);
-                ch.scrollTop = ch.scrollHeight;
-            } else {
-                if (existing) existing.remove();
-            }
+                ch.appendChild(el); ch.scrollTop = ch.scrollHeight;
+            } else { if (existing) existing.remove(); }
         }
 
         async function handleChatSubmit(e) {
             if (e && e.preventDefault) e.preventDefault();
             if (isChatTyping) return;
 
+            // Login guard
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { toggleChatWindow(false); showLogin(); return; }
+
             const input = document.getElementById('chatInput');
             const btn = document.getElementById('chatSubmitBtn');
             const userMsg = input.value.trim();
             if (!userMsg) return;
 
-            input.value = '';
-            input.disabled = true;
-            btn.disabled = true;
+            input.value = ''; input.disabled = true; btn.disabled = true;
             document.getElementById('quickBtnContainer').innerHTML = '';
             isChatTyping = true;
 
@@ -809,17 +1048,16 @@
             showTypingIndicator(true);
 
             try {
-                const { data: { session } } = await _supabase.auth.getSession();
-                const token = session?.access_token || '';
-
                 const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-assistant`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
                     },
-                    body: JSON.stringify({ messages: chatHistory.slice(-10) })
+                    body: JSON.stringify({
+                        messages: chatHistory.slice(-10),
+                        userName: chatUserFirstName
+                    })
                 });
 
                 const result = await res.json();
@@ -836,11 +1074,8 @@
                 console.error('AI error:', err);
             }
 
-            isChatTyping = false;
-            input.disabled = false;
-            btn.disabled = false;
-            input.focus();
-            renderQuickBtns();
+            isChatTyping = false; input.disabled = false; btn.disabled = false;
+            input.focus(); renderQuickBtns();
         }
     </script>
 </body>

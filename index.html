@@ -68,29 +68,40 @@
         .dark #historicalBanner { color: #a78bfa; border-color: #7c3aed40; }
 
         /* ========= AI CHATBOT STYLES ========= */
-        #aiChatContainer { position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; }
-
         #chatToggleButton {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 1000;
             width: 60px; height: 60px; border-radius: 9999px;
             background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
             color: white; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 10px 25px -5px rgba(37,99,235,0.4);
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1); cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s; cursor: pointer;
+            border: none;
         }
-        #chatToggleButton:hover { transform: scale(1.1) rotate(10deg); }
+        #chatToggleButton:hover { transform: scale(1.1) rotate(10deg); box-shadow: 0 20px 35px -10px rgba(37,99,235,0.5); }
 
         #chatWindow {
-            position: absolute; bottom: calc(100% + 1rem); right: 0;
-            width: 400px; max-width: 90vw; height: 540px; max-height: 75vh;
+            position: fixed; bottom: 5rem; right: 2rem; z-index: 999;
+            width: 400px; height: 540px;
+            min-width: 280px; min-height: 360px;
             display: flex; flex-direction: column;
             background-color: white; border: 1px solid #e2e8f0; border-radius: 20px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            transform-origin: bottom right;
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            transition: opacity 0.3s, transform 0.3s;
             opacity: 0; transform: scale(0.95) translateY(10px); pointer-events: none;
+            overflow: hidden;
         }
         .dark #chatWindow { background-color: #1e293b; border-color: #334155; }
         #chatWindow.open { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+
+        /* Resize handle */
+        #chatResize {
+            position: absolute; bottom: 4px; left: 8px;
+            width: 20px; height: 20px; cursor: sw-resize; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            color: #cbd5e1; user-select: none;
+        }
+        #chatResize:hover { color: #2563eb; }
+        .dark #chatResize { color: #475569; }
 
         .chat-header {
             padding: 1rem 1.25rem;
@@ -386,45 +397,65 @@
         </main>
     </div>
 
+    <!-- ================= CHART MODAL ================= -->
+    <div id="chartModal" class="fixed inset-0 z-[2000] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 p-6 border border-slate-200 dark:border-slate-700">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="chartModalTitle" class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-bar text-blue-500"></i> Grafik
+                </h3>
+                <button onclick="closeChartModal()" class="text-slate-400 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-xmark fa-lg"></i>
+                </button>
+            </div>
+            <canvas id="chartCanvas" style="width:100%;height:320px;display:block;background:#f8fafc;border-radius:12px;"></canvas>
+            <p class="text-xs text-slate-400 mt-3 text-center">AI Finbot · Concentrix Trendyol</p>
+        </div>
+    </div>
+
     <!-- ================= AI CHATBOT ================= -->
-    <div id="aiChatContainer">
-        <div id="chatWindow">
-            <!-- Header -->
-            <div class="chat-header">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-robot text-white text-sm"></i>
-                    </div>
-                    <div>
-                        <div class="text-white font-bold text-sm">AI Finansal Asistan</div>
-                        <div class="text-white/60 text-xs">Groq · Llama 3.3</div>
-                    </div>
+    <div id="chatWindow">
+        <!-- Sürükleme header alanı -->
+        <div class="chat-header" id="chatDragHandle" style="cursor:move;">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-robot text-white text-sm"></i>
                 </div>
-                <div class="flex gap-2 items-center">
-                    <button onclick="clearChat()" title="Sohbeti Temizle" class="text-white/60 hover:text-white transition-colors text-sm px-2">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                    <button onclick="toggleChatWindow(false)" class="text-white/60 hover:text-white transition-colors">
-                        <i class="fa-solid fa-xmark fa-lg"></i>
-                    </button>
+                <div>
+                    <div class="text-white font-bold text-sm">AI Finansal Asistan</div>
+                    <div class="text-white/60 text-xs">Groq · Llama 3.3</div>
                 </div>
             </div>
-            <!-- Messages -->
-            <div id="chatHistory"></div>
-            <!-- Quick Buttons -->
-            <div id="quickBtnContainer"></div>
-            <!-- Input -->
-            <form id="chatForm" onsubmit="handleChatSubmit(event)">
-                <input id="chatInput" type="text" placeholder="Bir soru sorun..." autocomplete="off">
-                <button type="submit" id="chatSubmitBtn">
-                    <i class="fa-solid fa-paper-plane"></i>
+            <div class="flex gap-2 items-center">
+                <button onclick="clearChat()" title="Sohbeti Temizle" class="text-white/60 hover:text-white transition-colors text-sm px-2">
+                    <i class="fa-solid fa-trash-can"></i>
                 </button>
-            </form>
+                <button onclick="toggleChatWindow(false)" class="text-white/60 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark fa-lg"></i>
+                </button>
+            </div>
         </div>
-        <button id="chatToggleButton" onclick="toggleChatWindow()" title="AI Asistanı Aç">
-            <i class="fa-solid fa-robot fa-xl"></i>
-        </button>
+        <!-- Messages -->
+        <div id="chatHistory"></div>
+        <!-- Quick Buttons -->
+        <div id="quickBtnContainer"></div>
+        <!-- Input -->
+        <form id="chatForm" onsubmit="handleChatSubmit(event)">
+            <input id="chatInput" type="text" placeholder="Bir soru sorun..." autocomplete="off">
+            <button type="submit" id="chatSubmitBtn">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+        <!-- Sol alt resize handle -->
+        <div id="chatResize" title="Boyutlandır">
+            <i class="fa-solid fa-grip-lines-vertical" style="font-size:10px;"></i>
+        </div>
     </div>
+
+    <!-- Toggle button -->
+    <button id="chatToggleButton" onclick="toggleChatWindow()" title="AI Asistanı Aç">
+        <i class="fa-solid fa-robot fa-xl"></i>
+    </button>
 
     <script>
         const SUPABASE_URL = 'https://jurkhhhpacxnemzjwedb.supabase.co';
@@ -776,9 +807,7 @@
             // ── LOGIN GUARD ──
             if (forceState !== false) {
                 const dashboard = document.getElementById('mainDashboard');
-                if (dashboard.classList.contains('hidden')) {
-                    return; // login yoksa aç
-                }
+                if (dashboard.classList.contains('hidden')) return;
             }
 
             const isOpen = win.classList.contains('open');
@@ -788,12 +817,119 @@
                 btn.style.transform = 'scale(0)';
                 btn.style.pointerEvents = 'none';
                 if (chatHistory.length === 0) initChat();
+                initDragAndResize();
                 setTimeout(() => document.getElementById('chatInput').focus(), 300);
             } else {
                 win.classList.remove('open');
                 btn.style.transform = 'scale(1)';
                 btn.style.pointerEvents = 'auto';
             }
+        }
+
+        // ── SÜRÜKLEME & YENİDEN BOYUTLANDIRMA ──────────────────────
+        let dragInitialized = false;
+
+        function initDragAndResize() {
+            if (dragInitialized) return;
+            dragInitialized = true;
+
+            const win = document.getElementById('chatWindow');
+            const handle = document.getElementById('chatDragHandle');
+            const resizeHandle = document.getElementById('chatResize');
+
+            // SÜRÜKLEME
+            let isDragging = false, dragStartX, dragStartY, winStartX, winStartY;
+
+            handle.addEventListener('mousedown', (e) => {
+                if (e.target.closest('button')) return;
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                const rect = win.getBoundingClientRect();
+                winStartX = rect.left;
+                winStartY = rect.top;
+                win.style.transition = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                let newX = winStartX + (e.clientX - dragStartX);
+                let newY = winStartY + (e.clientY - dragStartY);
+                // Ekran sınırlarını aşmasın
+                newX = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, newX));
+                newY = Math.max(0, Math.min(window.innerHeight - win.offsetHeight, newY));
+                win.style.right = 'auto';
+                win.style.bottom = 'auto';
+                win.style.left = newX + 'px';
+                win.style.top = newY + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                win.style.transition = '';
+            });
+
+            // YENİDEN BOYUTLANDIRMA (sol alt köşe)
+            let isResizing = false, resStartX, resStartY, resStartW, resStartH, resStartL, resStartT;
+
+            resizeHandle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                resStartX = e.clientX;
+                resStartY = e.clientY;
+                const rect = win.getBoundingClientRect();
+                resStartW = rect.width;
+                resStartH = rect.height;
+                resStartL = rect.left;
+                resStartT = rect.top;
+                win.style.transition = 'none';
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const dx = e.clientX - resStartX;
+                const dy = e.clientY - resStartY;
+                const newW = Math.max(280, resStartW - dx);
+                const newH = Math.max(360, resStartH + dy);
+                const newL = resStartL + (resStartW - newW);
+                win.style.width = newW + 'px';
+                win.style.height = newH + 'px';
+                win.style.right = 'auto';
+                win.style.bottom = 'auto';
+                win.style.left = newL + 'px';
+                win.style.top = resStartT + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isResizing = false;
+                win.style.transition = '';
+            });
+
+            // TOUCH DESTEĞI (mobil)
+            handle.addEventListener('touchstart', (e) => {
+                if (e.target.closest('button')) return;
+                const touch = e.touches[0];
+                isDragging = true;
+                dragStartX = touch.clientX; dragStartY = touch.clientY;
+                const rect = win.getBoundingClientRect();
+                winStartX = rect.left; winStartY = rect.top;
+                win.style.transition = 'none';
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const touch = e.touches[0];
+                let newX = winStartX + (touch.clientX - dragStartX);
+                let newY = winStartY + (touch.clientY - dragStartY);
+                newX = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, newX));
+                newY = Math.max(0, Math.min(window.innerHeight - 60, newY));
+                win.style.right = 'auto'; win.style.bottom = 'auto';
+                win.style.left = newX + 'px'; win.style.top = newY + 'px';
+            }, { passive: true });
+
+            document.addEventListener('touchend', () => { isDragging = false; win.style.transition = ''; });
         }
 
         function initChat() {
@@ -915,46 +1051,54 @@
 
         // ── GRAFİK MODAL ────────────────────────────────────────────
         function openChartModal(chartType, rawData) {
-            // Negatif değerleri destekle: "Kanal A=-50000" gibi formatları parse et
-            const pairs = rawData.split('|').map(p => {
+            // Pipe ile ayrılmış çiftleri parse et: "Etiket=Değer|Etiket2=Değer2"
+            const pairs = String(rawData).split('|').map(p => {
                 const eqIdx = p.lastIndexOf('=');
+                if (eqIdx === -1) return null;
                 return [p.slice(0, eqIdx).trim(), p.slice(eqIdx + 1).trim()];
-            });
-            const labels = pairs.map(p => p[0]);
-            const values = pairs.map(p => parseFloat(p[1].replace(/[₺\s]/g, '')) || 0);
+            }).filter(Boolean);
 
-            if (labels.length === 0 || values.every(v => v === 0)) {
-                alert('Grafik verisi oluşturulamadı. Lütfen farklı bir soru deneyin.');
+            const labels = pairs.map(p => p[0]);
+            const values = pairs.map(p => parseFloat(p[1].replace(/[^0-9.-]/g, '')) || 0);
+
+            console.log('Chart data:', {chartType, labels, values});
+
+            if (labels.length === 0) {
+                alert('Grafik verisi bulunamadı.');
                 return;
             }
 
             const modal = document.getElementById('chartModal');
-            const canvas = document.getElementById('chartCanvas');
             const title = document.getElementById('chartModalTitle');
             title.textContent = chartType === 'bar' ? 'Karşılaştırma Grafiği' : 'Dağılım Grafiği';
             modal.classList.remove('hidden');
+            modal.style.display = 'flex';
 
-            // Canvas'ı gerçek görüntülenen boyuta ayarla
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width || 600;
-            canvas.height = 340;
+            // Modal açıldıktan sonra canvas boyutunu hesapla
+            setTimeout(() => {
+                const canvas = document.getElementById('chartCanvas');
+                canvas.width = canvas.offsetWidth || 580;
+                canvas.height = 320;
 
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#cbd5e1' : '#475569';
-            const gridColor = isDark ? '#334155' : '#e2e8f0';
+                const isDark = document.documentElement.classList.contains('dark');
+                const textColor = isDark ? '#cbd5e1' : '#475569';
+                const gridColor = isDark ? '#334155' : '#e2e8f0';
 
-            if (chartType === 'bar') {
-                drawBarChart(ctx, labels, values, textColor, gridColor, canvas.width, canvas.height);
-            } else {
-                drawPieChart(ctx, labels, values, canvas.width, canvas.height);
-            }
+                if (chartType === 'bar') {
+                    drawBarChart(ctx, labels, values, textColor, gridColor, canvas.width, canvas.height);
+                } else {
+                    drawPieChart(ctx, labels, values, canvas.width, canvas.height);
+                }
+            }, 50);
         }
 
         function closeChartModal() {
-            document.getElementById('chartModal').classList.add('hidden');
+            const m = document.getElementById('chartModal');
+            m.classList.add('hidden');
+            m.style.display = '';
         }
 
         function drawBarChart(ctx, labels, values, textColor, gridColor, W, H) {

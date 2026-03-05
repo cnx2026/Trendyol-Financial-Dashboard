@@ -879,11 +879,15 @@
                 const [, chartType, dataStr] = chartMatch;
                 const btnWrap = document.createElement('div');
                 btnWrap.className = 'chart-btn-wrap';
-                const encodedData = encodeURIComponent(dataStr);
-                btnWrap.innerHTML = `
-                    <button onclick="openChartModal('${chartType}','${encodedData}')" class="chart-view-btn">
-                        <i class="fa-solid fa-chart-bar"></i> Grafiği Görüntüle
-                    </button>`;
+                const chartBtn = document.createElement('button');
+                chartBtn.className = 'chart-view-btn';
+                chartBtn.innerHTML = '<i class="fa-solid fa-chart-bar"></i> Grafiği Görüntüle';
+                chartBtn.dataset.chartType = chartType;
+                chartBtn.dataset.chartData = dataStr;
+                chartBtn.addEventListener('click', function() {
+                    openChartModal(this.dataset.chartType, this.dataset.chartData);
+                });
+                btnWrap.appendChild(chartBtn);
                 el.appendChild(btnWrap);
             }
 
@@ -910,17 +914,30 @@
         }
 
         // ── GRAFİK MODAL ────────────────────────────────────────────
-        function openChartModal(chartType, encodedData) {
-            const dataStr = decodeURIComponent(encodedData);
-            const pairs = dataStr.split(',').map(p => p.split('='));
-            const labels = pairs.map(p => p[0].trim());
-            const values = pairs.map(p => parseFloat(p[1]) || 0);
+        function openChartModal(chartType, rawData) {
+            // Negatif değerleri destekle: "Kanal A=-50000" gibi formatları parse et
+            const pairs = rawData.split('|').map(p => {
+                const eqIdx = p.lastIndexOf('=');
+                return [p.slice(0, eqIdx).trim(), p.slice(eqIdx + 1).trim()];
+            });
+            const labels = pairs.map(p => p[0]);
+            const values = pairs.map(p => parseFloat(p[1].replace(/[₺\s]/g, '')) || 0);
+
+            if (labels.length === 0 || values.every(v => v === 0)) {
+                alert('Grafik verisi oluşturulamadı. Lütfen farklı bir soru deneyin.');
+                return;
+            }
 
             const modal = document.getElementById('chartModal');
             const canvas = document.getElementById('chartCanvas');
             const title = document.getElementById('chartModalTitle');
             title.textContent = chartType === 'bar' ? 'Karşılaştırma Grafiği' : 'Dağılım Grafiği';
             modal.classList.remove('hidden');
+
+            // Canvas'ı gerçek görüntülenen boyuta ayarla
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width || 600;
+            canvas.height = 340;
 
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -942,42 +959,59 @@
 
         function drawBarChart(ctx, labels, values, textColor, gridColor, W, H) {
             const colors = ['#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899'];
-            const maxVal = Math.max(...values);
-            const padL = 65, padR = 20, padT = 30, padB = 55;
+            const posColor = '#10b981', negColor = '#ef4444';
+            const maxVal = Math.max(...values.map(Math.abs), 1);
+            const hasNeg = values.some(v => v < 0);
+            const padL = 70, padR = 20, padT = 30, padB = 60;
             const chartW = W - padL - padR;
             const chartH = H - padT - padB;
-            const barW = (chartW / labels.length) * 0.6;
             const gap = chartW / labels.length;
+            const barW = gap * 0.55;
 
-            // Grid
-            ctx.strokeStyle = gridColor; ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = padT + chartH - (chartH / 4) * i;
+            // Baseline Y (negatif varsa ortada, yoksa altta)
+            const baselineRatio = hasNeg ? 0.5 : 1;
+            const baselineY = padT + chartH * baselineRatio;
+
+            // Baseline çiz
+            ctx.strokeStyle = textColor; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(padL, baselineY); ctx.lineTo(padL + chartW, baselineY); ctx.stroke();
+
+            // Grid çizgileri
+            ctx.lineWidth = 0.5; ctx.strokeStyle = gridColor;
+            [-1, -0.5, 0.5, 1].forEach(ratio => {
+                if (!hasNeg && ratio < 0) return;
+                const y = baselineY - ratio * (chartH * baselineRatio);
+                if (y < padT || y > padT + chartH) return;
                 ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + chartW, y); ctx.stroke();
+                const val = Math.round(maxVal * Math.abs(ratio));
                 ctx.fillStyle = textColor; ctx.font = '10px Inter'; ctx.textAlign = 'right';
-                const val = Math.round(maxVal / 4 * i);
-                ctx.fillText(val >= 1000000 ? (val/1000000).toFixed(1)+'M' : val >= 1000 ? (val/1000).toFixed(0)+'K' : val, padL - 5, y + 3);
-            }
+                const dispV = val >= 1000000 ? (val/1000000).toFixed(1)+'M' : val >= 1000 ? (val/1000).toFixed(0)+'K' : val;
+                ctx.fillText((ratio < 0 ? '-' : '') + dispV, padL - 5, y + 3);
+            });
 
             // Barlar
             values.forEach((val, i) => {
-                const barH = maxVal > 0 ? (val / maxVal) * chartH : 0;
                 const x = padL + gap * i + (gap - barW) / 2;
-                const y = padT + chartH - barH;
-                ctx.fillStyle = colors[i % colors.length];
+                const barH = (Math.abs(val) / maxVal) * chartH * baselineRatio;
+                const y = val >= 0 ? baselineY - barH : baselineY;
+                ctx.fillStyle = val >= 0 ? posColor : negColor;
                 ctx.beginPath();
-                ctx.roundRect ? ctx.roundRect(x, y, barW, barH, 4) : ctx.rect(x, y, barW, barH);
+                if (ctx.roundRect) ctx.roundRect(x, y, barW, barH, 3);
+                else ctx.rect(x, y, barW, barH);
                 ctx.fill();
 
                 // Label
                 ctx.fillStyle = textColor; ctx.font = '9px Inter'; ctx.textAlign = 'center';
-                const shortLabel = labels[i].length > 10 ? labels[i].slice(0, 10) + '…' : labels[i];
+                const shortLabel = labels[i].length > 11 ? labels[i].slice(0, 11) + '…' : labels[i];
                 ctx.fillText(shortLabel, x + barW / 2, padT + chartH + 14);
 
                 // Değer
                 ctx.font = 'bold 9px Inter';
-                const dispVal = val >= 1000000 ? (val/1000000).toFixed(1)+'M' : val >= 1000 ? (val/1000).toFixed(0)+'K' : val.toFixed(1);
-                ctx.fillText(dispVal, x + barW / 2, y - 4);
+                ctx.fillStyle = val >= 0 ? posColor : negColor;
+                const dispVal = Math.abs(val) >= 1000000 ? (val/1000000).toFixed(1)+'M'
+                    : Math.abs(val) >= 1000 ? (val/1000).toFixed(0)+'K' : val.toFixed(0);
+                const labelY = val >= 0 ? y - 5 : y + barH + 12;
+                ctx.fillText(dispVal, x + barW / 2, labelY);
             });
         }
 

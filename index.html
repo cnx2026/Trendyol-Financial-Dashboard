@@ -93,15 +93,11 @@
         .dark #chatWindow { background-color: #1e293b; border-color: #334155; }
         #chatWindow.open { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
 
-        /* Resize handle */
-        #chatResize {
-            position: absolute; bottom: 4px; left: 8px;
-            width: 20px; height: 20px; cursor: sw-resize; z-index: 10;
-            display: flex; align-items: center; justify-content: center;
-            color: #cbd5e1; user-select: none;
+        /* 8 yönlü resize handle'ları */
+        .chat-resizer {
+            position: absolute; z-index: 20; user-select: none;
         }
-        #chatResize:hover { color: #2563eb; }
-        .dark #chatResize { color: #475569; }
+        .chat-resizer:hover { background: rgba(37,99,235,0.12); border-radius: 2px; }
 
         .chat-header {
             padding: 1rem 1.25rem;
@@ -112,9 +108,14 @@
         }
 
         #chatHistory {
-            flex-grow: 1; overflow-y: auto; padding: 1rem;
-            display: flex; flex-direction: column; gap: 0.75rem;
+            flex-grow: 1; overflow-y: auto; padding: 1rem 1rem 0.5rem;
+            display: flex; flex-direction: column; gap: 0.85rem;
+            scroll-behavior: smooth;
         }
+        #chatHistory::-webkit-scrollbar { width: 4px; }
+        #chatHistory::-webkit-scrollbar-track { background: transparent; }
+        #chatHistory::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark #chatHistory::-webkit-scrollbar-thumb { background: #475569; }
 
         .chat-message { display: flex; flex-direction: column; max-width: 85%; animation: messageIn 0.3s ease-out; }
         @keyframes messageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -122,12 +123,41 @@
         .chat-message.bot  { align-self: flex-start; }
 
         .message-content {
-            padding: 0.65rem 1rem; border-radius: 14px;
-            font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap;
+            padding: 0.8rem 1.1rem; border-radius: 16px;
+            font-size: 0.84rem; line-height: 1.75; white-space: pre-wrap;
+            word-break: break-word;
         }
-        .user .message-content { background: #2563eb; color: white; border-bottom-right-radius: 3px; }
-        .bot  .message-content { background: #f1f5f9; color: #1e293b; border-bottom-left-radius: 3px; }
-        .dark .bot .message-content { background: #334155; color: #f1f5f9; }
+        .user .message-content {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white; border-bottom-right-radius: 3px;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+        }
+        .bot .message-content {
+            background: #f8fafc; color: #1e293b;
+            border-bottom-left-radius: 3px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .dark .bot .message-content { background: #1e293b; color: #e2e8f0; border-color: #334155; }
+
+        /* Bot mesaj içi özel formatlar */
+        .bot .message-content strong { color: #1d4ed8; font-weight: 700; }
+        .dark .bot .message-content strong { color: #93c5fd; }
+        .bot .message-content .msg-line { display: block; padding: 2px 0; }
+        .bot .message-content .msg-divider {
+            display: block; margin: 8px 0; border-top: 1px solid #e2e8f0;
+        }
+        .dark .bot .message-content .msg-divider { border-color: #334155; }
+        .bot .message-content .msg-badge-ok {
+            display: inline-block; background: #dcfce7; color: #166534;
+            border-radius: 4px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600;
+        }
+        .bot .message-content .msg-badge-err {
+            display: inline-block; background: #fee2e2; color: #991b1b;
+            border-radius: 4px; padding: 1px 6px; font-size: 0.75rem; font-weight: 600;
+        }
+        .dark .bot .message-content .msg-badge-ok { background: #14532d; color: #86efac; }
+        .dark .bot .message-content .msg-badge-err { background: #7f1d1d; color: #fca5a5; }
 
         .bot.typing .message-content { display: flex; gap: 4px; align-items: center; padding: 0.75rem 1rem; }
         .bot.typing span { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; animation: typingBounce 1s infinite; }
@@ -446,10 +476,15 @@
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
         </form>
-        <!-- Sol alt resize handle -->
-        <div id="chatResize" title="Boyutlandır">
-            <i class="fa-solid fa-grip-lines-vertical" style="font-size:10px;"></i>
-        </div>
+        <!-- 8 yönlü resize handle'ları -->
+        <div class="chat-resizer" data-dir="n"  style="top:0;left:8px;right:8px;height:5px;cursor:n-resize;"></div>
+        <div class="chat-resizer" data-dir="s"  style="bottom:0;left:8px;right:8px;height:5px;cursor:s-resize;"></div>
+        <div class="chat-resizer" data-dir="e"  style="right:0;top:8px;bottom:8px;width:5px;cursor:e-resize;"></div>
+        <div class="chat-resizer" data-dir="w"  style="left:0;top:8px;bottom:8px;width:5px;cursor:w-resize;"></div>
+        <div class="chat-resizer" data-dir="ne" style="top:0;right:0;width:12px;height:12px;cursor:ne-resize;"></div>
+        <div class="chat-resizer" data-dir="nw" style="top:0;left:0;width:12px;height:12px;cursor:nw-resize;"></div>
+        <div class="chat-resizer" data-dir="se" style="bottom:0;right:0;width:14px;height:14px;cursor:se-resize;border-radius:0 0 16px 0;"></div>
+        <div class="chat-resizer" data-dir="sw" style="bottom:0;left:0;width:12px;height:12px;cursor:sw-resize;"></div>
     </div>
 
     <!-- Toggle button -->
@@ -826,7 +861,7 @@
             }
         }
 
-        // ── SÜRÜKLEME & YENİDEN BOYUTLANDIRMA ──────────────────────
+        // ── SÜRÜKLEME & 8 YÖNLÜ YENİDEN BOYUTLANDIRMA ─────────────
         let dragInitialized = false;
 
         function initDragAndResize() {
@@ -835,101 +870,112 @@
 
             const win = document.getElementById('chatWindow');
             const handle = document.getElementById('chatDragHandle');
-            const resizeHandle = document.getElementById('chatResize');
+            const MIN_W = 300, MIN_H = 360;
+            const MAX_W = () => window.innerWidth  - 16;
+            const MAX_H = () => window.innerHeight - 16;
 
-            // SÜRÜKLEME
-            let isDragging = false, dragStartX, dragStartY, winStartX, winStartY;
+            // ── SÜRÜKLEME ──────────────────────────────────────────
+            let isDragging = false, dragSX, dragSY, winSX, winSY;
 
             handle.addEventListener('mousedown', (e) => {
                 if (e.target.closest('button')) return;
                 isDragging = true;
-                dragStartX = e.clientX;
-                dragStartY = e.clientY;
-                const rect = win.getBoundingClientRect();
-                winStartX = rect.left;
-                winStartY = rect.top;
+                dragSX = e.clientX; dragSY = e.clientY;
+                const r = win.getBoundingClientRect();
+                winSX = r.left; winSY = r.top;
                 win.style.transition = 'none';
+                document.body.style.userSelect = 'none';
                 e.preventDefault();
             });
 
+            // ── 8 YÖNLÜ RESIZE ─────────────────────────────────────
+            let isResizing = false, resDir = '', resSX, resSY, resW, resH, resL, resT;
+
+            document.querySelectorAll('.chat-resizer').forEach(el => {
+                el.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    resDir = el.dataset.dir;
+                    resSX = e.clientX; resSY = e.clientY;
+                    const r = win.getBoundingClientRect();
+                    resW = r.width; resH = r.height;
+                    resL = r.left;  resT = r.top;
+                    win.style.transition = 'none';
+                    document.body.style.userSelect = 'none';
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+
             document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                let newX = winStartX + (e.clientX - dragStartX);
-                let newY = winStartY + (e.clientY - dragStartY);
-                // Ekran sınırlarını aşmasın
-                newX = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, newX));
-                newY = Math.max(0, Math.min(window.innerHeight - win.offsetHeight, newY));
-                win.style.right = 'auto';
+                if (isDragging) {
+                    let x = winSX + (e.clientX - dragSX);
+                    let y = winSY + (e.clientY - dragSY);
+                    x = Math.max(0, Math.min(MAX_W() - win.offsetWidth,  x));
+                    y = Math.max(0, Math.min(MAX_H() - win.offsetHeight, y));
+                    win.style.left = x + 'px'; win.style.top = y + 'px';
+                    win.style.right = 'auto'; win.style.bottom = 'auto';
+                    return;
+                }
+                if (!isResizing) return;
+
+                const dx = e.clientX - resSX;
+                const dy = e.clientY - resSY;
+                let newW = resW, newH = resH, newL = resL, newT = resT;
+
+                // Yatay
+                if (resDir.includes('e')) newW = Math.min(MAX_W(), Math.max(MIN_W, resW + dx));
+                if (resDir.includes('w')) {
+                    newW = Math.min(MAX_W(), Math.max(MIN_W, resW - dx));
+                    newL = resL + (resW - newW);
+                }
+                // Dikey
+                if (resDir.includes('s')) newH = Math.min(MAX_H(), Math.max(MIN_H, resH + dy));
+                if (resDir.includes('n')) {
+                    newH = Math.min(MAX_H(), Math.max(MIN_H, resH - dy));
+                    newT = resT + (resH - newH);
+                }
+
+                win.style.width  = newW + 'px';
+                win.style.height = newH + 'px';
+                win.style.left   = newL + 'px';
+                win.style.top    = newT + 'px';
+                win.style.right  = 'auto';
                 win.style.bottom = 'auto';
-                win.style.left = newX + 'px';
-                win.style.top = newY + 'px';
             });
 
             document.addEventListener('mouseup', () => {
                 isDragging = false;
-                win.style.transition = '';
-            });
-
-            // YENİDEN BOYUTLANDIRMA (sol alt köşe)
-            let isResizing = false, resStartX, resStartY, resStartW, resStartH, resStartL, resStartT;
-
-            resizeHandle.addEventListener('mousedown', (e) => {
-                isResizing = true;
-                resStartX = e.clientX;
-                resStartY = e.clientY;
-                const rect = win.getBoundingClientRect();
-                resStartW = rect.width;
-                resStartH = rect.height;
-                resStartL = rect.left;
-                resStartT = rect.top;
-                win.style.transition = 'none';
-                e.preventDefault();
-                e.stopPropagation();
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isResizing) return;
-                const dx = e.clientX - resStartX;
-                const dy = e.clientY - resStartY;
-                const newW = Math.max(280, resStartW - dx);
-                const newH = Math.max(360, resStartH + dy);
-                const newL = resStartL + (resStartW - newW);
-                win.style.width = newW + 'px';
-                win.style.height = newH + 'px';
-                win.style.right = 'auto';
-                win.style.bottom = 'auto';
-                win.style.left = newL + 'px';
-                win.style.top = resStartT + 'px';
-            });
-
-            document.addEventListener('mouseup', () => {
                 isResizing = false;
                 win.style.transition = '';
+                document.body.style.userSelect = '';
             });
 
-            // TOUCH DESTEĞI (mobil)
+            // ── TOUCH SÜRÜKLEME (mobil) ─────────────────────────────
             handle.addEventListener('touchstart', (e) => {
                 if (e.target.closest('button')) return;
-                const touch = e.touches[0];
+                const t = e.touches[0];
                 isDragging = true;
-                dragStartX = touch.clientX; dragStartY = touch.clientY;
-                const rect = win.getBoundingClientRect();
-                winStartX = rect.left; winStartY = rect.top;
+                dragSX = t.clientX; dragSY = t.clientY;
+                const r = win.getBoundingClientRect();
+                winSX = r.left; winSY = r.top;
                 win.style.transition = 'none';
             }, { passive: true });
 
             document.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
-                const touch = e.touches[0];
-                let newX = winStartX + (touch.clientX - dragStartX);
-                let newY = winStartY + (touch.clientY - dragStartY);
-                newX = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, newX));
-                newY = Math.max(0, Math.min(window.innerHeight - 60, newY));
+                const t = e.touches[0];
+                let x = winSX + (t.clientX - dragSX);
+                let y = winSY + (t.clientY - dragSY);
+                x = Math.max(0, Math.min(MAX_W() - win.offsetWidth,  x));
+                y = Math.max(0, Math.min(MAX_H() - win.offsetHeight, y));
+                win.style.left = x + 'px'; win.style.top = y + 'px';
                 win.style.right = 'auto'; win.style.bottom = 'auto';
-                win.style.left = newX + 'px'; win.style.top = newY + 'px';
             }, { passive: true });
 
-            document.addEventListener('touchend', () => { isDragging = false; win.style.transition = ''; });
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+                win.style.transition = '';
+            });
         }
 
         function initChat() {
@@ -961,6 +1007,58 @@
             handleChatSubmit(new Event('submit'));
         }
 
+        // ── BOT MESAJ FORMATLAYICI ───────────────────────────────
+        function formatBotMessage(text) {
+            const lines = text.split('\n');
+            let html = '';
+            for (let line of lines) {
+                let l = line;
+                // Başlık: ## veya ━━━ satırları
+                if (/^#{1,3}\s/.test(l)) {
+                    l = l.replace(/^#{1,3}\s*/, '');
+                    l = `<span class="msg-line" style="font-weight:700;font-size:0.82rem;color:#64748b;letter-spacing:0.04em;text-transform:uppercase;margin-top:4px;">${escHtml(l)}</span>`;
+                    html += l;
+                    continue;
+                }
+                // Çizgi ayraç
+                if (/^[━─=]{4,}/.test(l)) {
+                    html += '<span class="msg-divider"></span>';
+                    continue;
+                }
+                // Boş satır → boşluk
+                if (l.trim() === '') {
+                    html += '<span style="display:block;height:4px;"></span>';
+                    continue;
+                }
+                // Madde listesi: - veya •
+                const isBullet = /^[\-•]\s/.test(l.trim());
+                if (isBullet) l = l.replace(/^\s*[\-•]\s/, '');
+
+                // Bold: **...**
+                l = l.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                // ✅ ❌ → renkli badge
+                l = l.replace(/✅\s*/g, '<span class="msg-badge-ok">✅ KAR</span> ');
+                l = l.replace(/❌\s*/g, '<span class="msg-badge-err">❌ ZARAR</span> ');
+                // 📈 📉 → renkli
+                l = l.replace(/📈/g, '<span style="color:#16a34a">📈</span>');
+                l = l.replace(/📉/g, '<span style="color:#dc2626">📉</span>');
+
+                if (isBullet) {
+                    html += `<span class="msg-line" style="display:flex;gap:8px;padding:3px 0;">
+                        <span style="color:#2563eb;flex-shrink:0;margin-top:1px;">›</span>
+                        <span>${l}</span>
+                    </span>`;
+                } else {
+                    html += `<span class="msg-line">${l}</span>`;
+                }
+            }
+            return html;
+        }
+
+        function escHtml(t) {
+            return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
         function clearChat() {
             chatHistory = [];
             document.getElementById('chatHistory').innerHTML = '';
@@ -987,9 +1085,7 @@
 
             const content = document.createElement('div');
             content.className = 'message-content';
-            content.innerHTML = cleanText
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
+            content.innerHTML = formatBotMessage(cleanText);
             el.appendChild(content);
 
             // Excel butonu ekle

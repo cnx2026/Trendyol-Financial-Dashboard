@@ -1130,19 +1130,120 @@
 
         // ── EXCEL BOT'TAN İNDİR ──────────────────────────────────────
         async function downloadExcelFromBot(type, filter) {
-            // advisorData'yı yenile (yoksa)
-            if (!advisorData.length) {
-                const { data } = isHistoricalPeriod()
-                    ? await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart })
-                    : await _supabase.from('view_advisor_performance').select('*');
-                advisorData = data || [];
+            // Geçerli type değerlerini kontrol et
+            const validTypes = ['advisor', 'leader', 'channel', 'manager'];
+            if (!validTypes.includes(type)) {
+                alert('Geçersiz rapor tipi: ' + type);
+                return;
             }
-            // expLevel'i type olarak set et, tümünü al
-            document.getElementById('expLevel').value = type;
-            document.getElementById('expSenior').value = 'all';
-            document.getElementById('expManager').value = 'all';
-            // Doğrudan generateExcel çağır
-            await generateExcel();
+
+            let exportData = [], sheetName = 'Rapor';
+
+            try {
+                if (type === 'advisor') {
+                    // advisorData yoksa çek
+                    if (!advisorData.length) {
+                        const { data } = isHistoricalPeriod()
+                            ? await _supabase.rpc('get_period_advisors', { p_start: selectedPeriodStart })
+                            : await _supabase.from('view_advisor_performance').select('*');
+                        advisorData = data || [];
+                    }
+                    sheetName = 'Temsilci Detay';
+                    exportData = advisorData.map(r => {
+                        let o = {};
+                        o[t('xls_reg')] = r.cnx_register_number;
+                        o[t('xls_name')] = r.user_name;
+                        o[t('xls_clean_hours')] = parseFloat(r.clean_working_time || 0);
+                        o[t('xls_raw_fte')] = parseFloat(r.raw_fte || 0);
+                        o[t('xls_fte')] = parseFloat(r.capped_fte || 0);
+                        o[t('xls_tl')] = r.team_leader;
+                        o[t('xls_om')] = r.operation_manager;
+                        o[t('xls_sm')] = r.senior_manager;
+                        o[t('xls_channel')] = r.channel_name;
+                        return o;
+                    });
+                } else {
+                    // leader / channel / manager için direkt view/rpc çek
+                    let sd, err;
+                    if (isHistoricalPeriod()) {
+                        const rm = { 'leader': 'get_period_leaders', 'channel': 'get_period_channels', 'manager': 'get_period_operations' };
+                        ({ data: sd, error: err } = await _supabase.rpc(rm[type], { p_start: selectedPeriodStart }));
+                    } else {
+                        const vm = { 'leader': 'view_leader_performance', 'channel': 'view_channel_performance', 'manager': 'view_operations_performance' };
+                        ({ data: sd, error: err } = await _supabase.from(vm[type]).select('*'));
+                    }
+                    if (err) { alert('Rapor verisi çekilemedi: ' + err.message); return; }
+                    const f = sd || [];
+
+                    if (type === 'leader') {
+                        sheetName = 'Takim Lideri Ozeti';
+                        exportData = f.map(r => {
+                            let o = {};
+                            o[t('xls_tl')] = r.leader_name;
+                            o[t('xls_om')] = r.operation_manager;
+                            o[t('xls_clean_hours')] = parseFloat(r.total_clean_hours || 0);
+                            o[t('xls_prod_fte')] = parseFloat(r.produced_fte || 0);
+                            o[t('xls_fore_fte')] = parseFloat(r.forecast_fte || 0);
+                            o[t('xls_fte_diff')] = parseFloat(r.produced_fte - r.forecast_fte);
+                            o[t('xls_total_fee')] = parseFloat(r.total_fee || 0);
+                            o[t('xls_fee_diff')] = parseFloat(r.fee_diff || 0);
+                            return o;
+                        });
+                    } else if (type === 'channel') {
+                        sheetName = 'Kanal Ozeti';
+                        exportData = f.map(r => {
+                            let o = {};
+                            o[t('xls_channel')] = r.channel_name;
+                            o[t('xls_unit_price')] = r.unit_price;
+                            o[t('xls_clean_hours')] = parseFloat(r.total_clean_hours || 0);
+                            o[t('xls_prod_fte')] = parseFloat(r.produced_fte || 0);
+                            o[t('xls_fore_fte')] = parseFloat(r.forecast_fte || 0);
+                            o[t('xls_fte_diff')] = parseFloat(r.produced_fte - r.forecast_fte);
+                            o[t('xls_total_fee')] = parseFloat(r.total_fee || 0);
+                            o[t('xls_fee_diff')] = parseFloat(r.fee_diff || 0);
+                            return o;
+                        });
+                    } else if (type === 'manager') {
+                        sheetName = 'Operasyon Yoneticisi Ozeti';
+                        exportData = f.map(r => {
+                            let o = {};
+                            o[t('xls_om')] = r.manager_name;
+                            o[t('xls_clean_hours')] = parseFloat(r.total_clean_hours || 0);
+                            o[t('xls_prod_fte')] = parseFloat(r.produced_fte || 0);
+                            o[t('xls_fore_fte')] = parseFloat(r.forecast_fte || 0);
+                            o[t('xls_fte_diff')] = parseFloat(r.produced_fte - r.forecast_fte);
+                            o[t('xls_total_fee')] = parseFloat(r.total_fee || 0);
+                            o[t('xls_fee_diff')] = parseFloat(r.fee_diff || 0);
+                            return o;
+                        });
+                    }
+                }
+
+                if (!exportData.length) { alert(t('no_data')); return; }
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                const nc = [t('xls_clean_hours'), t('xls_prod_fte'), t('xls_fore_fte'), t('xls_fte_diff'), t('xls_raw_fte'), t('xls_fte')];
+                const cc = [t('xls_total_fee'), t('xls_fee_diff'), t('xls_unit_price')];
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const a = XLSX.utils.encode_cell({ r: 0, c: C });
+                    if (!ws[a]) continue;
+                    const cn = ws[a].v;
+                    const fmt = cc.includes(cn) ? '"₺" #,##0' : (nc.includes(cn) ? '0.00' : null);
+                    if (fmt) for (let R = 1; R <= range.e.r; ++R) {
+                        const ca = XLSX.utils.encode_cell({ r: R, c: C });
+                        if (ws[ca] && ws[ca].t === 'n') ws[ca].z = fmt;
+                    }
+                }
+                ws['!cols'] = Object.keys(exportData[0]).map(() => ({ wch: 20 }));
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                XLSX.writeFile(wb, `Trendyol_${sheetName.replace(/ /g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+
+            } catch (err) {
+                console.error('Excel bot error:', err);
+                alert('Excel oluşturulurken hata: ' + err.message);
+            }
         }
 
         // ── GRAFİK MODAL ────────────────────────────────────────────
